@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14C1510" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="CartStore" representedClassName="CartStore" syncable="YES">
+        <attribute name="cart_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="qty" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="cartProduct" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductStore" inverseName="productCart" inverseEntity="ProductStore" syncable="YES"/>
+    </entity>
+    <entity name="CustomerStore" representedClassName="CustomerStore" syncable="YES">
+        <attribute name="customer_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customer_default" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="customer_description" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pricelist_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="terms" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="customerPriceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PriceListStore" inverseName="priceListCustomer" inverseEntity="PriceListStore" syncable="YES"/>
+    </entity>
+    <entity name="GlobalStore" representedClassName="GlobalStore" syncable="YES">
+        <attribute name="customer_default_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customer_default_code_copy" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="days_sync_interval" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="event" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="last_order_number" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="logout_event" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="minutes_monitor_server" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="my_custom_logo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="my_custom_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prefix" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prefix_number_length" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="qty_event" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="sales_percentage_tax" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="sync_event" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="terminal_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="terminal_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="themes" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="OfflineSalesStore" representedClassName="OfflineSalesStore" syncable="YES">
+        <attribute name="carts" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customer_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="invoice_no" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="payment_type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="PriceListStore" representedClassName="PriceListStore" syncable="YES">
+        <attribute name="currency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="pricelist_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="product_code" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="priceListCustomer" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CustomerStore" inverseName="customerPriceList" inverseEntity="CustomerStore" syncable="YES"/>
+        <relationship name="priceListProduct" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductStore" inverseName="productPriceList" inverseEntity="ProductStore" syncable="YES"/>
+    </entity>
+    <entity name="ProductStore" representedClassName="ProductStore" syncable="YES">
+        <attribute name="image_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pc_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="product_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="product_description" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="product_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="productCart" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CartStore" inverseName="cartProduct" inverseEntity="CartStore" syncable="YES"/>
+        <relationship name="productPriceList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PriceListStore" inverseName="priceListProduct" inverseEntity="PriceListStore" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="CartStore" positionX="0" positionY="0" width="128" height="88"/>
+        <element name="CustomerStore" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="GlobalStore" positionX="0" positionY="0" width="128" height="298"/>
+        <element name="OfflineSalesStore" positionX="9" positionY="108" width="128" height="103"/>
+        <element name="PriceListStore" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="ProductStore" positionX="0" positionY="0" width="128" height="163"/>
+    </elements>
+</model>

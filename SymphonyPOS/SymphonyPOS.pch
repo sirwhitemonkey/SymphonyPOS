@@ -1,0 +1,79 @@
+#ifdef __OBJC__
+#import "PersistenceManager.h"
+#import "SharedServices.h"
+
+#endif
+
+#ifndef SymphonyPOS_SymphonyPOS_pch
+#define SymphonyPOS_SymphonyPOS_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif
+
+#define DEBUG_MODE
+
+#ifdef DEBUG_MODE
+#define DebugLog( s, ... ) NSLog( @"<%p %@:%s(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent],__FUNCTION__,__LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+
+#else
+#define DebugLog( s, ... )
+#endif
+
+#ifdef __IPHONE_6_0
+# define LINE_BREAK_WORD_WRAP NSLineBreakByWordWrapping
+#else
+# define LINE_BREAK_WORD_WRAP UILineBreakModeWordWrap
+#endif
+
+#define persistenceManager ([PersistenceManager sharedInstance])
+#define sharedServices ([SharedServices sharedInstance])
+
+#pragma mark - constants
+#define APP_TOKEN @"token"
+#define APP_USER_IDENT @"appUserIdent"
+#define APP_USER_PIN_IDENT @"appUserPinIdent"
+#define APP_LOGGED_IDENT @"appLoggedIdent"
+#define APP_FOOTER @"Copyright (c) 2015 XM DEVELOPMENTS. All rights reserved"
+#define ALPHA_CHARACTERS @" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+#define DECRYPTION_KEY @"12345678901234567890123456789012"
+
+#define PAYMENT_TYPE @"paymentType"
+#define PAYMENT_INVOICE @"paymentInvoice"
+#define PAYMENT_CREDITCARD @"CreditCard"
+#define PAYMENT_CREDITCARDTYPE @"paymentCreditCardType"
+#define PAYMENT_CREDITCARDSIGNATURE @"paymentCreditCardSignature"
+#define PAYMENT_EFTPOS @"EFTPOS"
+#define PAYMENT_CASH @"Cash"
+#define CASH_SALES @"cashSales"
+#define CUSTOMER @"customer"
+#define SCAN_MODE @"scanMode"
+#define PASSKEY @"passKey"
+
+#pragma mark - central api service
+#pragma API_VERSION @"v1"
+#define API_URL @"http://52.64.16.2:8087"
+
+#pragma mark - custom url api service
+#define API_PRODUCTS @"products"
+#define API_LOGIN @"login"
+#define API_SYNC  @"sync"
+#define API_SUBMIT_AUTHORISATION @"submitAuthorisation"
+#define API_SUBMIT_PAYMENT @"submitPayment"
+#define API_CHECK_CONNECTION @"checkConnection"
+#define API_OFFLINE_SALES @"offlineSales"
+
+#define API_SYNC_DATE_LAST_UPDATED @"sync_date_last_updated"
+
+
+#define MOCK_DATA YES
+
+
+
+#define COLOR_GRADIENT_GREEN [UIColor colorWithRed:98.0/255.0 green:189.0/255.0 blue:24.0/255.0 alpha:1.0]
+#define COLOR_GRADIENT_BLUE [UIColor colorWithRed:39.0/255.0 green:203.0/255.0 blue:232.0/255.0 alpha:1.0]
+#define BASE_COLOR [UIColor colorWithRed:238.0f/255.0f green:233.0f/255.0f blue:230.0f/255.0f alpha:1]
+#define WARNING [UIColor colorWithRed:220.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0f]
+
+

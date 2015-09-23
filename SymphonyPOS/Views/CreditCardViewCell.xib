@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PaymentViewController">
+            <connections>
+                <outlet property="creditCardViewCell" destination="tLQ-tv-iif" id="ad8-UG-9lk"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CreditCardViewCell" rowHeight="550" id="tLQ-tv-iif" customClass="CreditCardViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="550"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tLQ-tv-iif" id="Zrk-Ei-icq">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sub totals:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TUy-Ro-AOD">
+                        <rect key="frame" x="50" y="48" width="67" height="21"/>
+                        <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sales tax:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l8B-0k-EMc">
+                        <rect key="frame" x="50" y="66" width="67" height="21"/>
+                        <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Grand totals:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IDU-n4-Nzf">
+                        <rect key="frame" x="33" y="88" width="84" height="21"/>
+                        <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sub totals" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q3N-lZ-URL">
+                        <rect key="frame" x="132" y="48" width="116" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sales tax" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2H-4E-62s">
+                        <rect key="frame" x="132" y="66" width="116" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Grand Totals" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UuC-8s-pWJ">
+                        <rect key="frame" x="132" y="88" width="116" height="21"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" tag="100" contentMode="scaleToFill" fixedFrame="YES" selected="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4S9-Eo-yYK" customClass="RadioButton">
+                        <rect key="frame" x="15" y="152" width="143" height="24"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <state key="normal" title=" Visa" image="unchecked">
+                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="selected" image="checked"/>
+                        <connections>
+                            <action selector="paymentCreditCardType:" destination="-2" eventType="touchUpInside" id="8yE-5F-QPQ"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Card type" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6EW-Iz-Y90">
+                        <rect key="frame" x="14" y="123" width="84" height="21"/>
+                        <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" tag="101" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I7K-QJ-eQe" customClass="RadioButton">
+                        <rect key="frame" x="14" y="184" width="108" height="24"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <state key="normal" title=" Mastercard" image="unchecked">
+                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="selected" image="checked"/>
+                        <connections>
+                            <action selector="paymentCreditCardType:" destination="-2" eventType="touchUpInside" id="4jN-PF-y0g"/>
+                            <outletCollection property="groupButtons" destination="g1Z-ih-YxU" id="cuC-x5-zfY"/>
+                        </connections>
+                    </button>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="CC_logos_-_visa-mastercard-amex" translatesAutoresizingMaskIntoConstraints="NO" id="ZRM-AN-2zC">
+                        <rect key="frame" x="120" y="95" width="141" height="92"/>
+                    </imageView>
+                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="rounded_table_cell" translatesAutoresizingMaskIntoConstraints="NO" id="Ht6-GL-gvZ">
+                        <rect key="frame" x="10" y="294" width="302" height="46"/>
+                    </imageView>
+                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Credit card number" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D5a-x9-QR7">
+                        <rect key="frame" x="21" y="302" width="280" height="30"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="9a6-jI-Ggo"/>
+                        </connections>
+                    </textField>
+                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="rounded_table_cell_top" translatesAutoresizingMaskIntoConstraints="NO" id="o76-BE-hhm">
+                        <rect key="frame" x="10" y="248" width="302" height="46"/>
+                    </imageView>
+                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="rounded_table_cell" translatesAutoresizingMaskIntoConstraints="NO" id="BuK-B9-20g">
+                        <rect key="frame" x="10" y="340" width="148" height="46"/>
+                    </imageView>
+                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Exp. month(i.e 08)" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XB0-35-Rr9">
+                        <rect key="frame" x="21" y="348" width="132" height="29"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="6zY-kX-ugA"/>
+                        </connections>
+                    </textField>
+                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="rounded_table_cell" translatesAutoresizingMaskIntoConstraints="NO" id="FFL-dy-OPu">
+                        <rect key="frame" x="156" y="340" width="156" height="46"/>
+                    </imageView>
+                    <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Exp. year (i.e 2016)" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Sbc-hD-p9b">
+                        <rect key="frame" x="174" y="349" width="132" height="29"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="G01-4H-fGZ"/>
+                        </connections>
+                    </textField>
+                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="rounded_table_cell_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="YdS-z5-lAB">
+                        <rect key="frame" x="10" y="386" width="302" height="46"/>
+                    </imageView>
+                    <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Security code" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BgT-qY-TcR">
+                        <rect key="frame" x="20" y="394" width="280" height="30"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="mRh-cX-vX3"/>
+                        </connections>
+                    </textField>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Cardholder name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uyy-KX-gJE">
+                        <rect key="frame" x="20" y="256" width="292" height="30"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="4ej-kJ-1fR"/>
+                        </connections>
+                    </textField>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Or provide your signature:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PBe-k8-c09">
+                        <rect key="frame" x="15" y="446" width="208" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" tag="102" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g1Z-ih-YxU" customClass="RadioButton">
+                        <rect key="frame" x="14" y="216" width="144" height="24"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <state key="normal" title=" American express" image="unchecked">
+                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="selected" image="checked"/>
+                        <connections>
+                            <action selector="paymentCreditCardType:" destination="-2" eventType="touchUpInside" id="2EM-cq-I79"/>
+                            <outletCollection property="groupButtons" destination="4S9-Eo-yYK" id="WGT-3K-sZ6"/>
+                        </connections>
+                    </button>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9hJ-XC-jCr">
+                        <rect key="frame" x="228" y="11" width="84" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <state key="normal" title="Battery info" backgroundImage="batt_info_0">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TS7-Ha-tqj" customClass="RoundedButton">
+                        <rect key="frame" x="88" y="486" width="147" height="43"/>
+                        <state key="normal" title="Next">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="style">
+                                <integer key="value" value="10"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="next:" destination="-2" eventType="touchUpInside" id="aE5-D2-apN"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="batteryBtn" destination="9hJ-XC-jCr" id="W1A-7E-Ut0"/>
+                <outlet property="cardHolderName" destination="uyy-KX-gJE" id="iF6-uz-Mzt"/>
+                <outlet property="creditCardNumber" destination="D5a-x9-QR7" id="fhi-iB-jdy"/>
+                <outlet property="expiryDateMonth" destination="XB0-35-Rr9" id="Mmq-If-Arh"/>
+                <outlet property="expiryDateYear" destination="Sbc-hD-p9b" id="7gb-AE-ZQP"/>
+                <outlet property="grandTotals" destination="UuC-8s-pWJ" id="fJM-D3-UcX"/>
+                <outlet property="nextBtn" destination="TS7-Ha-tqj" id="wdG-cG-LMy"/>
+                <outlet property="provideSignature" destination="PBe-k8-c09" id="qSp-Lc-OO0"/>
+                <outlet property="salesPercentageTax" destination="y2H-4E-62s" id="800-gc-LlA"/>
+                <outlet property="securityCode" destination="BgT-qY-TcR" id="VdB-SP-OUF"/>
+                <outlet property="subTotals" destination="q3N-lZ-URL" id="AXz-qs-sYC"/>
+            </connections>
+            <point key="canvasLocation" x="267" y="344"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="CC_logos_-_visa-mastercard-amex" width="249" height="50"/>
+        <image name="batt_info_0" width="200" height="52"/>
+        <image name="checked" width="24" height="24"/>
+        <image name="rounded_table_cell" width="302" height="46"/>
+        <image name="rounded_table_cell_bottom" width="302" height="46"/>
+        <image name="rounded_table_cell_top" width="302" height="46"/>
+        <image name="unchecked" width="24" height="24"/>
+    </resources>
+</document>

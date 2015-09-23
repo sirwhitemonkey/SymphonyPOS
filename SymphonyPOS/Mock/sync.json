@@ -1,0 +1,147 @@
+{
+    "error" : false,
+    "message": "",
+    "date_last_updated": "12345",
+    "data": {
+        "products": [
+                     {
+                     "product_code": "1234567890",
+                     "product_name": "Kings 100 Series Desk Accessories",
+                     "unit": "Unit Ea.",
+                     "image_url": "http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg",
+                     "product_description": "",
+                     "pc_code": "1234567890"
+                     },
+                     {
+                     "product_code": "1234567870",
+                     "product_name": "Kings 5000 Series Chair Accessories",
+                     "unit": "Unit Ea.",
+                     "image_url": "http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg",
+                     "product_description": "",
+                     "pc_code": "0987654321"
+                     },
+                     {
+                     "product_code": "1234567800",
+                     "product_name": "Queens 5000 Series Desk Accessories",
+                     "unit": "Unit Ea.",
+                     "image_url": "http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg",
+                     "product_description": "",
+                     "pc_code": "1234512345"
+                     },
+                     {
+                     "product_code": "1234567990",
+                     "product_name": "Prince 5000 Series Glass Accessories",
+                     "unit": "Unit Ea.",
+                     "image_url": "http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg",
+                     "product_description": "",
+                     "pc_code": "6789067890"
+                     },
+                     {
+                     "product_code": "1934567890",
+                     "product_name": "Kingstown 5000 Series Desk Accessories",
+                     "unit": "Unit Ea.",
+                     "image_url": "http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg",
+                     "product_description": "",
+                     "pc_code": "1234509876"
+                     }
+                     
+                     ],
+        "pricelists": [
+                       {
+                       "product_code": "1234567890",
+                       "pricelist_code": "1111111111",
+                       "price": 20,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1234567870",
+                       "pricelist_code": "1111111111",
+                       "price": 10.6,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1234567800",
+                       "pricelist_code": "1111111111",
+                       "price": 30,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1234567990",
+                       "pricelist_code": "1111111111",
+                       "price": 20,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1934567890",
+                       "pricelist_code": "1111111111",
+                       "price": 20,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1234567890",
+                       "pricelist_code": "2111111111",
+                       "price": 40,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1234567870",
+                       "pricelist_code": "2111111111",
+                       "price": 20.6,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1234567800",
+                       "pricelist_code": "2111111111",
+                       "price": 20,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1234567990",
+                       "pricelist_code": "2111111111",
+                       "price": 10,
+                       "currency": "USD"
+                       },
+                       {
+                       "product_code": "1934567890",
+                       "pricelist_code": "2111111111",
+                       "price": 60,
+                       "currency": "USD"
+                       }
+                       ],
+        "customers": [
+                      {
+                      "customer_code": "1234567890",
+                      "customer_description": "Default Customer",
+                      "default": true,
+                      "pricelist_code": "1111111111",
+                      "terms": false
+                      },
+                      {
+                      "customer_code": "1234567892",
+                      "customer_description": "Mr. Young",
+                      "default": false,
+                      "pricelist_code": "2111111111",
+                      "terms": false
+                      },
+                      {
+                      "customer_code": "1234567895",
+                      "customer_description": "Bugs Bunny",
+                      "default": false,
+                      "pricelist_code": "1111111111",
+                      "terms": false
+                      },
+                      {
+                      "customer_code": "1234567812",
+                      "customer_description": "Resident Evil",
+                      "default": false,
+                      "pricelist_code": "2111111111",
+                      "terms": false
+                      }
+                      ],
+        "customer_default_code": "1234567812",
+        "sales_percentage_tax": 10,
+        "prefix": "MB",
+        "prefix_number_length": 9,
+        "last_order_number": 1
+    }
+}

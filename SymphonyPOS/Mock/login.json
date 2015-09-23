@@ -1,0 +1,20 @@
+{
+    "error": false,
+    "message": "Authentication successful",
+    "token": "",
+    "data": {
+        "my_custom_url" : "http://52.64.16.2:8087/v1",
+        "my_custom_logo": "http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg",
+        "themes": {
+            "table_odd_row": "#FFFFFF",
+            "table_even_row": "#EFEFF4",
+            "table_simple_row": "#F4EBEB",
+            "navigation_bar": "#E5EAE8",
+            "navigation_bar_title" : "#0000000",
+            "background" : "#EFEFF4",
+            "button_submit": "#27CBE8",
+            "button_remove": "#FF0000"
+        }
+    }
+    
+}
