@@ -110,9 +110,7 @@
 }
 
 - (void) apiSubmitPaymentResponse:(Response *)response {
-    if (!response.error) {
-        [self finaliseSubmission];
-    }
+    [self finaliseSubmission];
 }
 
 #pragma mark - UIActionSheet
@@ -172,7 +170,7 @@
  * SubmitViewController submitting the transaction (i.e offline/online)
  */
 - (void) submitTransaction: (BOOL) offline{
-    NSString *last_order_number = [NSString stringWithFormat:@"%ld",[_globalStore.last_order_number integerValue] + 1];
+    NSString *last_order_number = [NSString stringWithFormat:@"%d",[_globalStore.last_order_number integerValue] + 1];
     long prefix_number_length = [_globalStore.prefix_number_length integerValue];
     
     NSMutableArray *invoice=[NSMutableArray array];

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		412C53901BB4827800E51B81 /* JSONResponseSerializerWithData.m in Sources */ = {isa = PBXBuildFile; fileRef = 412C538F1BB4827800E51B81 /* JSONResponseSerializerWithData.m */; };
+		413620C41BB3796C00B548F6 /* authSubmit.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C31BB3796C00B548F6 /* authSubmit.json */; };
+		413620C61BB38EBC00B548F6 /* themes.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C51BB38EBC00B548F6 /* themes.json */; };
+		413620C81BB3934800B548F6 /* dataDefaults.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C71BB3934800B548F6 /* dataDefaults.json */; };
 		41EA213E1BABAA570021824E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA213D1BABAA570021824E /* main.m */; };
 		41EA21411BABAA570021824E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA21401BABAA570021824E /* AppDelegate.m */; };
 		41EA21491BABAA570021824E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41EA21481BABAA570021824E /* Images.xcassets */; };
@@ -117,6 +121,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		412C538E1BB4827800E51B81 /* JSONResponseSerializerWithData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONResponseSerializerWithData.h; path = Services/JSONResponseSerializerWithData.h; sourceTree = "<group>"; };
+		412C538F1BB4827800E51B81 /* JSONResponseSerializerWithData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONResponseSerializerWithData.m; path = Services/JSONResponseSerializerWithData.m; sourceTree = "<group>"; };
+		413620C31BB3796C00B548F6 /* authSubmit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = authSubmit.json; sourceTree = "<group>"; };
+		413620C51BB38EBC00B548F6 /* themes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = themes.json; sourceTree = "<group>"; };
+		413620C71BB3934800B548F6 /* dataDefaults.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dataDefaults.json; sourceTree = "<group>"; };
 		41EA21381BABAA570021824E /* SymphonyPOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SymphonyPOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41EA213C1BABAA570021824E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		41EA213D1BABAA570021824E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -484,6 +493,9 @@
 				41EA21DA1BABACE90021824E /* submitAuthorisation.json */,
 				41EA21DB1BABACE90021824E /* submitPayment.json */,
 				41EA21DC1BABACE90021824E /* sync.json */,
+				413620C31BB3796C00B548F6 /* authSubmit.json */,
+				413620C51BB38EBC00B548F6 /* themes.json */,
+				413620C71BB3934800B548F6 /* dataDefaults.json */,
 			);
 			name = Mock;
 			sourceTree = "<group>";
@@ -533,6 +545,8 @@
 			children = (
 				41EA220C1BABAD500021824E /* APIManager.h */,
 				41EA220D1BABAD500021824E /* APIManager.m */,
+				412C538E1BB4827800E51B81 /* JSONResponseSerializerWithData.h */,
+				412C538F1BB4827800E51B81 /* JSONResponseSerializerWithData.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -714,8 +728,10 @@
 				41EA223A1BABAD8A0021824E /* CreditCardViewCell.xib in Resources */,
 				41EA21C11BABAC990021824E /* checked@2x.png in Resources */,
 				41EA21C01BABAC990021824E /* checked.png in Resources */,
+				413620C81BB3934800B548F6 /* dataDefaults.json in Resources */,
 				41EA21CB1BABAC990021824E /* unchecked.png in Resources */,
 				41EA21C21BABAC990021824E /* connected.png in Resources */,
+				413620C61BB38EBC00B548F6 /* themes.json in Resources */,
 				41EA21BC1BABAC990021824E /* batt_info_50.png in Resources */,
 				41EA21DD1BABACE90021824E /* login.json in Resources */,
 				41EA21C61BABAC990021824E /* rounded_table_cell_bottom.png in Resources */,
@@ -730,6 +746,7 @@
 				41EA21CE1BABAC990021824E /* user-logout@2x.png in Resources */,
 				41EA21C51BABAC990021824E /* refresh@2x.png in Resources */,
 				41EA21DE1BABACE90021824E /* offlineSales.json in Resources */,
+				413620C41BB3796C00B548F6 /* authSubmit.json in Resources */,
 				41EA21BA1BABAC990021824E /* batt_info_0.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -789,6 +806,7 @@
 				41EA221F1BABAD6A0021824E /* NSData-AES.m in Sources */,
 				41EA223B1BABAD8A0021824E /* CustomerViewCell.m in Sources */,
 				41EA22201BABAD6A0021824E /* rijndael.c in Sources */,
+				412C53901BB4827800E51B81 /* JSONResponseSerializerWithData.m in Sources */,
 				41EA22651BABB5350021824E /* PriceListStore.m in Sources */,
 				41EA22621BABB5350021824E /* CustomerStore.m in Sources */,
 				41EA21F31BABAD060021824E /* Product.m in Sources */,

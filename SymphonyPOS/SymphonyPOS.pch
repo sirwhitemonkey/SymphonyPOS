@@ -27,18 +27,22 @@
 # define LINE_BREAK_WORD_WRAP UILineBreakModeWordWrap
 #endif
 
+#define MOCK_DATA NO
+
 #define persistenceManager ([PersistenceManager sharedInstance])
 #define sharedServices ([SharedServices sharedInstance])
 
-#pragma mark - constants
+#pragma Messages
+#define APP_FOOTER @"Copyright (c) 2015 XM DEVELOPMENTS. All rights reserved"
+#define SERVER_ERROR @"Server experienced internal error"
+#define UNAUTHORIZED_USER @"Unauthorized credentials"
+
+#pragma - Generic constants
 #define APP_TOKEN @"token"
 #define APP_USER_IDENT @"appUserIdent"
+#define APP_USER_SECURITY @"appUserSecurity"
 #define APP_USER_PIN_IDENT @"appUserPinIdent"
 #define APP_LOGGED_IDENT @"appLoggedIdent"
-#define APP_FOOTER @"Copyright (c) 2015 XM DEVELOPMENTS. All rights reserved"
-#define ALPHA_CHARACTERS @" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-#define DECRYPTION_KEY @"12345678901234567890123456789012"
-
 #define PAYMENT_TYPE @"paymentType"
 #define PAYMENT_INVOICE @"paymentInvoice"
 #define PAYMENT_CREDITCARD @"CreditCard"
@@ -50,10 +54,50 @@
 #define CUSTOMER @"customer"
 #define SCAN_MODE @"scanMode"
 #define PASSKEY @"passKey"
+#define ALPHA_CHARACTERS @" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+#define DECRYPTION_KEY @"12345678901234567890123456789012"
 
-#pragma mark - central api service
-#pragma API_VERSION @"v1"
-#define API_URL @"http://52.64.16.2:8087"
+
+#pragma mark - Response codes
+#define HTTP_STATUS_OK 200
+#define HTTP_STATUS_UNAUTHORIZED 401
+
+#pragma mark - Api service
+//TODO
+#define API_URL @"http://192.168.60.1:8080/Sphere/v1"
+#define CUSTOM_CLIENT_LOGO @"http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg"
+
+#define API_AUTH_SUBMIT @"auth/submit"
+#define API_SETTING_THEMES @"setting/themes"
+#define API_SETTING_DATA_DEFAULTS @"setting/dataDefaults"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #pragma mark - custom url api service
 #define API_PRODUCTS @"products"
@@ -67,7 +111,7 @@
 #define API_SYNC_DATE_LAST_UPDATED @"sync_date_last_updated"
 
 
-#define MOCK_DATA YES
+
 
 
 

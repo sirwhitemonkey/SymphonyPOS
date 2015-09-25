@@ -1,0 +1,11 @@
+
+{
+    "data": {
+            "customer_default_code": "C00000001",
+            "sales_percentage_tax": 10,
+            "prefix": "MB",
+            "prefix_number_length": 9,
+            "last_order_number": 1
+    },
+    "responseCode": 200
+}

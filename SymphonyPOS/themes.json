@@ -1,0 +1,14 @@
+
+{
+    "data": {
+        "table_odd_row": "#FFFFFF",
+        "table_even_row": "#EFEFF4",
+        "table_simple_row": "#F4EBEB",
+        "navigation_bar": "#E5EAE8",
+        "navigation_bar_title" : "#0000000",
+        "background" : "#EFEFF4",
+        "button_submit": "#27CBE8",
+        "button_remove": "#FF0000"
+    },
+    "responseCode": 200
+}

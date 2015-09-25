@@ -190,6 +190,7 @@
 -(void)apiSyncResponse:(Response *)response {
     DebugLog(@"apiSyncResponse -> %@", response);
     
+    /*
     [persistenceManager updateSync:self response:response];
     
     if (!response.error) {
@@ -200,6 +201,7 @@
             [self dismissViewControllerAnimated:YES completion:nil];
         }
     }
+     */
     
 }
 

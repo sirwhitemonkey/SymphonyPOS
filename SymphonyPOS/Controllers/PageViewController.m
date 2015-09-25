@@ -127,24 +127,28 @@
 
 - (void) apiSyncResponse:(Response *)response {
     DebugLog(@"apiSyncResponse");
+    /*
     if (!response.error) {
         [persistenceManager updateSync:self response:response];
-    }
+    }*/
     
 }
 
 - (void) apiOfflineSalesResponse:(Response *)response {
     DebugLog(@"apiOfflineSalesResponse");
+    /*
     if (!response.error) {
         [persistenceManager removeOfflineSalesStore];
-    }
+    }*/
 }
 
 - (void)apiProductsResponse:(Response *)response {
     
     DebugLog(@"apiProductsResponse");
+    /*
     if (!response.error) {
     }
+     */
 }
 
 #pragma mark - SyncService

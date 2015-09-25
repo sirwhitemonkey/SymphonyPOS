@@ -22,58 +22,196 @@
 
 #pragma mark - api services
 
--(void) login: (id)reference username:(NSString *)username password:(NSString *)password  {
+-(AFHTTPRequestOperation*) authSubmit:(id)reference {
     
     _reference = reference;
-    
     [self visualFeedback:@"Authenticating ..." hide:NO withCallBack:nil];
     
     if (MOCK_DATA) {
         Response *response;
-        response = [self getResponse:[self getMockData:@"login"]];
+        response = [self getResponse:[self getMockData:@"authSubmit"]];
         
         [self visualFeedback:nil hide:YES withCallBack: ^{
-           [self.delegate apiLoginResponse:response];
+           [self.delegate apiAuthSubmitResponse:response];
         }];
-        return;
+        return nil;
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",API_URL,API_LOGIN]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",API_URL,API_AUTH_SUBMIT]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:60.0];
+    [self setHeaders:request];
     [request setHTTPMethod:@"POST"];
-    /**
-     * parameters:
-     * username , the merchant's account
-     * password, the merchant's password
-     */
-    NSString *params = [NSString stringWithFormat:@"username=%@&password=%@",username,password];
-    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
-    
+
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
+    operation.responseSerializer = [JSONResponseSerializerWithData serializer];
+   
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-         Response *response = (Response*)[self getResponse:responseObject];
+         Response *response;
+         response = (Response*)[self getResponse:responseObject];
       
         [self visualFeedback:nil hide:YES withCallBack: ^{
-            [self.delegate apiLoginResponse:response];
+            [self.delegate apiAuthSubmitResponse:response];
         }];
         
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         Response *response;
+        id jsonString = error.userInfo[JSONResponseSerializerWithDataKey];
+        id responseObject = [NSJSONSerialization JSONObjectWithData:
+                             [jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                            options:0 error:nil];
+         response = (Response*)[self getResponse:responseObject];
         
         [self visualFeedback:nil hide:YES withCallBack: ^ {
-            [sharedServices showMessage:reference message:[error description] error:YES withCallBack: ^ {
+            [sharedServices showMessage:reference message:[self getError:response] error:YES withCallBack: ^ {
                 [self.delegate apiRequestError:error];
             }];
         }];
       
     }];
-    [operation start];
-    
+    return operation;
 }
+
+-(AFHTTPRequestOperation*) themes:(id)reference group:(BOOL)group  {
+    
+    _reference = reference;
+    if (!group) {
+        [self visualFeedback:@"Getting themes ..." hide:NO withCallBack:nil];
+    }
+    
+    if (MOCK_DATA) {
+        Response *response;
+        response = [self getResponse:[self getMockData:@"themes"]];
+        
+        if (!group) {
+            [self visualFeedback:nil hide:YES withCallBack: ^{
+                [self.delegate apiThemesResponse:response];
+            }];
+        } else {
+             [self.delegate apiThemesResponse:response];
+        }
+        return nil;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",API_URL,API_SETTING_THEMES]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+    [self setHeaders:request];
+    [request setHTTPMethod:@"GET"];
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        Response *response = (Response*)[self getResponse:responseObject];
+        
+        if (!group) {
+            [self visualFeedback:nil hide:YES withCallBack: ^{
+                [self.delegate apiThemesResponse:response];
+            }];
+        } else {
+            [self.delegate apiThemesResponse:response];
+        }
+
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        [self visualFeedback:nil hide:YES withCallBack: ^ {
+            if (!group) {
+                [sharedServices showMessage:reference message:SERVER_ERROR error:YES withCallBack: ^ {
+                    [self.delegate apiRequestError:error];
+                }];
+            } else {
+                [self.delegate apiRequestError:error];
+            }
+            
+        }];
+        
+    }];
+    return operation;
+}
+
+-(AFHTTPRequestOperation*) dataDefaults:(id)reference group:(BOOL)group  {
+    
+    _reference = reference;
+    if (!group) {
+        [self visualFeedback:@"Getting data defaults ..." hide:NO withCallBack:nil];
+    }
+    
+    if (MOCK_DATA) {
+        Response *response;
+        response = [self getResponse:[self getMockData:@"dataDefaults"]];
+        
+        if (!group) {
+            [self visualFeedback:nil hide:YES withCallBack: ^{
+                [self.delegate apiDataDefaultsResponse:response];
+            }];
+        } else {
+           [self.delegate apiDataDefaultsResponse:response];
+        }
+        return nil;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",API_URL,API_SETTING_DATA_DEFAULTS]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+    [self setHeaders:request];
+    [request setHTTPMethod:@"GET"];
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        Response *response = (Response*)[self getResponse:responseObject];
+        
+        if (!group) {
+            [self visualFeedback:nil hide:YES withCallBack: ^{
+             [self.delegate apiDataDefaultsResponse:response];
+            }];
+        } else {
+             [self.delegate apiDataDefaultsResponse:response];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        [self visualFeedback:nil hide:YES withCallBack: ^ {
+            if (!group) {
+                [sharedServices showMessage:reference message:SERVER_ERROR error:YES withCallBack: ^ {
+                    [self.delegate apiRequestError:error];
+                }];
+            } else {
+                [self.delegate apiRequestError:error];
+            }
+            
+        }];
+        
+    }];
+    return operation;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - (void) submitAuthorisation:(id)reference {
     _reference = reference;
@@ -535,6 +673,7 @@
     
     if (error) {
         DebugLog(@"getResponse -> error -> %@",[error description]);
+        response = nil;
     }
     return response;
     
@@ -589,6 +728,22 @@
     return data;
 }
 
+#pragma Private methods
+- (void) setHeaders :(NSMutableURLRequest *) request{
+    NSString *wsee = [CocoaWSSE headerWithUsername:[persistenceManager getKeyChain:APP_USER_IDENT] password:[persistenceManager getKeyChain:APP_USER_SECURITY]];
+    DebugLog(@"wsee ->%@",wsee);
+    [request setValue:wsee forHTTPHeaderField:@"X-WSSE"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+}
 
+- (NSString*) getError:(Response*)response {
+    NSString *message=nil;
+    if (response!=nil && [response.responseCode integerValue] == HTTP_STATUS_UNAUTHORIZED) {
+        message = UNAUTHORIZED_USER;
+    } else {
+        message = SERVER_ERROR;
+    }
+    return message;
+}
 
 @end

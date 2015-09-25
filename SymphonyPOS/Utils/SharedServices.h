@@ -81,4 +81,13 @@
  */
 - (NSString*)decrypt:(NSString *)decrypt key:(NSString*)theKey;
 
+/*!
+ * SharedServices sha1 generator
+ */
+- (NSString*) sha1:(NSString*)input;
+
+/*!
+ * SharedServices md5 generator
+ */
+- (NSString *) md5:(NSString *) input;
 @end

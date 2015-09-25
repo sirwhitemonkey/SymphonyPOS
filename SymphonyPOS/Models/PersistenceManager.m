@@ -476,7 +476,7 @@
 
 - (void)updateSync:(id)reference response:(Response *)response {
     DebugLog(@"updateSync -> %@", response);
-    
+    /*
     if (response.error) {
         [sharedServices showMessage:reference message:@"Synchronisation communication failed from server." error:YES withCallBack:nil];
         return;
@@ -513,6 +513,7 @@
     [self updateSettingsBundle];
     
     [self setKeyChain:API_SYNC_DATE_LAST_UPDATED value:response.date_last_updated];
+     */
 }
 
 - (void) updateSettingsBundle {

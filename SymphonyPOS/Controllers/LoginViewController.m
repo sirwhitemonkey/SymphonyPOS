@@ -11,12 +11,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     DebugLog(@"viewDidLoad");
     
     // Test account
-    self.username.text = @"Rommel";
-    self.password.text = @"rom151";
+    self.username.text = @"ronaldo";
+    self.password.text = @"ronaldo12345";
     
     _apiManager = [[APIManager alloc] init];
     
@@ -48,8 +47,6 @@
 - (IBAction)signIn:(id)sender {
     DebugLog(@"signIn");
     
-    
-    
     [self.view endEditing:YES];
     
     if ([sharedServices isEmptyString:self.username.text]) {
@@ -63,7 +60,11 @@
     }
     
     _apiManager.delegate = self;
-    [_apiManager login:self username:self.username.text password:self.password.text];
+    
+    [persistenceManager setKeyChain:APP_USER_IDENT value:self.username.text];
+    [persistenceManager setKeyChain:APP_USER_SECURITY
+                               value:[sharedServices sha1:[sharedServices md5:self.password.text]]];
+    [[_apiManager  authSubmit:self] start];
 }
 
 - (IBAction)forgotPassword:(id)sender {
@@ -75,7 +76,6 @@
 - (void) textFieldDidBeginEditing:(UITextField *)textField {
     [sharedServices setPlaceHolder:textField error:NO];
 }
-
 
 /*
  #pragma mark - Navigation
@@ -95,55 +95,33 @@
     }
 }
 
-- (void) apiSubmitAuthorisationResponse:(Response *)response {
-    DebugLog(@"apiSubmitAuthorisationResponse -> %@", response);
-    if (!response.error) {
-        [self dissmissView];
-    }
+- (void) apiAuthSubmitResponse:(Response *)response {
+    DebugLog(@"apiAuthSubmitResponse -> %@", response);
     
+    [persistenceManager setKeyChain:APP_LOGGED_IDENT
+                              value:[persistenceManager getKeyChain:APP_USER_IDENT]];
+    
+    AFHTTPRequestOperation *themes = [_apiManager themes:self group:YES];
+    AFHTTPRequestOperation *dataDefaults = [_apiManager dataDefaults:self group:YES];
+    
+    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:@[themes,dataDefaults] progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
+        DebugLog(@"%i of %i complete",numberOfFinishedOperations,totalNumberOfOperations);
+        
+    } completionBlock:^(NSArray *operations) {
+        DebugLog(@"All operations in batch complete");
+        [self dissmissView];
+    }];
+    
+    [[NSOperationQueue mainQueue] addOperations:operations waitUntilFinished:NO];
 }
 
-- (void) apiLoginResponse:(Response *)response {
-    DebugLog(@"apiLoginResponse -> %@", response);
+- (void)apiThemesResponse:(Response *)response {
+   DebugLog(@"apiThemesResponse -> %@", response);
+}
+
+- (void) apiDataDefaultsResponse:(Response *)response {
+    DebugLog(@"apiDataDefaultsResponse -> %@", response);
     
-    NSString *loggedUser = [sharedServices trim:[self.username.text lowercaseString]];
-    
-    NSError *error = nil;
-    GlobalItems *globalItems = [MTLJSONAdapter modelOfClass:GlobalItems.class
-                                         fromJSONDictionary:response.data error:&error];
-    
-    if (error) {
-        DebugLog(@"apiLoginResponse -> %@",[error description]);
-    } else {
-        
-        GlobalStore *globalStore = [persistenceManager getGlobalStore];
-        
-        DebugLog(@"apiLoginResponse -> globalStore ->%@",globalStore.themes);
-        
-        globalStore.my_custom_url = globalItems.my_custom_url;
-        globalStore.my_custom_logo = globalItems.my_custom_logo;
-        
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:globalItems.themes
-                                                           options:NSJSONWritingPrettyPrinted
-                                                             error:&error];
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        globalStore.themes = jsonString;
-        [persistenceManager saveContext];
-        
-        [persistenceManager setKeyChain:APP_USER_IDENT value:loggedUser];
-        [persistenceManager setKeyChain:APP_TOKEN value:response.token];
-        
-        NSString *key = [sharedServices stringsWithLength:32];
-        [persistenceManager setKeyChain:PASSKEY value:key];
-        
-             
-        
-        _apiManager.delegate = self;
-        [_apiManager submitAuthorisation:self];
-        
-    }
 }
 
 
@@ -152,8 +130,7 @@
  * LoginViewController dismissing the current view
  */
 - (void) dissmissView {
-    
-    double delayInSeconds = 0.5;
+     double delayInSeconds = 0.5;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self dismissViewControllerAnimated:YES completion:nil];

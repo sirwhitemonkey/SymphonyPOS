@@ -8,6 +8,7 @@
 #import "Response.h"
 #import "GlobalStore.h"
 #import "CocoaWSSE.h"
+#import "JSONResponseSerializerWithData.h"
 
 
 @protocol APIManagerDelegate <NSObject>
@@ -20,20 +21,40 @@
 
 @optional
 /*!
- * APIManagerDelegate login callback.
- * Contains the following data  i.e tokens, themes, custom url and logo
+ * APIManagerDelegate auth submit callback.
  */
-- (void) apiLoginResponse:(Response*)response;
+- (void) apiAuthSubmitResponse:(Response*)response;
+
+/*!
+ * APIManagerDelegate themes callback.
+ */
+- (void) apiThemesResponse:(Response*)response;
+
+/*!
+ * APIManagerDelegate data defaults callback.
+ */
+- (void) apiDataDefaultsResponse:(Response*)response;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*!
  * APIManagerDelegate sync callback.
- * Contains the following data i.e date last updated, products, pricelists, customers and default information.
  */
 - (void) apiSyncResponse:(Response*)response;
 
 /*!
  * APIManagerDelegate check connection  callback.
- * Checking the current connection i.e custom url site
  */
 - (void) apiCheckConnnectionResponse:(Response*) response;
 
@@ -70,9 +91,45 @@
 @property (weak) id<APIManagerDelegate> delegate;
 
 /*!
- * APIManager login request
+ * APIManager auth submit request
  */
-- (void) login:(id)reference username:(NSString*)username password:(NSString*) password;
+- (AFHTTPRequestOperation*) authSubmit:(id)reference;
+
+/*!
+ * APIManager themes request
+ */
+- (AFHTTPRequestOperation*) themes:(id)reference group:(BOOL)group;
+
+/*!
+ * APIManager data defaults request
+ */
+- (AFHTTPRequestOperation*) dataDefaults:(id)reference group:(BOOL)group;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*!
  * APIManager sync data  request
