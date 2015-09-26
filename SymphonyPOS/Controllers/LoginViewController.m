@@ -105,7 +105,7 @@
     AFHTTPRequestOperation *dataDefaults = [_apiManager dataDefaults:self group:YES];
     
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:@[themes,dataDefaults] progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
-        DebugLog(@"%i of %i complete",numberOfFinishedOperations,totalNumberOfOperations);
+        DebugLog(@"%lu of %lu complete",(unsigned long)numberOfFinishedOperations,(unsigned long)totalNumberOfOperations);
         
     } completionBlock:^(NSArray *operations) {
         DebugLog(@"All operations in batch complete");

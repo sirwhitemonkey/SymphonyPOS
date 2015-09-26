@@ -64,7 +64,7 @@
 
 #pragma mark - Api service
 //TODO
-#define API_URL @"http://192.168.60.1:8080/Sphere/v1"
+#define API_URL @"http://192.168.1.7:8080/Sphere/v1"
 #define CUSTOM_CLIENT_LOGO @"http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg"
 
 #define API_AUTH_SUBMIT @"auth/submit"
