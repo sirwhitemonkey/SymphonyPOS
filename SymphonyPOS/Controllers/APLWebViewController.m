@@ -74,7 +74,7 @@
     _globalStore = [persistenceManager getGlobalStore];
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
     
     NSDictionary *printCopy =[persistenceManager getDataStore:@"printCopy"];
     NSString *invoiceNo = [printCopy objectForKey:@"invoiceNo"];
@@ -117,7 +117,7 @@
         NSNumber *qty =[cart objectForKey:@"qty"];
         float amount = [priceListStore.price floatValue] * [qty floatValue];
         receipts = [NSString stringWithFormat:@"%@<tr><td>%@</td><td>%ld</td><td>%@%.2f</td><td>%@%.2f</td></tr>",receipts,
-                    productStore.product_name, (long)[qty integerValue], currency,[priceListStore.price floatValue] ,currency,amount];
+                    productStore.desc, (long)[qty integerValue], currency,[priceListStore.price floatValue] ,currency,amount];
         
     }
    
@@ -157,9 +157,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -305,7 +311,7 @@
 
 #pragma mark - Private methods
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
 }
 
 @end

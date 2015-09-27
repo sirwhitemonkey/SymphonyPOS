@@ -4,7 +4,7 @@
 #import "MTLModel.h"
 #import "Mantle.h"
 
-@interface GlobalItems : MTLModel <MTLJSONSerializing>
+@interface DataDefaults : MTLModel <MTLJSONSerializing>
 /*!
  * GlobalItems my_custom_url , the customer custom url
  */

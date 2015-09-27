@@ -29,8 +29,8 @@
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-    [self.tableView setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.tableView setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
     
      self.automaticallyAdjustsScrollViewInsets = NO;
   
@@ -67,9 +67,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 
 #pragma mark - Notifications
@@ -101,7 +107,7 @@
     if (cell == nil) {
         [[NSBundle mainBundle] loadNibNamed:@"CustomerViewCell" owner:self options:nil];
         cell=self.customerViewCell;
-        [cell setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"table_simple_row"]]];
+        [cell setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"table_simple_row"]]];
     }
     
    
@@ -109,7 +115,7 @@
     CustomerViewCell *cViewCell = (CustomerViewCell*)cell;
     cViewCell.customer_code.text = customerStore.customer_code;
     cViewCell.customer_description.text = customerStore.customer_description;
-    [sharedServices searchPatternInLabels: cViewCell.customer_description searchString:_searchBar.text];
+    [service searchPatternInLabels: cViewCell.customer_description searchString:_searchBar.text];
     return cell;
 }
 
@@ -144,7 +150,7 @@
 
 #pragma mark - Private methods
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
 }
 
 /*!

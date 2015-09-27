@@ -6,7 +6,7 @@
 #import "Product.h"
 #import "PriceList.h"
 #import "Customer.h"
-#import "GlobalItems.h"
+#import "DataDefaults.h"
 
 @interface PinViewController : UIViewController <UITextFieldDelegate,APIManagerDelegate>
 

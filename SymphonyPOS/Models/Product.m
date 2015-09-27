@@ -5,13 +5,23 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
-             @"product_code" : @"product_code",
-             @"product_name" : @"product_name",
-             @"unit" : @"unit",
+             @"identifier" : @"id",
+             @"itemNo" : @"itemNo",
+             @"upcCode" : @"upcCode",
+             @"inStock" : @"inStock",
              @"image_url" : @"image_url",
-             @"product_description" : @"product_description",
-             @"pc_code" : @"pc_code"
+             @"notActive" : @"notActive",
+             @"desc" : @"desc",
+             @"stockUnit" : @"stockunit"
              };
+}
+
++ (NSValueTransformer *)inStockJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
+}
+
++ (NSValueTransformer *)notActiveJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
 }
 
 

@@ -24,8 +24,8 @@
     
     NSData *data = [globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-    [self.nextBtn setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"button_submit"]]];
+    [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.nextBtn setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_submit"]]];
     
 }
 
@@ -42,21 +42,27 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
+   return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#endif
 
 
 #pragma mark - events
 - (IBAction)next:(id)sender{
 
-    if ([sharedServices isEmptyString:self.terminal_code.text]) {
-        [sharedServices setPlaceHolder:self.terminal_code error:YES];
+    if ([service isEmptyString:self.terminal_code.text]) {
+        [service setPlaceHolder:self.terminal_code error:YES];
         return;
     }
     
-    if ([sharedServices isEmptyString:self.terminal_name.text]) {
-        [sharedServices setPlaceHolder:self.terminal_name error:YES];
+    if ([service isEmptyString:self.terminal_name.text]) {
+        [service setPlaceHolder:self.terminal_name error:YES];
         return;
     }
     GlobalStore *globalStore = [persistenceManager getGlobalStore];
@@ -69,7 +75,7 @@
 
 #pragma mark - UITextField
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    [sharedServices setPlaceHolder:textField error:NO];
+    [service setPlaceHolder:textField error:NO];
 }
 /*
  #pragma mark - Navigation

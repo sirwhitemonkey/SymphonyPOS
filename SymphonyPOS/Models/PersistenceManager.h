@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIkit.h>
 #import "KeychainWrapper.h"
-#import "ProductStore.h"
+#import "ProductStore+CoreDataProperties.h"
 #import "CartStore.h"
 #import "PriceListStore.h"
 #import "CustomerStore.h"
@@ -9,9 +9,12 @@
 #import "Product.h"
 #import "PriceList.h"
 #import "Customer.h"
-#import "GlobalItems.h"
+#import "DataDefaults.h"
 #import "Response.h"
 #import "OfflineSalesStore.h"
+#import "MetaData.h"
+#import "APIManager.h"
+#import "Constants.h"
 
 @interface PersistenceManager : NSObject
 /*!
@@ -47,12 +50,12 @@
 /*!
  * PersistenceManager getting the product from coredata  using product code
  */
-- (ProductStore*)getProductStore:(NSString*)product_code;
+- (ProductStore*)getProductStore:(NSString*)itemNo;
 
 /*!
  * PersistenceManager getting the product from coredata using barcode code
  */
-- (ProductStore*)getProductStoreByBarcode:(NSString *)barcode;
+- (ProductStore*)getProductStoreByUpcCode:(NSString *)upcCode;
 
 /*!
  * PersistenceManager getting the arrays of products from coredata
@@ -147,17 +150,12 @@
 /*!
  * PersistenceManager clearing all the events (i.e transactions and data cache)
  */
-- (void)clearAllEvents;
+- (void)clearCache;
 
 /*!
- * PersistenceManager clearing the current event
+ * PersistenceManager clearing the current transaction
  */
-- (void)clearCurrentEvent;
-
-/*!
- * PersistenceManager clearing the payment cache (i.e credit card information)
- */
-- (void)clearPaymentEvent;
+- (void)clearCurrentTransaction;
 
 /*!
  * PersistenceManager setting/storing data into secured keychain
@@ -204,6 +202,14 @@
  */
 - (void) updateSettingsBundle;
 
+/*!
+ * PersistenceManager setting the my custom preferences
+ */
+- (void) setMyCustomPreference:(NSString*)url logo:(NSString*)logo;
 
+/*!
+ * PersistenceManager sync products
+ */
+- (void) syncProducts: (APIManager*)apiManager response:(Response*)response completedCallback:(void (^)(void))callbackBlock;
 
 @end

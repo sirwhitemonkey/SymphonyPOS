@@ -2,19 +2,21 @@
 //  OfflineSalesStore.h
 //  SymphonyPOS
 //
-//  Created by Rommel Sumpo on 18/09/15.
-//  Copyright (c) 2015 XMDevelopments. All rights reserved.
+//  Created by Rommel Sumpo on 27/09/15.
+//  Copyright © 2015 XMDevelopments. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface OfflineSalesStore : NSManagedObject
 
-@property (nonatomic, retain) NSString * carts;
-@property (nonatomic, retain) NSString * customer_code;
-@property (nonatomic, retain) NSString * invoice_no;
-@property (nonatomic, retain) NSString * payment_type;
+// Insert code here to declare functionality of your managed object subclass
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "OfflineSalesStore+CoreDataProperties.h"

@@ -64,9 +64,9 @@
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
-     [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-     [self.tableView setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-     [self.cashSalesBtn setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"button_submit"]]];
+     [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+     [self.tableView setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+     [self.cashSalesBtn setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_submit"]]];
     
      self.navigationItem.hidesBackButton = YES;
     
@@ -135,9 +135,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 
 #pragma mark - IBActions
@@ -171,14 +177,15 @@
 
 - (IBAction)cashSales:(id)sender {
     if ([[persistenceManager getCartStores] count] == 0) {
-        [sharedServices showMessage:self message:@"No carts available"  error:YES withCallBack:nil];
-        return;
+        [service showMessage:self loader:NO message:@"No carts available"   error:YES
+          waitUntilCompleted:NO withCallBack:nil];
+    } else {
+        self.navigationItem.title = @"Quick Order";
+        [self viewPaymentCustomerPage];
     }
-    self.navigationItem.title = @"Quick Order";
-    [self viewPaymentCustomerPage];
 }
 
-#pragma mark - APIManager 
+#pragma mark - APIManager
 - (void)apiRequestError:(NSError *)error {
     
 }
@@ -272,7 +279,7 @@
         if (cell == nil) {
             [[NSBundle mainBundle] loadNibNamed:@"FilteredProductViewCell" owner:self options:nil];
             cell=self.filteredProductViewCell;
-            [cell setBackgroundColor:[sharedServices colorFromHexString:
+            [cell setBackgroundColor:[service colorFromHexString:
                                                   [_themes objectForKey:@"table_simple_row"]]];
         }
     } else {
@@ -290,37 +297,37 @@
         productStore=[_products objectAtIndex:indexPath.row];
         
         FilteredProductViewCell *fpViewCell = (FilteredProductViewCell*)cell;
-        fpViewCell.product_name.text = productStore.product_name;
-        [sharedServices searchPatternInLabels:fpViewCell.product_name searchString:_archivedSearchStrings];
+        fpViewCell.product_name.text = productStore.desc;
+        [service searchPatternInLabels:fpViewCell.product_name searchString:_archivedSearchStrings];
     } else {
         
         if (indexPath.row % 2) {
             
-            cell.contentView.backgroundColor = [sharedServices colorFromHexString:[_themes objectForKey:@"table_even_row"]];
+            cell.contentView.backgroundColor = [service colorFromHexString:[_themes objectForKey:@"table_even_row"]];
         } else {
-            cell.contentView.backgroundColor = [sharedServices colorFromHexString:[_themes objectForKey:@"table_odd_row"]];
+            cell.contentView.backgroundColor = [service colorFromHexString:[_themes objectForKey:@"table_odd_row"]];
         }
 
         CartStore *cartStore=[_products objectAtIndex:indexPath.row];
         productStore = cartStore.cartProduct;
         
         ProductViewCell *pViewCell = (ProductViewCell*)cell;
-         pViewCell.product_name.text = productStore.product_name;
-         pViewCell.product_description.text = productStore.product_description;
-         pViewCell.unit.text = productStore.unit;
+         pViewCell.product_name.text = productStore.desc;
+         pViewCell.product_description.text = productStore.desc;
+         pViewCell.unit.text = productStore.stockunit;
         
         
-        PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:_customerStore.pricelist_code product_code:productStore.product_code];
+        PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:_customerStore.pricelist_code product_code:productStore.itemNo];
         
          pViewCell.unit_price.text = [NSString stringWithFormat:@"%@ %.2f",priceListStore.currency,[priceListStore.price floatValue]];
-        [sharedServices boxInputStyling:pViewCell.qty];
+        [service boxInputStyling:pViewCell.qty];
         pViewCell.qty.text = [cartStore.qty stringValue];
         pViewCell.qty.tag = indexPath.row;
         pViewCell.total.text = [NSString stringWithFormat:@"%@ %.2f", priceListStore.currency,
                                 ([cartStore.qty integerValue] * [priceListStore.price floatValue])];
         
         pViewCell.removeToCart.tag = indexPath.row;
-         [ pViewCell.removeToCart setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"button_remove"]]];
+         [ pViewCell.removeToCart setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_remove"]]];
       
         [_apiManager syncImage:pViewCell.image_url url:productStore.image_url];
         
@@ -450,7 +457,7 @@
         case 1: {
             switch (buttonIndex) {
                 case 0:
-                    [persistenceManager clearAllEvents];
+                    [persistenceManager clearCache];
                     [self.navigationController popToRootViewControllerAnimated:YES];
                 default:
                     break;
@@ -515,26 +522,27 @@
 }
 
 -(void)barcodeData:(NSString *)barcode type:(int)type{
-    //[sharedServices showAlert:@"Barcode" message:[NSString stringWithFormat:@"Type: %@\nBarcode: %@",[_dtdev barcodeType2Text:type],barcode]];
+    //[service showAlert:@"Barcode" message:[NSString stringWithFormat:@"Type: %@\nBarcode: %@",[_dtdev barcodeType2Text:type],barcode]];
     [self.view endEditing:YES];
-    ProductStore *productStore = [persistenceManager getProductStoreByBarcode:barcode];
+    ProductStore *productStore = [persistenceManager getProductStoreByUpcCode:barcode];
     if (productStore == nil) {
-        [sharedServices showMessage:self message:@"Pc code of this item not available" error:YES withCallBack:nil];
-        return;
-    }
-    NSUserDefaults* settings = [NSUserDefaults standardUserDefaults];
-    BOOL qtyEvent = [settings boolForKey:@"qtyEvent"];
-    if (qtyEvent) {
-        [self viewQtyPage:productStore];
+        [service showMessage:self loader:NO message:@"Pc code of this item not available" error:YES
+          waitUntilCompleted:NO withCallBack:nil];
     } else {
-        [self setToCart:productStore qty:[NSNumber numberWithInt:1]];
+        NSUserDefaults* settings = [NSUserDefaults standardUserDefaults];
+        BOOL qtyEvent = [settings boolForKey:@"qtyEvent"];
+        if (qtyEvent) {
+            [self viewQtyPage:productStore];
+        } else {
+            [self setToCart:productStore qty:[NSNumber numberWithInt:1]];
+        }
     }
 }
 
 
 #pragma mark - Private methods
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
     
     [self updateEvents];
     [self lineaProConnect];
@@ -573,7 +581,7 @@
 - (void) searchProducts:(NSString*) searchString {
     _archivedSearchStrings = searchString;
     _onSearchProduct = false;
-    if (![sharedServices isEmptyString:_archivedSearchStrings]) {
+    if (![service isEmptyString:_archivedSearchStrings]) {
         _onSearchProduct = true;
         _products = [persistenceManager getProductStores:searchString];
 
@@ -616,9 +624,9 @@
     for (CartStore *cartStore in cartStores) {
         ProductStore *productStore = cartStore.cartProduct;
         
-        PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:_customerStore.pricelist_code product_code:productStore.product_code];
+        PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:_customerStore.pricelist_code product_code:productStore.itemNo];
         subTotals += ([priceListStore.price floatValue] * (float)[cartStore.qty integerValue]);
-        if ([sharedServices isEmptyString:currency]) {
+        if ([service isEmptyString:currency]) {
             currency = priceListStore.currency;
         }
     }
@@ -714,7 +722,7 @@
  * POSViewController  setting the cart's purchased
  */
 - (void)setToCart:(ProductStore*)productStore qty:(NSNumber*)qty{
-    CartStore *cartStore = [persistenceManager getCartByProductStore:productStore.product_code];
+    CartStore *cartStore = [persistenceManager getCartByProductStore:productStore.itemNo];
     if (!cartStore) {
         [persistenceManager setCartStore:qty productStore:productStore];
     } else {
@@ -729,7 +737,7 @@
     }
     for (int idx=0;idx<_products.count;idx++) {
         cartStore  = _products[idx];
-        if (cartStore.cartProduct.product_code == productStore.product_code) {
+        if (cartStore.cartProduct.itemNo == productStore.itemNo) {
             _currentRow = idx;
             break;
         }

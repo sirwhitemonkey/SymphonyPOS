@@ -22,12 +22,12 @@
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-    [self.tableView setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-    [self.nextBtn setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"button_submit"]]];
+    [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.tableView setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.nextBtn setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_submit"]]];
     
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    [cell.contentView setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
+    [cell.contentView setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
     
     NSDictionary *customer =[persistenceManager getDataStore:CUSTOMER];
     if (customer) {
@@ -49,9 +49,16 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
+
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -76,14 +83,14 @@
 #pragma mark - IBActions
 - (IBAction)next:(id)sender {
     [self.view endEditing:YES];
-    if ([sharedServices isEmptyString:self.name.text]) {
-        [sharedServices setPlaceHolder:self.name error:YES];
+    if ([service isEmptyString:self.name.text]) {
+        [service setPlaceHolder:self.name error:YES];
         return;
     }
-    if (![sharedServices isEmptyString:self.email.text]) {
-        if (![sharedServices checkEmail:self.email.text]) {
-            [sharedServices showMessage:self message:@"Invalid email address" error:YES
-                           withCallBack:nil];
+    if (![service isEmptyString:self.email.text]) {
+        if (![service checkEmail:self.email.text]) {
+            [service showMessage:self loader:NO message:@"Invalid email address" error:YES
+                            waitUntilCompleted:NO withCallBack:nil];
             return;
         }
     }
@@ -101,7 +108,7 @@
 
 #pragma mark - UITextField
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    [sharedServices setPlaceHolder:textField error:NO];
+    [service setPlaceHolder:textField error:NO];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -138,7 +145,7 @@
 }
 
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
 }
 
 @end

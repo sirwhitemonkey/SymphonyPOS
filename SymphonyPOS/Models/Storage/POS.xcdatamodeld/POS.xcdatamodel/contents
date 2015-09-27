@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14C1510" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="14F27" minimumToolsVersion="Xcode 4.3">
     <entity name="CartStore" representedClassName="CartStore" syncable="YES">
         <attribute name="cart_code" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="qty" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="cartProduct" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductStore" inverseName="productCart" inverseEntity="ProductStore" syncable="YES"/>
     </entity>
     <entity name="CustomerStore" representedClassName="CustomerStore" syncable="YES">
-        <attribute name="customer_code" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="customer_default" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="customer_description" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="pricelist_code" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="terms" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="address1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="address2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="address3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="address4" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="code" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="currency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="group" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="priceCode" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="taxGroup" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="customerPriceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PriceListStore" inverseName="priceListCustomer" inverseEntity="PriceListStore" syncable="YES"/>
     </entity>
     <entity name="GlobalStore" representedClassName="GlobalStore" syncable="YES">
@@ -39,29 +47,30 @@
         <attribute name="payment_type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="PriceListStore" representedClassName="PriceListStore" syncable="YES">
-        <attribute name="currency" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="pricelist_code" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="product_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="code" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="desc" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <relationship name="priceListCustomer" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CustomerStore" inverseName="customerPriceList" inverseEntity="CustomerStore" syncable="YES"/>
         <relationship name="priceListProduct" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductStore" inverseName="productPriceList" inverseEntity="ProductStore" syncable="YES"/>
     </entity>
     <entity name="ProductStore" representedClassName="ProductStore" syncable="YES">
+        <attribute name="desc" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="image_url" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="pc_code" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="product_code" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="product_description" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="product_name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inStock" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="itemNo" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="notActive" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="stockUnit" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="upcCode" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="productCart" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CartStore" inverseName="cartProduct" inverseEntity="CartStore" syncable="YES"/>
         <relationship name="productPriceList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PriceListStore" inverseName="priceListProduct" inverseEntity="PriceListStore" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CartStore" positionX="0" positionY="0" width="128" height="88"/>
-        <element name="CustomerStore" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="GlobalStore" positionX="0" positionY="0" width="128" height="298"/>
-        <element name="OfflineSalesStore" positionX="9" positionY="108" width="128" height="103"/>
-        <element name="PriceListStore" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="ProductStore" positionX="0" positionY="0" width="128" height="163"/>
+        <element name="CartStore" positionX="97" positionY="45" width="128" height="88"/>
+        <element name="CustomerStore" positionX="108" positionY="-144" width="128" height="253"/>
+        <element name="GlobalStore" positionX="-261" positionY="243" width="128" height="298"/>
+        <element name="OfflineSalesStore" positionX="61" positionY="176" width="128" height="103"/>
+        <element name="PriceListStore" positionX="-173" positionY="-144" width="128" height="118"/>
+        <element name="ProductStore" positionX="-432" positionY="29" width="128" height="193"/>
     </elements>
 </model>

@@ -2,8 +2,8 @@
 //  CartStore.h
 //  SymphonyPOS
 //
-//  Created by Rommel Sumpo on 18/09/15.
-//  Copyright (c) 2015 XMDevelopments. All rights reserved.
+//  Created by Rommel Sumpo on 27/09/15.
+//  Copyright © 2015 XMDevelopments. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,10 +11,14 @@
 
 @class ProductStore;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CartStore : NSManagedObject
 
-@property (nonatomic, retain) NSString * cart_code;
-@property (nonatomic, retain) NSNumber * qty;
-@property (nonatomic, retain) ProductStore *cartProduct;
+// Insert code here to declare functionality of your managed object subclass
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "CartStore+CoreDataProperties.h"

@@ -2,8 +2,8 @@
 //  CustomerStore.h
 //  SymphonyPOS
 //
-//  Created by Rommel Sumpo on 18/09/15.
-//  Copyright (c) 2015 XMDevelopments. All rights reserved.
+//  Created by Rommel Sumpo on 27/09/15.
+//  Copyright © 2015 XMDevelopments. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,13 +11,14 @@
 
 @class PriceListStore;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CustomerStore : NSManagedObject
 
-@property (nonatomic, retain) NSString * customer_code;
-@property (nonatomic, retain) NSNumber * customer_default;
-@property (nonatomic, retain) NSString * customer_description;
-@property (nonatomic, retain) NSString * pricelist_code;
-@property (nonatomic, retain) NSNumber * terms;
-@property (nonatomic, retain) PriceListStore *customerPriceList;
+// Insert code here to declare functionality of your managed object subclass
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "CustomerStore+CoreDataProperties.h"

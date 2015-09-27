@@ -51,8 +51,8 @@
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-    [self.tableView setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.tableView setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
     
     NSDictionary *cashSales = [persistenceManager getDataStore:CASH_SALES];
     _currency = [cashSales objectForKey:@"currency"];
@@ -81,9 +81,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -117,8 +123,8 @@
         NSString *cardType = [self creditCardType:accountNumber];
         
         if (cardType == nil) {
-            [sharedServices showMessage:self message:@"Credit card not supported at this time" error:YES withCallBack:nil];
-            return;
+            [service showMessage:self loader:NO message:@"Credit card not supported at this time" error:YES   waitUntilCompleted:NO withCallBack:nil];
+    
         } else {
             [persistenceManager setDataStore:PAYMENT_CREDITCARDTYPE value:cardType];
             RoundedButton *cardTypeBtn = nil;
@@ -139,7 +145,7 @@
             [_dtdev playSound:100 beepData:sound length:sizeof(sound) error:nil];
         }
     }else{
-        [sharedServices showMessage:self message:@"Use a valid payment card" error:YES withCallBack:nil];
+        [service showMessage:self loader:NO message:@"Use a valid payment card" error:YES waitUntilCompleted:NO  withCallBack:nil];
     }
     
 }
@@ -244,7 +250,7 @@
                 }
             }
         }else {
-            [sharedServices showMessage:self message:@"Invalid payment card decryption" error:YES
+            [service showMessage:self message:@"Invalid payment card decryption" error:YES
                            withCallBack:nil];
         }
     }
@@ -302,7 +308,7 @@
             return;
         }
     } else {
-        [sharedServices showMessage:self message:@"The SmartCard inserted is inserted the wrong way or is non-EMV SmartCard" error:YES withCallBack:nil];
+        [service showMessage:self loader:NO message:@"The SmartCard inserted is inserted the wrong way or is non-EMV SmartCard" error:YES waitUntilCompleted:NO withCallBack:nil];
         
     }
     
@@ -430,7 +436,7 @@
             [[NSBundle mainBundle] loadNibNamed:@"CreditCardViewCell" owner:self options:nil];
             cell=self.creditCardViewCell;
             CreditCardViewCell *ccViewCell = (CreditCardViewCell*)cell;
-            [ccViewCell.nextBtn setBackgroundColor:[sharedServices colorFromHexString:
+            [ccViewCell.nextBtn setBackgroundColor:[service colorFromHexString:
                                                     [_themes objectForKey:@"button_submit"]]];
             ccViewCell.subTotals.text = [NSString stringWithFormat:@"%@ %.2f",_currency,[_subTotals floatValue]];
             ccViewCell.salesPercentageTax.text =[NSString stringWithFormat:@"%@ %.2f (%@%@)",_currency,
@@ -442,19 +448,19 @@
             if (data) {
                 NSString *decryptCard = nil;
                 ccViewCell.cardHolderName.text = [data objectForKey:@"cardHolderName"];
-                decryptCard = [ sharedServices decrypt:[data objectForKey:@"creditCardNumber"] key:[persistenceManager getKeyChain:PASSKEY]];
+                decryptCard = [ service decrypt:[data objectForKey:@"creditCardNumber"] key:[persistenceManager getKeyChain:PASSKEY]];
                 
-                decryptCard = [sharedServices trim:decryptCard];
+                decryptCard = [service trim:decryptCard];
                 
                  ccViewCell.creditCardNumber.text = decryptCard;
                 
                 ccViewCell.expiryDateMonth.text = [data objectForKey:@"expMonth"];
                 ccViewCell.expiryDateYear.text = [data objectForKey:@"expYear"];
                 
-                if (![sharedServices isEmptyString:[data objectForKey:@"securityCode"]]) {
-                     NSString *decryptSecurityCode = [ sharedServices decrypt:[data objectForKey:@"securityCode"] key:[persistenceManager getKeyChain:PASSKEY]];
+                if (![service isEmptyString:[data objectForKey:@"securityCode"]]) {
+                     NSString *decryptSecurityCode = [ service decrypt:[data objectForKey:@"securityCode"] key:[persistenceManager getKeyChain:PASSKEY]];
                     
-                    decryptSecurityCode= [sharedServices trim:decryptSecurityCode];
+                    decryptSecurityCode= [service trim:decryptSecurityCode];
                     ccViewCell.securityCode.text = decryptSecurityCode;
                 }
                 
@@ -486,10 +492,10 @@
             [[NSBundle mainBundle] loadNibNamed:@"EFTPOSViewCell" owner:self options:nil];
             cell=self.eftposViewCell;
             EFTPOSViewCell *eViewCell = (EFTPOSViewCell*)cell;
-            [eViewCell.nextBtn setBackgroundColor:[sharedServices colorFromHexString:
+            [eViewCell.nextBtn setBackgroundColor:[service colorFromHexString:
                                                    [_themes objectForKey:@"button_submit"]]];
             
-            [eViewCell.nextBtn setBackgroundColor:[sharedServices colorFromHexString:
+            [eViewCell.nextBtn setBackgroundColor:[service colorFromHexString:
                                                    [_themes objectForKey:@"button_submit"]]];
             eViewCell.subTotals.text = [NSString stringWithFormat:@"%@ %.2f",_currency,[_subTotals floatValue]];
             eViewCell.salesPercentageTax.text =[NSString stringWithFormat:@"%@ %.2f (%@%@)",_currency,
@@ -507,7 +513,7 @@
             cell=self.cashViewCell;
             CashViewCell *cViewCell = (CashViewCell*)cell;
             ;
-            [cViewCell.nextBtn setBackgroundColor:[sharedServices colorFromHexString:
+            [cViewCell.nextBtn setBackgroundColor:[service colorFromHexString:
                                                    [_themes objectForKey:@"button_submit"]]];
             cViewCell.subTotals.text = [NSString stringWithFormat:@"%@ %.2f",_currency,[_subTotals floatValue]];
             cViewCell.salesPercentageTax.text =[NSString stringWithFormat:@"%@ %.2f (%@%@)",_currency,
@@ -521,14 +527,14 @@
             
         }
     }
-    [cell.contentView setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
+    [cell.contentView setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
     
     return cell;
 }
 
 #pragma  mark - UITextField
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    [sharedServices setPlaceHolder:textField error:NO];
+    [service setPlaceHolder:textField error:NO];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -603,7 +609,10 @@
 - (void) checkConnection {
    
     _apiManager.delegate = self;
-    [_apiManager checkConnection:self];
+    AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
+    if (checkConnection) {
+        [checkConnection start];
+    }
 }
 
 /*!
@@ -615,12 +624,12 @@
     BOOL dialog = false;
     if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
         
-        if ([sharedServices isEmptyString:self.creditCardViewCell.cardHolderName.text]) {
-            [sharedServices setPlaceHolder:self.creditCardViewCell.cardHolderName error:YES];
+        if ([service isEmptyString:self.creditCardViewCell.cardHolderName.text]) {
+            [service setPlaceHolder:self.creditCardViewCell.cardHolderName error:YES];
             validate = false;
         }
-        if ([sharedServices isEmptyString:self.creditCardViewCell.creditCardNumber.text]) {
-            [sharedServices setPlaceHolder:self.creditCardViewCell.creditCardNumber error:YES];
+        if ([service isEmptyString:self.creditCardViewCell.creditCardNumber.text]) {
+            [service setPlaceHolder:self.creditCardViewCell.creditCardNumber error:YES];
             validate = false;
             
         } else {
@@ -630,34 +639,33 @@
                 validate = false;
             
                 if (!dialog) {
-                    [sharedServices showMessage:self message:@"Invalid credit card number" error:YES
-                                   withCallBack:nil];
+                    [service showMessage:self  loader:NO message:@"Invalid credit card number" error:YES waitUntilCompleted:NO  withCallBack:nil];
                     dialog  = true;
                 }
                 
             }
         }
-        if ([sharedServices isEmptyString:self.creditCardViewCell.expiryDateMonth.text]) {
-            [sharedServices setPlaceHolder:self.creditCardViewCell.expiryDateMonth error:YES];
+        if ([service isEmptyString:self.creditCardViewCell.expiryDateMonth.text]) {
+            [service setPlaceHolder:self.creditCardViewCell.expiryDateMonth error:YES];
             validate = false;
         }
-        if ([sharedServices isEmptyString:self.creditCardViewCell.expiryDateYear.text] ||
+        if ([service isEmptyString:self.creditCardViewCell.expiryDateYear.text] ||
             self.creditCardViewCell.expiryDateYear.text.length < 4) {
-            [sharedServices setPlaceHolder:self.creditCardViewCell.expiryDateYear error:YES];
+            [service setPlaceHolder:self.creditCardViewCell.expiryDateYear error:YES];
              validate =false;
             if (!dialog) {
-                [sharedServices showMessage:self message:@"Invalid year (i.e 2016)"
-                                      error:YES withCallBack:nil];
+                [service showMessage:self loader:NO message:@"Invalid year (i.e 2016)"
+                                      error:YES waitUntilCompleted:NO withCallBack:nil];
                 dialog = true;
             }
         }
-        if (_signature == nil && [sharedServices isEmptyString:self.creditCardViewCell.securityCode.text]) {
-            [sharedServices setPlaceHolder:self.creditCardViewCell.securityCode error:YES];
+        if (_signature == nil && [service isEmptyString:self.creditCardViewCell.securityCode.text]) {
+            [service setPlaceHolder:self.creditCardViewCell.securityCode error:YES];
             
             validate = false;
             if (!dialog) {
-                [sharedServices showMessage: self message:@"Provide security code or signature"
-                                      error:YES withCallBack:nil];
+                [service showMessage: self loader:NO message:@"Provide security code or signature"
+                                      error:YES waitUntilCompleted:NO withCallBack:nil];
             }
         }
         if (validate) {
@@ -668,10 +676,10 @@
             }
             NSString *creditCardNumber = self.creditCardViewCell.creditCardNumber.text;
             NSString *securityCode = self.creditCardViewCell.securityCode.text;
-           creditCardNumber = [sharedServices encrypt:creditCardNumber key:[persistenceManager getKeyChain:PASSKEY]];
+           creditCardNumber = [service encrypt:creditCardNumber key:[persistenceManager getKeyChain:PASSKEY]];
             
-            if (![sharedServices isEmptyString:self.creditCardViewCell.securityCode.text]) {
-                securityCode = [sharedServices encrypt:securityCode key:[persistenceManager getKeyChain:PASSKEY]];
+            if (![service isEmptyString:self.creditCardViewCell.securityCode.text]) {
+                securityCode = [service encrypt:securityCode key:[persistenceManager getKeyChain:PASSKEY]];
             }
             
             data = [[NSDictionary alloc] initWithObjectsAndKeys:self.creditCardViewCell.cardHolderName.text, @"cardHolderName",
@@ -690,13 +698,13 @@
     }
     else if ([_paymentType isEqualToString:PAYMENT_CASH]) {
         
-        if ([sharedServices isEmptyString:self.cashViewCell.amountPaid.text]) {
-            [sharedServices setPlaceHolder:self.cashViewCell.amountPaid error:YES];
+        if ([service isEmptyString:self.cashViewCell.amountPaid.text]) {
+            [service setPlaceHolder:self.cashViewCell.amountPaid error:YES];
             validate = false;
         } else {
             float amountPaid = [self.cashViewCell.amountPaid.text floatValue];
             if (amountPaid < [_grandTotals floatValue]) {
-                [sharedServices showMessage:self message:@"Pay the 'Grand Total' amount" error:YES withCallBack:nil];
+                [service showMessage:self loader:NO message:@"Pay the 'Grand Total' amount" error:YES  waitUntilCompleted:NO withCallBack:nil];
                 validate = false;
             }
             if (validate) {
@@ -805,7 +813,7 @@
 }
 
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
     if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
         [self lineaProConnect];
     }

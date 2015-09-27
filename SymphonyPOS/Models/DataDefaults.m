@@ -1,6 +1,6 @@
-#import "GlobalItems.h"
+#import "DataDefaults.h"
 
-@implementation GlobalItems
+@implementation DataDefaults
 
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {

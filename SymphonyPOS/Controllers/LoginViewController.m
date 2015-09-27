@@ -38,9 +38,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 
 #pragma mark - events
@@ -49,13 +55,13 @@
     
     [self.view endEditing:YES];
     
-    if ([sharedServices isEmptyString:self.username.text]) {
-        [sharedServices setPlaceHolder:self.username error:YES];
+    if ([service isEmptyString:self.username.text]) {
+        [service setPlaceHolder:self.username error:YES];
         return;
     }
     
-    if ([sharedServices isEmptyString:self.password.text]) {
-        [sharedServices setPlaceHolder:self.password error:YES];
+    if ([service isEmptyString:self.password.text]) {
+        [service setPlaceHolder:self.password error:YES];
         return;
     }
     
@@ -63,8 +69,15 @@
     
     [persistenceManager setKeyChain:APP_USER_IDENT value:self.username.text];
     [persistenceManager setKeyChain:APP_USER_SECURITY
-                               value:[sharedServices sha1:[sharedServices md5:self.password.text]]];
-    [[_apiManager  authSubmit:self] start];
+                               value:[service sha1:[service md5:self.password.text]]];
+    
+    [service showMessage:self loader:YES message:@"Authenticating ..." error:NO
+      waitUntilCompleted:YES withCallBack:nil];
+    
+    AFHTTPRequestOperation *authSubmit = [_apiManager  authSubmit];
+     if (authSubmit) {
+        [authSubmit start];
+    }
 }
 
 - (IBAction)forgotPassword:(id)sender {
@@ -74,24 +87,19 @@
 #pragma mark - UITextField
 
 - (void) textFieldDidBeginEditing:(UITextField *)textField {
-    [sharedServices setPlaceHolder:textField error:NO];
+    [service setPlaceHolder:textField error:NO];
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 #pragma mark - APIManager
-- (void)apiRequestError:(NSError *)error {
-    DebugLog(@"apiRequestError -> %@", error);
-    if ([persistenceManager getKeyChain:PASSKEY] != nil ) {
-        [persistenceManager clearAllEvents];
+- (void)apiRequestError:(NSError *)error response:(Response *)response {
+    DebugLog(@"apiRequestError -> %@,%@", error,response);
+    if (!_apiManager.batchOperation) {
+        [persistenceManager clearCache];
+        [service hideMessage:^ {
+            [service showMessage:self loader:NO message:(NSString*)response.data error:YES
+              waitUntilCompleted:NO withCallBack:nil];
+        }];
     }
 }
 
@@ -101,27 +109,66 @@
     [persistenceManager setKeyChain:APP_LOGGED_IDENT
                               value:[persistenceManager getKeyChain:APP_USER_IDENT]];
     
-    AFHTTPRequestOperation *themes = [_apiManager themes:self group:YES];
-    AFHTTPRequestOperation *dataDefaults = [_apiManager dataDefaults:self group:YES];
-    
-    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:@[themes,dataDefaults] progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
-        DebugLog(@"%lu of %lu complete",(unsigned long)numberOfFinishedOperations,(unsigned long)totalNumberOfOperations);
-        
-    } completionBlock:^(NSArray *operations) {
-        DebugLog(@"All operations in batch complete");
-        [self dissmissView];
+    [service hideMessage:^ {
+   
+        _apiManager.batchOperation = true;
+        [service showMessage:self loader:YES message:@"Updating settings ..." error:NO
+          waitUntilCompleted:YES withCallBack:^ {
+       
+              AFHTTPRequestOperation *themes = [_apiManager themes];
+              AFHTTPRequestOperation *dataDefaults = [_apiManager dataDefaults];
+              
+              if (themes && dataDefaults) {
+                  NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:@[themes,dataDefaults] progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
+                      DebugLog(@"%lu of %lu complete",(unsigned long)numberOfFinishedOperations,(unsigned long)totalNumberOfOperations);
+                      
+                  } completionBlock:^(NSArray *operations) {
+                      _apiManager.batchOperation = false;
+                      DebugLog(@"All operations in batch complete");
+                      [persistenceManager updateSettingsBundle];
+                      [service hideMessage:^ {
+                          [self dissmissView];
+                      }];
+                  }];
+                  
+                  [[NSOperationQueue mainQueue] addOperations:operations waitUntilFinished:NO];
+              }
+          }];
+       
     }];
-    
-    [[NSOperationQueue mainQueue] addOperations:operations waitUntilFinished:NO];
+   
 }
 
 - (void)apiThemesResponse:(Response *)response {
    DebugLog(@"apiThemesResponse -> %@", response);
+    
+    GlobalStore *globalStore = [persistenceManager getGlobalStore];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:(NSDictionary*)response.data
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    globalStore.themes = jsonString;
+    [persistenceManager saveContext];
+
 }
 
 - (void) apiDataDefaultsResponse:(Response *)response {
     DebugLog(@"apiDataDefaultsResponse -> %@", response);
     
+    GlobalStore *globalStore = [persistenceManager getGlobalStore];
+    DataDefaults *dataDefaults = [MTLJSONAdapter modelOfClass:DataDefaults.class fromJSONDictionary:(NSDictionary*)response.data error:nil];
+    globalStore.sales_percentage_tax = dataDefaults.sales_percentage_tax;
+    globalStore.last_order_number = dataDefaults.last_order_number;
+    globalStore.prefix = dataDefaults.prefix;
+    globalStore.prefix_number_length = dataDefaults.prefix_number_length;
+    globalStore.customer_default_code =  dataDefaults.customer_default_code;
+    globalStore.customer_default_code_copy =dataDefaults.customer_default_code;
+    if ([globalStore.days_sync_interval integerValue] == 0) {
+        globalStore.days_sync_interval = [NSNumber numberWithInt:30];
+    }
+    [persistenceManager saveContext];
 }
 
 

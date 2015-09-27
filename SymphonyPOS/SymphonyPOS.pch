@@ -1,6 +1,6 @@
 #ifdef __OBJC__
 #import "PersistenceManager.h"
-#import "SharedServices.h"
+#import "Service.h"
 
 #endif
 
@@ -30,7 +30,7 @@
 #define MOCK_DATA NO
 
 #define persistenceManager ([PersistenceManager sharedInstance])
-#define sharedServices ([SharedServices sharedInstance])
+#define service ([Service sharedInstance])
 
 #pragma Messages
 #define APP_FOOTER @"Copyright (c) 2015 XM DEVELOPMENTS. All rights reserved"
@@ -56,7 +56,8 @@
 #define PASSKEY @"passKey"
 #define ALPHA_CHARACTERS @" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 #define DECRYPTION_KEY @"12345678901234567890123456789012"
-
+#define SYNC_DATE_LAST_UPDATED @"sync_date_last_updated"
+#define PAGE_LIMIT 1000
 
 #pragma mark - Response codes
 #define HTTP_STATUS_OK 200
@@ -66,11 +67,13 @@
 //TODO
 #define API_URL @"http://192.168.1.7:8080/Sphere/v1"
 #define CUSTOM_CLIENT_LOGO @"http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg"
+//---
 
 #define API_AUTH_SUBMIT @"auth/submit"
 #define API_SETTING_THEMES @"setting/themes"
 #define API_SETTING_DATA_DEFAULTS @"setting/dataDefaults"
-
+#define API_PRODUCTS @"products"
+#define API_CHECK_CONNECTION @"checkConnection"
 
 
 
@@ -100,15 +103,14 @@
 
 
 #pragma mark - custom url api service
-#define API_PRODUCTS @"products"
+
 #define API_LOGIN @"login"
 #define API_SYNC  @"sync"
 #define API_SUBMIT_AUTHORISATION @"submitAuthorisation"
 #define API_SUBMIT_PAYMENT @"submitPayment"
-#define API_CHECK_CONNECTION @"checkConnection"
 #define API_OFFLINE_SALES @"offlineSales"
 
-#define API_SYNC_DATE_LAST_UPDATED @"sync_date_last_updated"
+
 
 
 

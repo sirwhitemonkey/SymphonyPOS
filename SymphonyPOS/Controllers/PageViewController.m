@@ -23,6 +23,9 @@
     [_syncService startTimerForSender:self withTimeInterval:60*5];
     
     [self registerNotifications];
+    
+    // Testing only
+    [persistenceManager setMyCustomPreference:API_URL logo:CUSTOM_CLIENT_LOGO];
    
 }
 
@@ -35,7 +38,7 @@
     [super viewDidAppear:animated];
     
     UIViewController *controller = nil;
-    NSString *appUserIdent = [persistenceManager getKeyChain:APP_USER_IDENT];
+    NSString *appUserIdent = [persistenceManager getKeyChain:APP_LOGGED_IDENT];
     NSString *appPin = [persistenceManager getKeyChain:APP_USER_PIN_IDENT];
   
     _globalStore = [persistenceManager getGlobalStore];
@@ -44,29 +47,21 @@
             NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
             
-            /*
-             [self.navigationController.navigationBar setBarTintColor:[sharedServices colorFromHexString:[themes objectForKey:@"navigation_bar"]]];
-             [self.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
-             [self.navigationController.navigationBar setTranslucent:YES];
-             [self.navigationController.navigationBar setTitleTextAttributes:
-             [NSDictionary dictionaryWithObjectsAndKeys:
-             [sharedServices colorFromHexString:[themes objectForKey:@"navigation_bar_title"]] , NSForegroundColorAttributeName,nil]];
-             */
-            [[UINavigationBar appearance] setBarTintColor:[sharedServices colorFromHexString:[themes objectForKey:@"navigation_bar"]]];
+            [[UINavigationBar appearance] setBarTintColor:[service colorFromHexString:[themes objectForKey:@"navigation_bar"]]];
             [[UINavigationBar appearance] setBarStyle:UIBarStyleBlackTranslucent];
             
             [[UINavigationBar appearance] setTitleTextAttributes:
              [NSDictionary dictionaryWithObjectsAndKeys:
-              [sharedServices colorFromHexString:[themes objectForKey:@"navigation_bar_title"]] , NSForegroundColorAttributeName,nil]];
+              [service colorFromHexString:[themes objectForKey:@"navigation_bar_title"]] , NSForegroundColorAttributeName,nil]];
         }
         
-        if ( ![sharedServices isEmptyString:appUserIdent] && ![sharedServices isEmptyString:appPin]) {
+        if ( ![service isEmptyString:appUserIdent] && ![service isEmptyString:appPin]) {
             // Filter app logged identifier
             if ([persistenceManager getDataStore:APP_LOGGED_IDENT] !=nil ) {
                 [self viewPOSPage];
                 
             } else {
-                if ([sharedServices isEmptyString:appPin]) {
+                if ([service isEmptyString:appPin]) {
                     // Show terminal page
                     [self viewTerminalPage];
                 } else {
@@ -78,7 +73,7 @@
                 }
             }
         } else {
-            if ([sharedServices isEmptyString:appUserIdent] && [sharedServices isEmptyString:appPin]) {
+            if ([service isEmptyString:appUserIdent] && [service isEmptyString:appPin]) {
                 // Show login page
                 controller = [persistenceManager getView:@"LoginViewController"];
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -91,7 +86,7 @@
         }
         
     } else {
-        [persistenceManager clearAllEvents];
+        [persistenceManager clearCache];
         // Show login page
         controller = [persistenceManager getView:@"LoginViewController"];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -104,9 +99,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 
 /*
@@ -171,7 +172,7 @@
      */
   
     // Sync
-    double date_last_sync_interval = [[persistenceManager getKeyChain:API_SYNC_DATE_LAST_UPDATED] doubleValue]/1000;
+    double date_last_sync_interval = [[persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED] doubleValue]/1000;
     NSDate * date_last_sync = [NSDate  dateWithTimeIntervalSince1970:date_last_sync_interval];
     NSTimeInterval date_current_sync = [[NSDate date] timeIntervalSinceDate:date_last_sync];
     

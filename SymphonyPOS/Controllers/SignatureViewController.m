@@ -27,9 +27,9 @@
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-    [self.clearSignatureBtn setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"button_remove"]]];
-    [self.completeSignatureBtn setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"button_submit"]]];
+    [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.clearSignatureBtn setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_remove"]]];
+    [self.completeSignatureBtn setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_submit"]]];
     
     _drawImage = [[UIImageView alloc] initWithImage:nil];
     _drawImage.frame = self.signatureView.frame;
@@ -154,9 +154,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
-    return UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 /*
 #pragma mark - Navigation
@@ -171,7 +177,7 @@
 
 #pragma mark - Private methods
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
 }
 
 @end

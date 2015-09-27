@@ -4,7 +4,6 @@
 #import <Foundation/Foundation.h>
 #import "AFHTTPRequestOperation.h"
 #import "UIImageView+AFNetworking.h"
-#import "VisualFeedbackViewController.h"
 #import "Response.h"
 #import "GlobalStore.h"
 #import "CocoaWSSE.h"
@@ -17,7 +16,7 @@
 /*!
  * APIManagerDelegate request error callback
  */
-- (void) apiRequestError:(NSError*)error;
+- (void) apiRequestError:(NSError*)error response:(Response*)response;
 
 @optional
 /*!
@@ -35,10 +34,10 @@
  */
 - (void) apiDataDefaultsResponse:(Response*)response;
 
-
-
-
-
+/*!
+ * APIManagerDelegate get products callback
+ */
+- (void) apiProductsResponse:(Response*)response;
 
 
 
@@ -76,10 +75,7 @@
  */
 - (void) apiSubmitAuthorisationResponse:(Response*)response;
 
-/*!
- * APIManagerDelegate get products callback
- */
-- (void) apiProductsResponse:(Response*)response;
+
 
 
 @end
@@ -90,26 +86,32 @@
  */
 @property (weak) id<APIManagerDelegate> delegate;
 
+@property BOOL batchOperation;
+
 /*!
  * APIManager auth submit request
  */
-- (AFHTTPRequestOperation*) authSubmit:(id)reference;
+- (AFHTTPRequestOperation*) authSubmit;
 
 /*!
  * APIManager themes request
  */
-- (AFHTTPRequestOperation*) themes:(id)reference group:(BOOL)group;
+- (AFHTTPRequestOperation*) themes;
 
 /*!
  * APIManager data defaults request
  */
-- (AFHTTPRequestOperation*) dataDefaults:(id)reference group:(BOOL)group;
+- (AFHTTPRequestOperation*) dataDefaults;
 
+/*!
+ * APIManager get the products
+ */
+- (AFHTTPRequestOperation*) getProducts:(int)page;
 
-
-
-
-
+/*!
+ * APIManager checking of connection request
+ */
+- (AFHTTPRequestOperation*) checkConnection;
 
 
 
@@ -136,10 +138,7 @@
  */
 - (void) sync:(id)reference;
 
-/*!
- * APIManager checking of connection request
- */
-- (void) checkConnection:(id)reference;
+
 
 /*!
  * APIManager payment submission request
@@ -152,13 +151,6 @@
 - (void) offlineSales:(id) reference;
 
 /*!
- * APIManager submission of authorisation data for encryption request.
- */
-- (void) submitAuthorisation:(id)reference;
-
-
-
-/*!
  * APIManager synchronisation of image on the background request.
  */
 - (void) syncImage:(UIImageView*) refImageView url:(NSString*)url;
@@ -167,10 +159,7 @@
 
 
 
-/*!
- * APIManager get the products
- */
-- (void) getProducts:(id)reference page:(int)page limit:(int)limit;
+
 
 @end
 

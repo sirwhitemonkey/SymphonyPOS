@@ -1,6 +1,3 @@
-//  Created by Ray Wenderlich on 12/6/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
-//
 
 // Used for saving to NSUserDefaults that a PIN has been set, and is the unique identifier for the Keychain.
 #define PIN_SAVED @"hasSavedPIN"
@@ -27,3 +24,9 @@ typedef enum {
     kTextFieldName,
     kTextFieldPassword
 } TextFieldTypes;
+
+typedef enum  {
+    kProducts = 0,
+    kPriceLists,
+    kCustomers
+} DataStoreTypes;

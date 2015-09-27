@@ -5,28 +5,35 @@
 
 @interface Product : MTLModel <MTLJSONSerializing>
 /*!
- * Product product_code , the product code
+ * Product itemNo , the item no
  */
-@property (nonatomic, strong)  NSString *product_code;
+@property (nonatomic, strong)  NSString *itemNo;
 /*!
- * Product product_name , the product name
+ * Product upcCode , the upc code
  */
-@property (nonatomic, strong)  NSString *product_name;
+@property (nonatomic, strong)  NSString *upcCode;
 /*!
- * Product unit , the product unit
+ * Product identifier , the product identifier
  */
-@property (nonatomic, strong)  NSString *unit;
+@property (nonatomic, strong)  NSNumber *identifier;
 /*!
  * Product image_url , the product image url
  */
 @property (nonatomic, strong)  NSString *image_url;
 /*!
- * Product product_description , the product description
+ * Product desc , the product description
  */
-@property (nonatomic, strong)  NSString *product_description;
+@property (nonatomic, strong)  NSString *desc;
 /*!
- * Product pc_code , the product barcode code
+ * Product stockUnit , the product stock unit
  */
-@property (nonatomic, strong)  NSString *pc_code;
-
+@property (nonatomic, strong)  NSString *stockUnit;
+/*!
+ * Product inStock , the product in stock status
+ */
+@property (nonatomic, assign)  BOOL inStock;
+/*!
+ * Product notActive , the product inactive status
+ */
+@property (nonatomic, assign)  BOOL notActive;
 @end

@@ -1,18 +1,18 @@
 
-#import "SharedServices.h"
+#import "Service.h"
 
-@interface  SharedServices()
+@interface  Service()
 @property (nonatomic,strong) VisualFeedBackViewController *vfbViewController;
 @end
-@implementation SharedServices
+@implementation Service
 @synthesize vfbViewController = _vfbViewController;
 
-+(SharedServices*)sharedInstance {
++(Service*)sharedInstance {
     static dispatch_once_t oncePredicate;
-    static SharedServices *_sharedInstance;
+    static Service *_sharedInstance;
     dispatch_once(&oncePredicate,^{
         [Base64 load];
-        _sharedInstance=[[SharedServices alloc]init];
+        _sharedInstance=[[Service alloc]init];
      });
     return _sharedInstance;
 }
@@ -30,20 +30,26 @@
     return [input stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
-- (void) showMessage: (id)reference message:(NSString*) message error:(BOOL)error withCallBack:(void (^)(void))callbackBlock {
+- (void) showMessage:(id)reference loader:(BOOL)loader message:(NSString *)message error:(BOOL)error
+        waitUntilCompleted:(BOOL)waitUntilCompleted withCallBack:(void (^)(void))callbackBlock {
    
     dispatch_async(dispatch_get_main_queue(), ^() {
         _vfbViewController = (VisualFeedBackViewController*)[persistenceManager getView:@"VisualFeedBackViewController"];
         _vfbViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [_vfbViewController initialise:NO message:message error:error];
+        [_vfbViewController initialise:loader message:message error:error];
         [_vfbViewController setModalPresentationStyle:UIModalPresentationOverCurrentContext];
         [reference presentViewController:_vfbViewController animated:YES completion: ^ {
-            [self hideMessage:^ {
+            if (!waitUntilCompleted) {
+                [self hideMessage:^ {
+                    if (callbackBlock != nil) {
+                        callbackBlock();
+                    }
+                }];
+            } else {
                 if (callbackBlock != nil) {
                     callbackBlock();
                 }
-                
-            }];
+            }
         }];
 
     });

@@ -23,8 +23,8 @@
     _globalStore = [persistenceManager getGlobalStore];
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
-    [self.paymentTypeBtn setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"button_submit"]]];
+    [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.paymentTypeBtn setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_submit"]]];
     NSString *title = @"Payment Type";
     if (![_globalStore.customer_default_code isEqualToString:_globalStore.customer_default_code_copy]) {
         title = [NSString stringWithFormat:@"%@ (%@)",title,@"Account mode"];
@@ -42,9 +42,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -131,12 +137,14 @@
  * PaymentTypeViewController checking the connection
  */
 - (void) checkConnection {
-    _apiManager.delegate = self;
-    [_apiManager checkConnection:self];
+    AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
+    if (checkConnection) {
+        [checkConnection start];
+    }
 }
 
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
 }
 
 /*!

@@ -2,8 +2,6 @@
 
 
 #import <UIKit/UIKit.h>
-#import "SyncService.h"
-
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

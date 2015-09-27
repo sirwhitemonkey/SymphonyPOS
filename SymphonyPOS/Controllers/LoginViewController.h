@@ -3,7 +3,7 @@
 #import <UIKit/UIKit.h>
 #import "UILabel+FormattedText.h"
 #import "APIManager.h"
-#import "GlobalItems.h"
+#import "DataDefaults.h"
 #import "GlobalStore.h"
 
 

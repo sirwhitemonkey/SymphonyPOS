@@ -3,41 +3,24 @@
 
 
 @interface APIManager()
-/*!
- * APIManager vfbViewController,  the visual presentation.
- */
-@property(nonatomic,strong) VisualFeedBackViewController *vfbViewController;
-
-/*!
- * APIManager reference, the reference view controller object.
- */
-@property (weak) id reference;
-
 @end
 
 @implementation APIManager
-@synthesize  delegate;
-@synthesize vfbViewController = _vfbViewController;
-@synthesize reference = _reference;
+@synthesize  delegate,batchOperation;
 
 #pragma mark - api services
 
--(AFHTTPRequestOperation*) authSubmit:(id)reference {
-    
-    _reference = reference;
-    [self visualFeedback:@"Authenticating ..." hide:NO withCallBack:nil];
+-(AFHTTPRequestOperation*) authSubmit{
+    GlobalStore *globalStore = [persistenceManager getGlobalStore];
     
     if (MOCK_DATA) {
         Response *response;
         response = [self getResponse:[self getMockData:@"authSubmit"]];
-        
-        [self visualFeedback:nil hide:YES withCallBack: ^{
-           [self.delegate apiAuthSubmitResponse:response];
-        }];
+        [self.delegate apiAuthSubmitResponse:response];
         return nil;
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",API_URL,API_AUTH_SUBMIT]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",globalStore.my_custom_url,API_AUTH_SUBMIT]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:60.0];
@@ -50,52 +33,25 @@
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
          Response *response;
          response = (Response*)[self getResponse:responseObject];
-      
-        [self visualFeedback:nil hide:YES withCallBack: ^{
-            [self.delegate apiAuthSubmitResponse:response];
-        }];
-        
+        [self.delegate apiAuthSubmitResponse:response];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         Response *response;
-        id jsonString = error.userInfo[JSONResponseSerializerWithDataKey];
-        id responseObject = [NSJSONSerialization JSONObjectWithData:
-                             [jsonString dataUsingEncoding:NSUTF8StringEncoding]
-                                                            options:0 error:nil];
-         response = (Response*)[self getResponse:responseObject];
-        
-        [self visualFeedback:nil hide:YES withCallBack: ^ {
-            [sharedServices showMessage:reference message:[self getError:response] error:YES withCallBack: ^ {
-                [self.delegate apiRequestError:error];
-            }];
-        }];
-      
+        [self setRequestOperationError:operation error:error];
     }];
     return operation;
 }
 
--(AFHTTPRequestOperation*) themes:(id)reference group:(BOOL)group  {
-    
-    _reference = reference;
-    if (!group) {
-        [self visualFeedback:@"Getting themes ..." hide:NO withCallBack:nil];
-    }
-    
+-(AFHTTPRequestOperation*) themes {
+
+     GlobalStore *globalStore = [persistenceManager getGlobalStore];
     if (MOCK_DATA) {
         Response *response;
         response = [self getResponse:[self getMockData:@"themes"]];
-        
-        if (!group) {
-            [self visualFeedback:nil hide:YES withCallBack: ^{
-                [self.delegate apiThemesResponse:response];
-            }];
-        } else {
-             [self.delegate apiThemesResponse:response];
-        }
+        [self.delegate apiThemesResponse:response];
         return nil;
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",API_URL,API_SETTING_THEMES]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",globalStore.my_custom_url,API_SETTING_THEMES]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:60.0];
@@ -107,54 +63,24 @@
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         Response *response = (Response*)[self getResponse:responseObject];
-        
-        if (!group) {
-            [self visualFeedback:nil hide:YES withCallBack: ^{
-                [self.delegate apiThemesResponse:response];
-            }];
-        } else {
-            [self.delegate apiThemesResponse:response];
-        }
-
+        [self.delegate apiThemesResponse:response];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        [self visualFeedback:nil hide:YES withCallBack: ^ {
-            if (!group) {
-                [sharedServices showMessage:reference message:SERVER_ERROR error:YES withCallBack: ^ {
-                    [self.delegate apiRequestError:error];
-                }];
-            } else {
-                [self.delegate apiRequestError:error];
-            }
-            
-        }];
-        
+        [self setRequestOperationError:operation error:error];
     }];
     return operation;
 }
 
--(AFHTTPRequestOperation*) dataDefaults:(id)reference group:(BOOL)group  {
+-(AFHTTPRequestOperation*) dataDefaults {
     
-    _reference = reference;
-    if (!group) {
-        [self visualFeedback:@"Getting data defaults ..." hide:NO withCallBack:nil];
+     GlobalStore *globalStore = [persistenceManager getGlobalStore];
+     if (MOCK_DATA) {
+         Response *response;
+         response = [self getResponse:[self getMockData:@"dataDefaults"]];
+         [self.delegate apiDataDefaultsResponse:response];
+         return nil;
     }
     
-    if (MOCK_DATA) {
-        Response *response;
-        response = [self getResponse:[self getMockData:@"dataDefaults"]];
-        
-        if (!group) {
-            [self visualFeedback:nil hide:YES withCallBack: ^{
-                [self.delegate apiDataDefaultsResponse:response];
-            }];
-        } else {
-           [self.delegate apiDataDefaultsResponse:response];
-        }
-        return nil;
-    }
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",API_URL,API_SETTING_DATA_DEFAULTS]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",globalStore.my_custom_url,API_SETTING_DATA_DEFAULTS]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:60.0];
@@ -166,182 +92,116 @@
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         Response *response = (Response*)[self getResponse:responseObject];
-        
-        if (!group) {
-            [self visualFeedback:nil hide:YES withCallBack: ^{
-             [self.delegate apiDataDefaultsResponse:response];
-            }];
-        } else {
-             [self.delegate apiDataDefaultsResponse:response];
-        }
+        [self.delegate apiDataDefaultsResponse:response];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+       [self setRequestOperationError:operation error:error];
+    }];
+    return operation;
+}
+
+-(AFHTTPRequestOperation*) getProducts:(int)page{
+  
+    if (MOCK_DATA) {
+        Response *response;
+        response = [self getResponse:[self getMockData:@"getProducts"]];
+        [self.delegate apiProductsResponse:response];
+        return nil;
+    }
+
+    GlobalStore *globalStore = [persistenceManager getGlobalStore];
+    NSString *params = [NSString stringWithFormat:@"date_last_updated=%@&page=%d&limit=%d",
+                        [persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED],page,PAGE_LIMIT];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@",globalStore.my_custom_url,API_PRODUCTS,params]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+    [self setHeaders:request];
+    [request setHTTPMethod:@"GET"];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        [self visualFeedback:nil hide:YES withCallBack: ^ {
-            if (!group) {
-                [sharedServices showMessage:reference message:SERVER_ERROR error:YES withCallBack: ^ {
-                    [self.delegate apiRequestError:error];
-                }];
-            } else {
-                [self.delegate apiRequestError:error];
-            }
-            
-        }];
+        Response *response = [self getResponse:responseObject];
+        [self.delegate apiProductsResponse:response];
         
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+       [self setRequestOperationError:operation error:error];
     }];
     return operation;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- (void) submitAuthorisation:(id)reference {
-    _reference = reference;
-    
-    [self visualFeedback:@"Authorising ..." hide:NO withCallBack:nil];
+- (AFHTTPRequestOperation*) checkConnection {
     
     if (MOCK_DATA) {
         Response *response;
-        response = [self getResponse:[self getMockData:@"submitAuthorisation"]];
-        
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiSubmitAuthorisationResponse:response];
-        }];
-        
-        return;
+        response = [self getResponse:[self getMockData:@"checkConnection"]];
+        persistenceManager.offline = false;
+       [self.delegate apiCheckConnnectionResponse:response];
+        return nil;
     }
     GlobalStore *globalStore = [persistenceManager getGlobalStore];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",globalStore.my_custom_url,API_SUBMIT_AUTHORISATION]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",globalStore.my_custom_url,API_CHECK_CONNECTION]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    /*!
-     * parameters:
-     * token , the unique identifier returned from server
-     * passkey, the unique pass key for the encryption/decryption
-     */
-    NSString *params = [NSString stringWithFormat:@"token=%@&passkey=%@",
-                        [persistenceManager getKeyChain:APP_TOKEN],
-                        [persistenceManager getKeyChain:PASSKEY]];
-    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        Response *response = (Response*)[self getResponse:responseObject];
         
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiSubmitAuthorisationResponse:response];
-        }];
-        
+        Response *response = [self getResponse:[self getMockData:@"checkConnection"]];
+        persistenceManager.offline = false;
+        [self.delegate apiCheckConnnectionResponse:response];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        [self visualFeedback:nil hide:YES withCallBack: ^ {
-            [sharedServices showMessage:reference message:[error description] error:YES withCallBack: ^ {
-                [self.delegate apiRequestError:error];
-            }];
-        }];
-        
-        
+        persistenceManager.offline = true;
+        [self setRequestOperationError:operation error:error];
     }];
-    [operation start];
+    
+    return operation;
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - (void) sync: (id)reference {
-    _reference = reference;
-    
-    [self visualFeedback:@"Synchronising ..." hide:NO withCallBack:nil];
-    
-     if (MOCK_DATA) {
-        Response *response;
-        response = [self getResponse:[self getMockData:@"sync"]];
-       
-         [self visualFeedback:nil hide:YES withCallBack:^ {
-           [self.delegate apiSyncResponse:response];
-        }];
-         
-        return;
-    }
-    GlobalStore *globalStore = [persistenceManager getGlobalStore];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",globalStore.my_custom_url,API_SYNC]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
-                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                       timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    /*!
-     * parameters:
-     * token , the unique identifier returned from server
-     * date_last_updated, the date last updated for the sync validation
-     */
-    NSString *params = [NSString stringWithFormat:@"token=%@&date_last_updated=%@",
-                        [persistenceManager getKeyChain:APP_TOKEN],
-                        [persistenceManager getKeyChain:API_SYNC_DATE_LAST_UPDATED]];
-    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        Response *response = (Response*)[self getResponse:responseObject];
-        
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiSyncResponse:response];
-        }];
-        
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        [self visualFeedback:nil hide:YES withCallBack: ^ {
-            [sharedServices showMessage:reference message:[error description] error:YES withCallBack: ^ {
-                [self.delegate apiRequestError:error];
-            }];
-        }];
-
-        
-    }];
-    [operation start];
-   
 }
 
 - (void) submitPayment:(id)reference invoice_no:(NSString*)invoice_no {
-    _reference = reference;
     
-    [self visualFeedback:@"Processing payment ..." hide:NO withCallBack:nil];
-    
-    if (MOCK_DATA) {
+   if (MOCK_DATA) {
         Response *response;
         response = [self getResponse:[self getMockData:@"submitPayment"]];
-        
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiSubmitPaymentResponse:response];
-        }];
-        
+       [self.delegate apiSubmitPaymentResponse:response];
+       
         return;
     }
     GlobalStore *globalStore = [persistenceManager getGlobalStore];
@@ -395,12 +255,12 @@
         CustomerStore *customerStore = [persistenceManager getCustomerStore:globalStore.customer_default_code];
         
         PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:customerStore.pricelist_code
-                                                             product_code:cartStore.cartProduct.product_code];
+                                                             product_code:cartStore.cartProduct.itemNo];
         [data setObject:cartStore.cart_code forKey:@"cart_code"];
         [data setObject:cartStore.qty forKey:@"qty"];
         [data setObject:customerStore.customer_code forKey:@"customer_code"];
         [data setObject:priceListStore.pricelist_code forKey:@"pricelist_code"];
-        [data setObject:cartStore.cartProduct.product_code forKey:@"product_code"];
+        [data setObject:cartStore.cartProduct.itemNo forKey:@"itemNo"];
         
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
                                                            options:NSJSONWritingPrettyPrinted
@@ -432,38 +292,22 @@
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         Response *response = (Response*)[self getResponse:responseObject];
-        
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiSubmitPaymentResponse:response];
-        }];
+        [self.delegate apiSubmitPaymentResponse:response];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        [self visualFeedback:nil hide:YES withCallBack: ^ {
-            [sharedServices showMessage:reference message:[error description] error:YES withCallBack: ^ {
-                [self.delegate apiRequestError:error];
-            }];
-        }];
-        
+        [self setRequestOperationError:operation error:error];
         
     }];
     [operation start];
-    
 }
 
 - (void) offlineSales:(id)reference {
-    
-    _reference = reference;
-    
-    [self visualFeedback:@"Processing offline sales ..." hide:NO withCallBack:nil];
     
     if (MOCK_DATA) {
         Response *response;
         response = [self getResponse:[self getMockData:@"offlineSales"]];
         
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiOfflineSalesResponse:response];
-        }];
+        [self.delegate apiOfflineSalesResponse:response];
         
         return;
     }
@@ -509,18 +353,10 @@
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         Response *response = (Response*)[self getResponse:responseObject];
         
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiOfflineSalesResponse:response];
-        }];
+       [self.delegate apiOfflineSalesResponse:response];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        [self visualFeedback:nil hide:YES withCallBack: ^ {
-            [sharedServices showMessage:reference message:[error description] error:YES withCallBack: ^ {
-                [self.delegate apiRequestError:error];
-            }];
-        }];
-        
+        [self setRequestOperationError:operation error:error];
         
     }];
     [operation start];
@@ -528,49 +364,6 @@
 }
 
 
-- (void) checkConnection:(id)reference {
-    
-    _reference = reference;
-    
-    [self visualFeedback:@"Checking server connection ..." hide:NO withCallBack:nil];
-    
-    if (MOCK_DATA) {
-        Response *response;
-        response = [self getResponse:[self getMockData:@"checkConnection"]];
-        persistenceManager.offline = false;
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiCheckConnnectionResponse:response];
-        }];
-        
-        return;
-    }
-    GlobalStore *globalStore = [persistenceManager getGlobalStore];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",globalStore.my_custom_url,API_CHECK_CONNECTION]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
-                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                       timeoutInterval:60.0];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-     
-        Response *response = [self getResponse:[self getMockData:@"checkConnection"]];
-        persistenceManager.offline = false;
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiCheckConnnectionResponse:response];
-        }];
-        
-        
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        persistenceManager.offline = true;
-        [self.delegate apiRequestError:error];
-    }];
-    [operation start];
-    
-}
 
 
 - (void) syncImage:(UIImageView*) refImageView url:(NSString *)url {
@@ -592,76 +385,6 @@
 }
 
 
-
--(void) getProducts:(id)reference page:(int)page limit:(int)limit {
- 
-    _reference = reference;
-    
-    [self visualFeedback:@"Synchronising products ..." hide:NO withCallBack:nil];
-   
-    GlobalStore *globalStore = [persistenceManager getGlobalStore];
-   
-    NSString *params = [NSString stringWithFormat:@"page=%d&limit=%d",page,limit];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@",globalStore.my_custom_url,API_PRODUCTS,params]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
-                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                       timeoutInterval:60.0];
-    DebugLog(@"%@",[CocoaWSSE headerWithUsername:@"ronaldo" password:@"b1495fc2427e37dda908c7c3d230046f55883286"]);
-    [request setValue:[CocoaWSSE headerWithUsername:@"ronaldo" password:@"b1495fc2427e37dda908c7c3d230046f55883286"] forHTTPHeaderField:@"X-WSSE"];
-    [request setHTTPMethod:@"GET"];
-    /*!
-     * parameters:
-     * page , page position
-     * limit, no. of records retrieved
-     */
-    //request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        DebugLog(@"--->%@",responseObject);
-        
-        Response *response = [self getResponse:responseObject];
-        [self visualFeedback:nil hide:YES withCallBack:^ {
-            [self.delegate apiProductsResponse:response];
-        }];
-        
-        
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [self visualFeedback:nil hide:YES withCallBack: ^ {
-            [sharedServices showMessage:reference message:[error description] error:YES withCallBack: ^ {
-                [self.delegate apiRequestError:error];
-            }];
-        }];
-    }];
-    [operation start];
-    
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*!
  * APIManager de-serialising json response object.
  */
@@ -678,34 +401,6 @@
     return response;
     
 }
-
-/*!
- * APIManager visual presentation.
- */
-- (void) visualFeedback:(NSString*) message  hide:(BOOL)hide
-           withCallBack:(void (^)(void))callbackBlock {
-    
-    if (!hide) {
-        _vfbViewController = (VisualFeedBackViewController*)[persistenceManager getView:@"VisualFeedBackViewController"];
-        _vfbViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [_vfbViewController initialise:YES message:message error:NO];
-        [_vfbViewController setModalPresentationStyle:UIModalPresentationOverFullScreen];
-        [_reference presentViewController:_vfbViewController animated:YES completion:^ {
-            if (callbackBlock!=nil) {
-                callbackBlock();
-            }
-        }];
-       } else {
-        if (_vfbViewController) {
-            [_vfbViewController dismissViewControllerAnimated:NO completion:^ {
-                if (callbackBlock!=nil) {
-                    callbackBlock();
-                }
-            }];
-            
-        }
-    }
-  }
 
 
 /*!
@@ -746,4 +441,18 @@
     return message;
 }
 
+- (void) setRequestOperationError:(AFHTTPRequestOperation*)operation error:(NSError *)error {
+    Response *response;
+    id jsonString = error.userInfo[JSONResponseSerializerWithDataKey];
+    NSString *message = SERVER_ERROR;
+     if (jsonString) {
+        id responseObject = [NSJSONSerialization JSONObjectWithData:
+                             [jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                            options:0 error:nil];
+        response = (Response*)[self getResponse:responseObject];
+        message = [self getError:response];
+    }
+    response.data = message;
+    [self.delegate apiRequestError:error response:response];
+}
 @end

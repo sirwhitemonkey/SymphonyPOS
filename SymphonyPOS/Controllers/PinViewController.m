@@ -20,6 +20,7 @@
  */
 @property (nonatomic,strong) NSDictionary *themes;
 
+
 @end
 
 @implementation PinViewController
@@ -30,20 +31,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.navigationController.navigationBarHidden = YES;
-    [sharedServices boxInputStyling:self.pin1];
-    [sharedServices boxInputStyling:self.pin2];
-    [sharedServices boxInputStyling:self.pin3];
-    [sharedServices boxInputStyling:self.pin4];
+     self.navigationController.navigationBarHidden = YES;
+    [service boxInputStyling:self.pin1];
+    [service boxInputStyling:self.pin2];
+    [service boxInputStyling:self.pin3];
+    [service boxInputStyling:self.pin4];
     
      _apiManager = [[APIManager alloc] init];
+    _apiManager.delegate = self;
     
     [self.pin1 becomeFirstResponder];
     
     _onExistingPinCode = true;
     NSString *userPinIdent = [persistenceManager getKeyChain:APP_USER_PIN_IDENT];
-    if ([sharedServices isEmptyString:userPinIdent]) {
+    if ([service isEmptyString:userPinIdent]) {
         _onExistingPinCode = false;
     }
     if (_onExistingPinCode) {
@@ -58,7 +59,7 @@
     
     NSData *data = [globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"background"]]];
+    [self.view setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"background"]]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -70,9 +71,16 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
+
 
 
 /*
@@ -121,10 +129,10 @@
     
     DebugLog(@"textFieldDidEndEditing:%@",loggedPin);
     
-    if (![sharedServices isEmptyString:self.pin1.text] &&
-        ![sharedServices isEmptyString:self.pin2.text] &&
-        ![sharedServices isEmptyString:self.pin3.text] &&
-        ![sharedServices isEmptyString:self.pin4.text]) {
+    if (![service isEmptyString:self.pin1.text] &&
+        ![service isEmptyString:self.pin2.text] &&
+        ![service isEmptyString:self.pin3.text] &&
+        ![service isEmptyString:self.pin4.text]) {
         
         NSString *pin;
         [self.view endEditing:YES];
@@ -132,7 +140,8 @@
    
             pin = [persistenceManager getKeyChain:APP_USER_PIN_IDENT];
             if (![pin isEqualToString:loggedPin]) {
-                [sharedServices showMessage:self message:@"Invalid pin code" error:YES withCallBack: ^{
+                [service showMessage:self loader:NO message:@"Invalid pin code" error:YES
+                  waitUntilCompleted:NO withCallBack: ^{
                     [self.pin1 becomeFirstResponder];
                     [self.pin1 setText:@""];
                     [self.pin2 setText:@""];
@@ -141,16 +150,23 @@
                 }];
             } else {
                 
-                if ([sharedServices isEmptyString:[persistenceManager getKeyChain:API_SYNC_DATE_LAST_UPDATED]]) {
-                    [self requestSync];
+                if ([service isEmptyString:[persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED]]) {
+                    // Sync products
+                    [service showMessage:self loader:YES message:@"Synchronising products ..." error:NO
+                      waitUntilCompleted:YES withCallBack:^ {
+                        _apiManager.batchOperation = true;
+                        AFHTTPRequestOperation *syncProducts = [_apiManager getProducts:0];
+                        if (syncProducts) {
+                            [syncProducts start];
+                        }
+                    }];
+                   
                 } else {
-                    [persistenceManager setDataStore:APP_LOGGED_IDENT value:[persistenceManager getKeyChain:APP_USER_IDENT]];
-                    
-                    [self dismissViewControllerAnimated:YES completion:nil];
+                     [self dismissViewControllerAnimated:YES completion:nil];
                 }
             }
         } else {
-            if ([sharedServices isEmptyString:_pinCode]) {
+            if ([service isEmptyString:_pinCode]) {
                 _pinCode = loggedPin;
                 [self.pin1 setText:@""];
                 [self.pin2 setText:@""];
@@ -162,11 +178,21 @@
             } else {
                 if ([_pinCode isEqualToString:loggedPin]) {
                     [persistenceManager setKeyChain:APP_USER_PIN_IDENT  value:loggedPin];
-                    [sharedServices showMessage:self message:@"Pin successfully created" error:NO withCallBack: ^{
-                        [self requestSync];
+                    [service showMessage:self loader:NO message:@"Pin successfully created" error:NO
+                      waitUntilCompleted:NO  withCallBack: ^{
+                        // Sync products
+                        [service showMessage:self loader:YES message:@"Synchronising products ..." error:NO
+                          waitUntilCompleted:YES withCallBack:^ {
+                            _apiManager.batchOperation = true;
+                            AFHTTPRequestOperation *syncProducts = [_apiManager getProducts:0];
+                            if (syncProducts) {
+                                [syncProducts start];
+                            }
+                        }];
                     }];
                 } else {
-                    [sharedServices showMessage:self message:@"Invalid pin . Try it again" error:YES withCallBack: ^ {
+                    [service showMessage:self loader:NO message:@"Invalid pin . Try it again" error:YES
+                      waitUntilCompleted:NO  withCallBack: ^ {
                         [self.pin1 setText:@""];
                         [self.pin2 setText:@""];
                         [self.pin3 setText:@""];
@@ -183,36 +209,21 @@
 }
 
 #pragma mark - APIManager
-- (void)apiRequestError:(NSError *)error {
-    DebugLog(@"apiRequestError -> %@", error);
+- (void)apiRequestError:(NSError *)error response:(Response *)response {
+    DebugLog(@"apiRequestError -> %@,%@", error,response);
 }
 
--(void)apiSyncResponse:(Response *)response {
-    DebugLog(@"apiSyncResponse -> %@", response);
-    
-    /*
-    [persistenceManager updateSync:self response:response];
-    
-    if (!response.error) {
-        [persistenceManager setDataStore:APP_LOGGED_IDENT value:[persistenceManager getKeyChain:APP_USER_IDENT]];
-        if (!_onExistingPinCode) {
-            [self performSegueWithIdentifier:@"PinPOSSegue" sender:self];
-        } else {
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    }
-     */
+- (void) apiProductsResponse:(Response *)response {
+    [persistenceManager syncProducts:_apiManager response:response completedCallback:^ {
+        [service hideMessage:^ {
+            // TODO  customers
+        }];
+    }];
     
 }
 
 
 #pragma mark - Private methods
-/*!
- * PinViewController {private}, sync request
- */
-- (void) requestSync {
-     _apiManager.delegate = self;
-    [_apiManager sync:self];
-}
+
 
 @end

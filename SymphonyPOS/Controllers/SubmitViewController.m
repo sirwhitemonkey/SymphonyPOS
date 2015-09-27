@@ -32,9 +32,9 @@
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
-    [self.view setBackgroundColor:[sharedServices colorFromHexString:
+    [self.view setBackgroundColor:[service colorFromHexString:
                                    [_themes objectForKey:@"background"]]];
-    [self.submitBtn setBackgroundColor:[sharedServices colorFromHexString:[_themes objectForKey:@"button_submit"]]];
+    [self.submitBtn setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_submit"]]];
     _offline = persistenceManager.offline;
     
     _paymentType = [persistenceManager getDataStore:PAYMENT_TYPE];
@@ -71,15 +71,23 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 
 #pragma mark - IBActions
 - (IBAction)submit:(id)sender {
-    _apiManager.delegate = self;
-    [_apiManager checkConnection:self];
+    AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
+    if (checkConnection) {
+        [checkConnection start];
+    }
 }
 
 
@@ -158,19 +166,21 @@
  * SubmitViewController checking the connection
  */
 - (void) checkConnection {
-    _apiManager.delegate = self;
-    [_apiManager checkConnection:self];
+    AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
+    if (checkConnection) {
+        [checkConnection start];
+    }
 }
 
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
 }
 
 /*!
  * SubmitViewController submitting the transaction (i.e offline/online)
  */
 - (void) submitTransaction: (BOOL) offline{
-    NSString *last_order_number = [NSString stringWithFormat:@"%d",[_globalStore.last_order_number integerValue] + 1];
+    NSString *last_order_number = [NSString stringWithFormat:@"%ld",[_globalStore.last_order_number integerValue] + 1];
     long prefix_number_length = [_globalStore.prefix_number_length integerValue];
     
     NSMutableArray *invoice=[NSMutableArray array];
@@ -231,7 +241,7 @@
     NSArray *cartStores = [persistenceManager getCartStores];
     for (CartStore *cartStore in cartStores) {
         NSDictionary *cart = [[NSDictionary alloc] initWithObjectsAndKeys:cartStore.cart_code,@"cart_code",
-        cartStore.cartProduct.product_code,@"product_code",cartStore.qty, @"qty", nil];
+        cartStore.cartProduct.itemNo,@"product_code",cartStore.qty, @"qty", nil];
         [carts addObject:cart];
     }
     NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -248,9 +258,10 @@
     self.navigationItem.hidesBackButton = YES;
     self.submitBtn.enabled = NO;
     [self.submitBtn setBackgroundColor:[UIColor lightGrayColor]];
-    [persistenceManager clearCurrentEvent];
+    [persistenceManager clearCurrentTransaction];
     self.navigationItem.title = @"Payment Received";
-    [sharedServices showMessage:self message:@"Payment received successfully" error:NO withCallBack:nil];
+    [service showMessage:self loader:NO message:@"Payment received successfully" error:NO
+      waitUntilCompleted:NO  withCallBack:nil];
     [persistenceManager setDataStore:@"printCopy" value:data];
     
     _printBtn =[[UIBarButtonItem alloc]  initWithTitle:@"Print" style:UIBarButtonItemStylePlain

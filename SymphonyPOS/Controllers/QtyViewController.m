@@ -26,9 +26,9 @@
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
    
-    [self.qtyView setBackgroundColor:[sharedServices colorFromHexString:
+    [self.qtyView setBackgroundColor:[service colorFromHexString:
                                                     [_themes objectForKey:@"background"]]];
-    [self.nextBtn setBackgroundColor:[sharedServices colorFromHexString:
+    [self.nextBtn setBackgroundColor:[service colorFromHexString:
                                       [_themes objectForKey:@"button_submit"]]];
    
 }
@@ -42,9 +42,15 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 90000
 - (NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
+#else
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+#endif
 
 - (void)initialise:(ProductStore *)productStore {
     _currentProductStore = productStore;
@@ -85,7 +91,7 @@
 
 #pragma mark - IBActions
 - (IBAction)next:(id)sender {
-    if ([sharedServices isEmptyString:self.qty.text]) {
+    if ([service isEmptyString:self.qty.text]) {
         self.qty.text = @"1";
     }
    
@@ -107,7 +113,7 @@
 
 #pragma mark - Private methods
 - (void) willEnterForegroundNotification {
-    [sharedServices showPinView:self];
+    [service showPinView:self];
 }
 
 

@@ -10,11 +10,11 @@
 #import <CommonCrypto/CommonKeyDerivation.h>
 
 
-@interface SharedServices : NSObject
+@interface Service : NSObject
 /*!
  * SharedServices shared instance
  */
-+ (SharedServices*) sharedInstance;
++ (Service*) sharedInstance;
 
 /*!
  * SharedServices checking the string  (i.e empty and/or null)
@@ -29,7 +29,13 @@
 /*!
  * SharedServices display message  views
  */
-- (void) showMessage:(id)source message:(NSString*)message error:(BOOL)error withCallBack:(void (^)(void))callbackBlock;
+- (void) showMessage:(id)reference loader:(BOOL)loader message:(NSString*)message error:(BOOL)error waitUntilCompleted:(BOOL)
+        waitUntilCompleted withCallBack:(void (^)(void))callbackBlock;
+
+/*!
+ * SharedServices hide message  views
+ */
+- (void) hideMessage :(void (^)(void))callbackBlock;
 
 /*!
  * SharedServices display the pin view

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="JXz-MK-874">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="JXz-MK-874">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
         <!--Page View Controller-->
@@ -21,7 +22,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hBp-fc-2hn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-580" y="-589"/>
+            <point key="canvasLocation" x="-280" y="-693"/>
         </scene>
         <!--Terminal View Controller-->
         <scene sceneID="qYu-yU-YpD">
@@ -85,7 +86,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TLe-B8-Wlc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="24" y="-1006.9999999999998"/>
+            <point key="canvasLocation" x="176" y="-1017"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="aea-FZ-768">
@@ -101,7 +102,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C0s-Xt-XnZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-808" y="-692.99999999999989"/>
+            <point key="canvasLocation" x="-882" y="-693"/>
         </scene>
         <!--Visual Feed Back View Controller-->
         <scene sceneID="RGm-fF-uDb">
@@ -265,7 +266,7 @@
                                 <rect key="frame" x="0.0" y="22" width="320" height="352"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="A0r-Cw-yzS" id="alE-gf-kZL">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="351.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="352"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 </tableViewCellContentView>
@@ -375,7 +376,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="348"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BcZ-Yu-VWb" id="axt-Ct-yVE">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="347.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="348"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="rounded_table_cell" id="OcB-3E-yq4">
@@ -756,7 +757,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="agp-rP-RlO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-31" y="-289"/>
+            <point key="canvasLocation" x="-859" y="-29"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="lgc-jC-dPe">
@@ -908,12 +909,7 @@
         <image name="unchecked" width="24" height="24"/>
         <image name="user-logout" width="16" height="16"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="xAU-hG-oCH"/>
+        <segue reference="tRo-Fu-6sh"/>
     </inferredMetricsTieBreakers>
 </document>
