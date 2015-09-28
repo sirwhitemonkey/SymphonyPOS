@@ -4,24 +4,54 @@
 #import "Mantle.h"
 
 @interface Customer : MTLModel <MTLJSONSerializing>
+
 /*!
- * Customer customer_code , the customer code
+ * Customer identifier , the customer identifier
  */
-@property (nonatomic, strong)  NSString *customer_code;
+@property (nonatomic, strong)  NSNumber *identifier;
 /*!
- * Customer pricelist_code , the customer pricelist code
+ * Customer address1 , the address 1
  */
-@property (nonatomic, strong)  NSString *pricelist_code;
+@property (nonatomic, strong)  NSString *address1;
 /*!
- * Customer customer-description , the customer description
+ * Customer address2 , the address 2
  */
-@property (nonatomic, strong)  NSString *customer_description;
+@property (nonatomic, strong)  NSString *address2;
 /*!
- * Customer customer_default , the customer default code
+ * Customer address3 , the address 3
  */
-@property (nonatomic, assign)  BOOL customer_default;
+@property (nonatomic, strong)  NSString *address3;
 /*!
- * Customer terms , the customer default terms
+ * Customer address4 , the address 4
  */
-@property (nonatomic, assign)  BOOL terms;
+@property (nonatomic, strong)  NSString *address4;
+/*!
+ * Customer code , the customer code
+ */
+@property (nonatomic, strong)  NSString *code;
+/*!
+ * Customer currency , the customer currency
+ */
+@property (nonatomic, strong)  NSString *currency;
+/*!
+* Customer group , the customer group
+*/
+@property (nonatomic, strong)  NSString *group;
+/*!
+ * Customer name , the customer name
+ */
+@property (nonatomic, strong)  NSString *name;
+/*!
+* Customer priceCode , the customer priceCode
+*/
+@property (nonatomic, strong)  NSString *priceCode;
+/*!
+ * Customer status , the customer status
+ */
+@property (nonatomic, strong)  NSNumber *status;
+/*!
+ * Customer taxGroup , the customer taxGroup
+ */
+@property (nonatomic, strong)  NSString *taxGroup;
+
 @end

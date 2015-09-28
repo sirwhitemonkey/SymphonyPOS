@@ -12,7 +12,7 @@
              @"image_url" : @"image_url",
              @"notActive" : @"notActive",
              @"desc" : @"desc",
-             @"stockUnit" : @"stockunit"
+             @"stockUnit" : @"stockUnit"
              };
 }
 

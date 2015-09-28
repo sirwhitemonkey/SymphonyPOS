@@ -74,6 +74,9 @@
 #define API_SETTING_DATA_DEFAULTS @"setting/dataDefaults"
 #define API_PRODUCTS @"products"
 #define API_CHECK_CONNECTION @"checkConnection"
+#define API_PRICELISTS @"priceLists"
+#define API_CUSTOMERS @"customers"
+#define API_PRICES @"prices"
 
 
 

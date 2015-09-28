@@ -5,21 +5,18 @@
 #import "Mantle.h"
 
 @interface PriceList : MTLModel <MTLJSONSerializing>
+
 /*!
- * PriceList product_code , the product code
+ * PriceList identifier , the pricelist identifier
  */
-@property (nonatomic, strong)  NSString *product_code;
+@property (nonatomic, strong)  NSNumber *identifier;
 /*!
- * PriceList pricelist_code , the pricelist code
+ * PriceList code , the pricelist code
  */
-@property (nonatomic, strong)  NSString *pricelist_code;
+@property (nonatomic, strong)  NSString *code;
 /*!
- * PriceList price , the pricelist price
+ * PriceList desc , the pricelist desc
  */
-@property (nonatomic, strong)  NSNumber *price;
-/*!
- * PriceList currency , the pricelist currency
- */
-@property (nonatomic, strong)  NSString *currency;
+@property (nonatomic, strong)  NSString *desc;
 
 @end

@@ -4,20 +4,20 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
-             @"pricelist_code" : @"pricelist_code",
-             @"customer_code" : @"customer_code",
-             @"customer_default" : @"default",
-             @"terms" : @"terms",
-             @"customer_description" : @"customer_description"
+             @"identifier" : @"id",
+             @"address1" : @"address1",
+             @"address2" : @"address2",
+             @"address3" : @"address3",
+             @"address4" : @"address4",
+             @"code" : @"code",
+             @"currency" : @"currency",
+             @"email" : @"email",
+             @"group" : @"group",
+              @"name" : @"name",
+             @"priceCode" : @"priceCode",
+             @"status" : @"status",
+             @"taxGroup" : @"taxGroup"
              };
-}
-
-+ (NSValueTransformer *)customer_defaultJSONTransformer {
-    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
-}
-
-+ (NSValueTransformer *)termsJSONTransformer {
-    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
 }
 
 @end

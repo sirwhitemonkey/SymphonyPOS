@@ -5,6 +5,10 @@
 
 @interface Product : MTLModel <MTLJSONSerializing>
 /*!
+ * Product identifier , the product identifier
+ */
+@property (nonatomic, strong)  NSNumber *identifier;
+/*!
  * Product itemNo , the item no
  */
 @property (nonatomic, strong)  NSString *itemNo;
@@ -12,10 +16,6 @@
  * Product upcCode , the upc code
  */
 @property (nonatomic, strong)  NSString *upcCode;
-/*!
- * Product identifier , the product identifier
- */
-@property (nonatomic, strong)  NSNumber *identifier;
 /*!
  * Product image_url , the product image url
  */

@@ -2,8 +2,8 @@
 //  ProductStore.h
 //  SymphonyPOS
 //
-//  Created by Rommel Sumpo on 27/09/15.
-//  Copyright © 2015 XMDevelopments. All rights reserved.
+//  Created by Rommel Sumpo on 28/09/15.
+//  Copyright (c) 2015 XMDevelopments. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,14 +11,30 @@
 
 @class CartStore, PriceListStore;
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface ProductStore : NSManagedObject
 
-// Insert code here to declare functionality of your managed object subclass
-
+@property (nonatomic, retain) NSString * desc;
+@property (nonatomic, retain) NSNumber * identifier;
+@property (nonatomic, retain) NSString * image_url;
+@property (nonatomic, retain) NSNumber * inStock;
+@property (nonatomic, retain) NSString * itemNo;
+@property (nonatomic, retain) NSNumber * notActive;
+@property (nonatomic, retain) NSString * stockUnit;
+@property (nonatomic, retain) NSString * upcCode;
+@property (nonatomic, retain) NSSet *productCart;
+@property (nonatomic, retain) NSSet *productPriceList;
 @end
 
-NS_ASSUME_NONNULL_END
+@interface ProductStore (CoreDataGeneratedAccessors)
 
-#import "ProductStore+CoreDataProperties.h"
+- (void)addProductCartObject:(CartStore *)value;
+- (void)removeProductCartObject:(CartStore *)value;
+- (void)addProductCart:(NSSet *)values;
+- (void)removeProductCart:(NSSet *)values;
+
+- (void)addProductPriceListObject:(PriceListStore *)value;
+- (void)removeProductPriceListObject:(PriceListStore *)value;
+- (void)addProductPriceList:(NSSet *)values;
+- (void)removeProductPriceList:(NSSet *)values;
+
+@end
