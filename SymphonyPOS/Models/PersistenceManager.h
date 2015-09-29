@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIkit.h>
 #import "KeychainWrapper.h"
-#import "ProductStore+CoreDataProperties.h"
+#import "ProductStore.h"
 #import "CartStore.h"
 #import "PriceListStore.h"
 #import "CustomerStore.h"
@@ -15,6 +15,8 @@
 #import "MetaData.h"
 #import "APIManager.h"
 #import "Constants.h"
+#import "PriceStore.h"
+#import "Price.h"
 
 @interface PersistenceManager : NSObject
 /*!
@@ -37,6 +39,7 @@
  */
 - (NSManagedObjectContext *)managedObjectContext;
 
+#pragma mark - Core data
 /*!
  * PersistenceManager coredata object context save event
  */
@@ -80,7 +83,7 @@
 /*!
  * PersistenceManager getting the cart from coredata using product_code
  */
-- (CartStore*)getCartByProductStore:(NSString*)product_code;
+- (CartStore*)getCartByProductStore:(NSString*)itemNo;
 
 /*!
  * PersistenceManager updating the cart from coredata
@@ -95,22 +98,27 @@
 /*!
  * PersistenceManager setting/storing the pricelist into coredata
  */
-- (void)setPriceListStore:(PriceList*)pricelist_code;
+- (void)setPriceListStore:(PriceList*)priceList;
 
 /*!
  * PersistenceManager getting the pricelist from coredata using pricelist code
  */
-- (PriceListStore*)getPriceListStore:(NSString*)pricelist_code;
+- (PriceListStore*)getPriceListStore:(NSString*)code;
 
 /*!
- * PersistenceManager getting the arrays of pricelists from coredata
+ * PersistenceManager setting/storing the price into coredata
  */
-- (NSArray*)getPriceListStores;
+- (void)setPriceStore:(Price*)price;
 
 /*!
- * PersistenceManager getting the pricelist by product
+ * PersistenceManager getting the prices from coredata using price identifier
  */
-- (PriceListStore*)getPriceListByProductStore:(NSString*)pricelist_code product_code:(NSString*)product_code;
+- (PriceStore*)getPriceStore:(NSNumber*)identifier;
+
+/*!
+ * PersistenceManager getting the price of item from coredata using price code and item no
+ */
+- (PriceStore*)getPriceStore:(NSString*)code itemNo:(NSString*)itemNo;
 
 /*!
  * PersistenceManager setting/storing the customer into coredata
@@ -120,7 +128,7 @@
 /*!
  * PersistenceManager getting the customer from coredata
  */
-- (CustomerStore*) getCustomerStore:(NSString*)customer_code;
+- (CustomerStore*) getCustomerStore:(NSString*)code;
 
 /*!
  * PersistenceManager getting the arrays of customers from coredata
@@ -147,6 +155,8 @@
  */
 - (GlobalStore*) getGlobalStore;
 
+
+#pragma mark - Common methods
 /*!
  * PersistenceManager clearing all the events (i.e transactions and data cache)
  */
@@ -193,23 +203,31 @@
 - (UIViewController*) getView:(NSString*)identifier;
 
 /*!
- * PersistenceManager updating the data during sync process
- */
-- (void) updateSync:(id)reference response:(Response*) response;
-
-/*!
  * PersistenceManager updating the settings in the bundle
  */
 - (void) updateSettingsBundle;
 
-/*!
- * PersistenceManager setting the my custom preferences
- */
-- (void) setMyCustomPreference:(NSString*)url logo:(NSString*)logo;
 
+#pragma mark - Sync methods
 /*!
  * PersistenceManager sync products
  */
 - (void) syncProducts: (APIManager*)apiManager response:(Response*)response completedCallback:(void (^)(void))callbackBlock;
+
+/*!
+ * PersistenceManager sync customers
+ */
+- (void) syncCustomers: (APIManager*)apiManager response:(Response*)response completedCallback:(void (^)(void))callbackBlock;
+
+/*!
+ * PersistenceManager sync pricelists
+ */
+- (void) syncPriceLists: (APIManager*)apiManager response:(Response*)response completedCallback:(void (^)(void))callbackBlock;
+
+/*!
+ * PersistenceManager sync prices
+ */
+- (void) syncPrices: (APIManager*)apiManager response:(Response*)response completedCallback:(void (^)(void))callbackBlock;
+
 
 @end

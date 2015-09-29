@@ -37,13 +37,10 @@
     [service boxInputStyling:self.pin3];
     [service boxInputStyling:self.pin4];
     
-     _apiManager = [[APIManager alloc] init];
-    _apiManager.delegate = self;
-    
     [self.pin1 becomeFirstResponder];
     
     _onExistingPinCode = true;
-    NSString *userPinIdent = [persistenceManager getKeyChain:APP_USER_PIN_IDENT];
+    NSString *userPinIdent = [persistenceManager getKeyChain:USER_PIN_IDENT];
     if ([service isEmptyString:userPinIdent]) {
         _onExistingPinCode = false;
     }
@@ -54,6 +51,7 @@
     }
     GlobalStore *globalStore = [persistenceManager getGlobalStore];
    
+     _apiManager = [[APIManager alloc] init];
     [_apiManager syncImage:self.logoView url:globalStore.my_custom_logo];
     
     
@@ -64,7 +62,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (BOOL)shouldAutorotate{
@@ -81,17 +78,6 @@
 }
 #endif
 
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark - UITextField
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -138,7 +124,7 @@
         [self.view endEditing:YES];
         if (_onExistingPinCode) {
    
-            pin = [persistenceManager getKeyChain:APP_USER_PIN_IDENT];
+            pin = [persistenceManager getKeyChain:USER_PIN_IDENT];
             if (![pin isEqualToString:loggedPin]) {
                 [service showMessage:self loader:NO message:@"Invalid pin code" error:YES
                   waitUntilCompleted:NO withCallBack: ^{
@@ -151,18 +137,10 @@
             } else {
                 
                 if ([service isEmptyString:[persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED]]) {
-                    // Sync products
-                    [service showMessage:self loader:YES message:@"Synchronising products ..." error:NO
-                      waitUntilCompleted:YES withCallBack:^ {
-                        _apiManager.batchOperation = true;
-                        AFHTTPRequestOperation *syncProducts = [_apiManager getProducts:0];
-                        if (syncProducts) {
-                            [syncProducts start];
-                        }
-                    }];
-                   
+                    [self viewSyncPage];
                 } else {
-                     [self dismissViewControllerAnimated:YES completion:nil];
+                    [persistenceManager setDataStore:PIN_LOGGED_IDENT value:PIN_LOGGED_IDENT];
+                    [self dismissViewControllerAnimated:YES completion:nil];
                 }
             }
         } else {
@@ -177,19 +155,11 @@
 
             } else {
                 if ([_pinCode isEqualToString:loggedPin]) {
-                    [persistenceManager setKeyChain:APP_USER_PIN_IDENT  value:loggedPin];
+                    [persistenceManager setKeyChain:USER_PIN_IDENT  value:loggedPin];
                     [service showMessage:self loader:NO message:@"Pin successfully created" error:NO
                       waitUntilCompleted:NO  withCallBack: ^{
-                        // Sync products
-                        [service showMessage:self loader:YES message:@"Synchronising products ..." error:NO
-                          waitUntilCompleted:YES withCallBack:^ {
-                            _apiManager.batchOperation = true;
-                            AFHTTPRequestOperation *syncProducts = [_apiManager getProducts:0];
-                            if (syncProducts) {
-                                [syncProducts start];
-                            }
-                        }];
-                    }];
+                        [self viewSyncPage];
+                      }];
                 } else {
                     [service showMessage:self loader:NO message:@"Invalid pin . Try it again" error:YES
                       waitUntilCompleted:NO  withCallBack: ^ {
@@ -208,22 +178,41 @@
     
 }
 
-#pragma mark - APIManager
-- (void)apiRequestError:(NSError *)error response:(Response *)response {
-    DebugLog(@"apiRequestError -> %@,%@", error,response);
+#pragma mark - SyncViewControllerDelegate
+- (void)syncDidCompleted:(SyncViewController *)controller {
+    DebugLog(@"syncDidCompleted");
+    [controller dismissViewControllerAnimated:YES completion:nil];
+    
+    [persistenceManager setDataStore:PIN_LOGGED_IDENT value:PIN_LOGGED_IDENT];
+    [persistenceManager setKeyChain:SYNC_DATE_LAST_UPDATED value:[persistenceManager getDataStore:SYNC_DATE_LAST_UPDATED]];
+    if (!_onExistingPinCode) {
+        [self viewPOSPage];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
-- (void) apiProductsResponse:(Response *)response {
-    [persistenceManager syncProducts:_apiManager response:response completedCallback:^ {
-        [service hideMessage:^ {
-            // TODO  customers
-        }];
-    }];
-    
+- (void) syncDidError:(SyncViewController *)controller {
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 
 #pragma mark - Private methods
+- (void)viewPOSPage {
+    [self performSegueWithIdentifier:@"PinPOSSegue" sender:self];
+}
 
+/*!
+ * PageViewController navigate to sync page
+ */
+- (void) viewSyncPage {
+    SyncViewController *controller = (SyncViewController*)[persistenceManager getView:@"SyncViewController"];
+    controller.delegate = self;
+    controller.settings = NO;
+    [controller setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self presentViewController:controller animated:NO completion: ^ {
+        [controller sync];
+    }];
+}
 
 @end

@@ -149,8 +149,7 @@
 #pragma mark - IBActions
 - (IBAction)sync:(id)sender {
     DebugLog(@"sync");
-    _apiManager.delegate = self;
-    [_apiManager sync:self];
+    [self viewSyncPage];
 }
 
 - (IBAction)logout:(id)sender {
@@ -184,17 +183,6 @@
         [self viewPaymentCustomerPage];
     }
 }
-
-#pragma mark - APIManager
-- (void)apiRequestError:(NSError *)error {
-    
-}
-
--(void)apiSyncResponse:(Response *)response {
-   DebugLog(@"apiSyncResponse -> %@", response);
-   [persistenceManager updateSync:self response:response];
-}
-
 
 #pragma mark - UITableView
 
@@ -314,17 +302,18 @@
         ProductViewCell *pViewCell = (ProductViewCell*)cell;
          pViewCell.product_name.text = productStore.desc;
          pViewCell.product_description.text = productStore.desc;
-         pViewCell.unit.text = productStore.stockunit;
+         pViewCell.unit.text = productStore.stockUnit;
         
         
-        PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:_customerStore.pricelist_code product_code:productStore.itemNo];
+        PriceStore *priceStore = [persistenceManager getPriceStore:_customerStore.priceCode
+                                                      itemNo:productStore.itemNo];
         
-         pViewCell.unit_price.text = [NSString stringWithFormat:@"%@ %.2f",priceListStore.currency,[priceListStore.price floatValue]];
+         pViewCell.unit_price.text = [NSString stringWithFormat:@"%@ %.2f",priceStore.currency,[priceStore.unitPrice floatValue]];
         [service boxInputStyling:pViewCell.qty];
         pViewCell.qty.text = [cartStore.qty stringValue];
         pViewCell.qty.tag = indexPath.row;
-        pViewCell.total.text = [NSString stringWithFormat:@"%@ %.2f", priceListStore.currency,
-                                ([cartStore.qty integerValue] * [priceListStore.price floatValue])];
+        pViewCell.total.text = [NSString stringWithFormat:@"%@ %.2f", priceStore.currency,
+                                ([cartStore.qty integerValue] * [priceStore.unitPrice floatValue])];
         
         pViewCell.removeToCart.tag = indexPath.row;
          [ pViewCell.removeToCart setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_remove"]]];
@@ -356,16 +345,16 @@
         [_dtdev barcodeStartScan:nil];
     }
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+#pragma mark - SyncViewControllerDelegate
+- (void)syncDidCompleted:(SyncViewController *)controller {
+    DebugLog(@"syncDidCompleted");
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
-*/
 
+- (void) syncDidError:(SyncViewController *)controller {
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
 
 
 #pragma mark - UISearchBar
@@ -607,7 +596,7 @@
 - (void) initialiseSettings {
     _globalStore = [persistenceManager getGlobalStore];
     _customerStore = [persistenceManager getCustomerStore:_globalStore.customer_default_code];
-    self.customer.text = _customerStore.customer_description;
+    self.customer.text = _customerStore.name;
 }
 
 /*!
@@ -624,10 +613,10 @@
     for (CartStore *cartStore in cartStores) {
         ProductStore *productStore = cartStore.cartProduct;
         
-        PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:_customerStore.pricelist_code product_code:productStore.itemNo];
-        subTotals += ([priceListStore.price floatValue] * (float)[cartStore.qty integerValue]);
+        PriceStore *priceStore = [persistenceManager getPriceStore:_customerStore.priceCode itemNo:productStore.itemNo];
+        subTotals += ([priceStore.unitPrice floatValue] * (float)[cartStore.qty integerValue]);
         if ([service isEmptyString:currency]) {
-            currency = priceListStore.currency;
+            currency = priceStore.currency;
         }
     }
     currency = (!currency ? @"" : currency);
@@ -758,6 +747,19 @@
     if (_deviceConnected) {
         [_dtdev barcodeStopScan:nil];
     }
+}
+
+/*!
+ * POSViewController navigate to sync page
+ */
+- (void) viewSyncPage {
+    SyncViewController *controller = (SyncViewController*)[persistenceManager getView:@"SyncViewController"];
+    controller.delegate = self;
+    controller.settings = NO;
+    [controller setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self presentViewController:controller animated:NO completion: ^ {
+        [controller sync];
+    }];
 }
 
 

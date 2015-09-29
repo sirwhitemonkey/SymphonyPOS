@@ -112,12 +112,12 @@
     CustomerStore *customerStore = [persistenceManager getCustomerStore:[printCopy objectForKey:@"customer_code"]];
     for (NSDictionary *cart  in carts) {
         ProductStore *productStore = [persistenceManager getProductStore:[cart objectForKey:@"product_code"]];
-        PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:customerStore.pricelist_code
-                                                                          product_code:[cart objectForKey:@"product_code"]];
+        PriceStore *priceStore = [persistenceManager  getPriceStore:customerStore.priceCode
+                                                                          itemNo:[cart objectForKey:@"product_code"]];
         NSNumber *qty =[cart objectForKey:@"qty"];
-        float amount = [priceListStore.price floatValue] * [qty floatValue];
+        float amount = [priceStore.unitPrice floatValue] * [qty floatValue];
         receipts = [NSString stringWithFormat:@"%@<tr><td>%@</td><td>%ld</td><td>%@%.2f</td><td>%@%.2f</td></tr>",receipts,
-                    productStore.desc, (long)[qty integerValue], currency,[priceListStore.price floatValue] ,currency,amount];
+                    productStore.desc, (long)[qty integerValue], currency,[priceStore.unitPrice floatValue] ,currency,amount];
         
     }
    
@@ -271,8 +271,9 @@
      footer size based on the paper size. We'll do that when we aren't doing the simple
      layout.
      */
-    UIFont *font = [UIFont fontWithName:@"Helvetica" size:HEADER_FOOTER_TEXT_HEIGHT];
-    CGSize titleSize = [myRenderer.jobTitle sizeWithFont:font];
+    NSDictionary *sizeWithAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"Helvetica" size:HEADER_FOOTER_TEXT_HEIGHT]};
+
+    CGSize titleSize = [myRenderer.jobTitle sizeWithAttributes:sizeWithAttributes];
     myRenderer.headerHeight = myRenderer.footerHeight = titleSize.height + HEADER_FOOTER_MARGIN_PADDING;
 #endif
     [myRenderer addPrintFormatter:viewFormatter startingAtPageAtIndex:0];

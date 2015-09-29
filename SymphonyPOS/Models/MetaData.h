@@ -41,4 +41,11 @@
  * MetaData last flag
  */
 @property BOOL first;
+
+/*!
+ * MetaData total number of elements
+ */
+@property (nonatomic,strong) NSNumber *date_last_updated;
+
+
 @end

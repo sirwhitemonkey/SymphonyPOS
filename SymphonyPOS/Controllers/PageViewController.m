@@ -3,46 +3,49 @@
 #import "PageViewController.h"
 
 @interface PageViewController ()
+@property (nonatomic,strong) APIManager *apiManager;
 @property (nonatomic,strong) SyncService *syncService;
 @property (nonatomic,strong) GlobalStore *globalStore;
 @end
 
 @implementation PageViewController
+@synthesize apiManager = _apiManager;
 @synthesize syncService = _syncService;
 @synthesize globalStore = _globalStore;
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     DebugLog(@"viewDidLoad");
-    // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden = YES;
+    
+    _apiManager = [[APIManager alloc] init];
+    _apiManager.delegate = self;
     
     _syncService = [SyncService sharedInstance];
     
-    // Sync every 5 minutes
-    [_syncService startTimerForSender:self withTimeInterval:60*5];
+    // Sync every 30 minutes
+    [_syncService startTimerForSender:self withTimeInterval:60*30];
     
     [self registerNotifications];
     
-    // Testing only
-    [persistenceManager setMyCustomPreference:API_URL logo:CUSTOM_CLIENT_LOGO];
-   
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     UIViewController *controller = nil;
-    NSString *appUserIdent = [persistenceManager getKeyChain:APP_LOGGED_IDENT];
-    NSString *appPin = [persistenceManager getKeyChain:APP_USER_PIN_IDENT];
+    NSString *appUserIdent = [persistenceManager getKeyChain:USER_LOGGED_IDENT];
+    NSString *appPin = [persistenceManager getKeyChain:USER_PIN_IDENT];
   
     _globalStore = [persistenceManager getGlobalStore];
     if (_globalStore.my_custom_url!= nil) {
+        
         if (_globalStore.themes) {
             NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
@@ -55,34 +58,32 @@
               [service colorFromHexString:[themes objectForKey:@"navigation_bar_title"]] , NSForegroundColorAttributeName,nil]];
         }
         
-        if ( ![service isEmptyString:appUserIdent] && ![service isEmptyString:appPin]) {
-            // Filter app logged identifier
-            if ([persistenceManager getDataStore:APP_LOGGED_IDENT] !=nil ) {
-                [self viewPOSPage];
+        if ( ![service isEmptyString:appUserIdent]) {
+         
+            if ([service isEmptyString:appPin]) {
+                // Show terminal page
+                [self viewTerminalPage];
                 
             } else {
-                if ([service isEmptyString:appPin]) {
-                    // Show terminal page
-                    [self viewTerminalPage];
-                } else {
-                    // Show pin page
+                
+                if ([persistenceManager getDataStore:PIN_LOGGED_IDENT] == nil) {
+                    // Show PinView page
                     controller = [persistenceManager getView:@"PinViewController"];
                     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                     [controller setModalPresentationStyle:UIModalPresentationFullScreen];
                     [self presentViewController:controller animated:YES completion:nil];
+                } else {
+                    // Show POS page
+                    [self viewPOSPage];
                 }
             }
         } else {
-            if ([service isEmptyString:appUserIdent] && [service isEmptyString:appPin]) {
-                // Show login page
-                controller = [persistenceManager getView:@"LoginViewController"];
-                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-                [controller setModalPresentationStyle:UIModalPresentationFullScreen];
-                [self presentViewController:controller animated:YES completion:nil];
-            } else {
-                // Show terminal page
-                [self viewTerminalPage];
-            }
+            [persistenceManager clearCache];
+            // Show login page
+            controller = [persistenceManager getView:@"LoginViewController"];
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+            [self presentViewController:controller animated:YES completion:nil];
         }
         
     } else {
@@ -110,67 +111,44 @@
 #endif
 
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 #pragma mark - APIManager
-- (void)apiRequestError:(NSError *)error {
-    DebugLog(@"apiRequestError: %@", error);
-    
+- (void)apiRequestError:(NSError *)error response:(Response *)response {
+    DebugLog(@"apiRequestError -> %@,%@", error,response);
+    if (!_apiManager.batchOperation) {
+        [service hideMessage:nil];
+    }
 }
 
-- (void) apiSyncResponse:(Response *)response {
-    DebugLog(@"apiSyncResponse");
-    /*
-    if (!response.error) {
-        [persistenceManager updateSync:self response:response];
-    }*/
-    
-}
 
 - (void) apiOfflineSalesResponse:(Response *)response {
-    DebugLog(@"apiOfflineSalesResponse");
-    /*
-    if (!response.error) {
-        [persistenceManager removeOfflineSalesStore];
-    }*/
+   [persistenceManager removeOfflineSalesStore];
+    [service hideMessage:nil];
 }
 
-- (void)apiProductsResponse:(Response *)response {
-    
-    DebugLog(@"apiProductsResponse");
-    /*
-    if (!response.error) {
-    }
-     */
+
+#pragma mark - SyncViewControllerDelegate
+- (void)syncDidCompleted:(SyncViewController *)controller {
+    DebugLog(@"syncDidCompleted");
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)syncDidError:(SyncViewController *)controller {
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - SyncService
 
 - (void)startTimerAction:(id)userInfo {
-    APIManager *apiManager;
     
     if (self.presentedViewController) {
         return ;
     }
-    if ([persistenceManager getKeyChain:APP_USER_IDENT] == nil ||
-        [persistenceManager getKeyChain:APP_USER_PIN_IDENT] == nil) {
+    // Check if pin/user already logged, if not disable sync
+    if ([persistenceManager getKeyChain:USER_LOGGED_IDENT] == nil ||
+        [persistenceManager getKeyChain:USER_PIN_IDENT] == nil) {
         return;
     }
    
-    /*
-    apiManager = [[APIManager alloc]init];
-    apiManager.delegate =self;
-    [apiManager getProducts:self page:11 limit:2000];
-     */
-  
     // Sync
     double date_last_sync_interval = [[persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED] doubleValue]/1000;
     NSDate * date_last_sync = [NSDate  dateWithTimeIntervalSince1970:date_last_sync_interval];
@@ -180,19 +158,18 @@
     NSUserDefaults* settings = [NSUserDefaults standardUserDefaults];
     long days_sync_interval = [[settings objectForKey:@"days_sync_interval"] integerValue];
     if (days_sync_interval < days) {
-        apiManager = [[APIManager alloc]init];
-        apiManager.delegate = self;
-        [apiManager sync:self];
+        [self viewSyncPage];
     }
     
     // Sync offline
     NSArray *offlineSalesStores = [persistenceManager getOfflineSalesStore];
     if (offlineSalesStores.count > 0) {
-        apiManager = [[APIManager alloc]init];
-        apiManager.delegate = self;
-        [apiManager offlineSales:self];
+        [service showMessage:self loader:YES message:@"Synchronising offline sales ..." error:NO
+          waitUntilCompleted:YES withCallBack:^ {
+              _apiManager.batchOperation = false;
+              [_apiManager offlineSales:self];
+          }];
     }
-
 }
 
 
@@ -236,6 +213,19 @@
  */
 - (void) viewTerminalPage {
     [self performSegueWithIdentifier:@"TerminalSegue" sender:self];
+}
+
+/*!
+ * PageViewController navigate to sync page
+ */
+- (void) viewSyncPage {
+    SyncViewController *controller = (SyncViewController*)[persistenceManager getView:@"SyncViewController"];
+    controller.delegate = self;
+    controller.settings = YES;
+    [controller setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self presentViewController:controller animated:NO completion: ^ {
+        [controller sync];
+    }];
 }
 
 

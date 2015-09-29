@@ -34,15 +34,15 @@
 
 #pragma Messages
 #define APP_FOOTER @"Copyright (c) 2015 XM DEVELOPMENTS. All rights reserved"
-#define SERVER_ERROR @"Server experienced internal error"
+#define SERVER_ERROR @"Server experienced communication error"
 #define UNAUTHORIZED_USER @"Unauthorized credentials"
 
 #pragma - Generic constants
-#define APP_TOKEN @"token"
-#define APP_USER_IDENT @"appUserIdent"
-#define APP_USER_SECURITY @"appUserSecurity"
-#define APP_USER_PIN_IDENT @"appUserPinIdent"
-#define APP_LOGGED_IDENT @"appLoggedIdent"
+#define USER_IDENT @"userIdent"
+#define USER_SECURITY @"userSecurity"
+#define USER_PIN_IDENT @"userPinIdent"
+#define USER_LOGGED_IDENT @"userLoggedIdent"
+#define PIN_LOGGED_IDENT @"pinLoggedIdent"
 #define PAYMENT_TYPE @"paymentType"
 #define PAYMENT_INVOICE @"paymentInvoice"
 #define PAYMENT_CREDITCARD @"CreditCard"
@@ -62,10 +62,11 @@
 #pragma mark - Response codes
 #define HTTP_STATUS_OK 200
 #define HTTP_STATUS_UNAUTHORIZED 401
+#define HTTP_STATUS_SERVICE_UNAVAILABLE 503
 
 #pragma mark - Api service
 //TODO
-#define API_URL @"http://192.168.1.7:8080/Sphere/v1"
+#define API_URL @"http://192.168.153.89:8080/Sphere/v1"
 #define CUSTOM_CLIENT_LOGO @"http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg"
 //---
 

@@ -39,8 +39,19 @@
  */
 - (void) apiProductsResponse:(Response*)response;
 
+/*!
+ * APIManagerDelegate get customers callback
+ */
+- (void) apiCustomersResponse:(Response*)response;
 
-
+/*!
+ * APIManagerDelegate get pricelists callback
+ */
+- (void) apiPriceListsResponse:(Response*)response;
+/*!
+ * APIManagerDelegate get prices callback
+ */
+- (void) apiPricesResponse:(Response*)response;
 
 
 
@@ -109,11 +120,24 @@
 - (AFHTTPRequestOperation*) getProducts:(int)page;
 
 /*!
+ * APIManager get the customers
+ */
+- (AFHTTPRequestOperation*) getCustomers:(int)page;
+
+/*!
+ * APIManager get the pricelists
+ */
+- (AFHTTPRequestOperation*) getPriceLists:(int)page;
+
+/*!
+ * APIManager get the prices
+ */
+- (AFHTTPRequestOperation*) getPrices:(int)page;
+
+/*!
  * APIManager checking of connection request
  */
 - (AFHTTPRequestOperation*) checkConnection;
-
-
 
 
 

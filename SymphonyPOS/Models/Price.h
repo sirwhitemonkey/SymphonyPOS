@@ -11,7 +11,7 @@
 /*!
  * Price currency , the price currency
  */
-@property (nonatomic, strong)  NSSTring *currency;
+@property (nonatomic, strong)  NSString *currency;
 /*!
  * Price itemNo , the price itemNo
  */

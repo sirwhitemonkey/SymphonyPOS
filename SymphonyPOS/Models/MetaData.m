@@ -12,7 +12,8 @@
              @"size" : @"size",
              @"last" : @"last",
              @"totalElements" : @"totalElements",
-             @"first" : @"first"
+             @"first" : @"first",
+             @"date_last_updated": @"date_last_updated"
              };
 }
 

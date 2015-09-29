@@ -1,0 +1,76 @@
+{
+    "data": {
+        "content": [
+                    {
+                    "code": "T10",
+                    "id": 1,
+                    "exclude": false,
+                    "desc": "Product price"
+                    },
+                    {
+                    "code": "T20",
+                    "id": 2,
+                    "exclude": false,
+                    "desc": "Medshop AUS/PNG Customer Price"
+                    },
+                    {
+                    "code": "T30",
+                    "id": 3,
+                    "exclude": false,
+                    "desc": "Discount by Cust Stat Grp"
+                    },
+                    {
+                    "code": "M10",
+                    "id": 4,
+                    "exclude": false,
+                    "desc": "Medshop Gross Price"
+                    },
+                    {
+                    "code": "M20",
+                    "id": 5,
+                    "exclude": false,
+                    "desc": "Discount by Qty"
+                    },
+                    {
+                    "code": "M15",
+                    "id": 6,
+                    "exclude": false,
+                    "desc": "Medshop Margin"
+                    },
+                    {
+                    "code": "M30",
+                    "id": 7,
+                    "exclude": false,
+                    "desc": "Membership discount"
+                    },
+                    {
+                    "code": "M05",
+                    "id": 8,
+                    "exclude": false,
+                    "desc": "Medshop License Control"
+                    },
+                    {
+                    "code": "M15A",
+                    "id": 9,
+                    "exclude": false,
+                    "desc": "Medshop Margin by item"
+                    },
+                    {
+                    "code": "KIT",
+                    "id": 10,
+                    "exclude": false,
+                    "desc": "kit Component"
+                    }
+                    ],
+        "metadata": {
+            "number": 0,
+            "numberOfElements": 10,
+            "totalPages": 2,
+            "size": 10,
+            "last": false,
+            "totalElements": 13,
+            "first": true
+        }
+    },
+    "responseCode": 200
+}

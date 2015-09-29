@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14C1510" minimumToolsVersion="Xcode 4.3">
     <entity name="CartStore" representedClassName="CartStore" syncable="YES">
-        <attribute name="cart_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cart_code" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
         <attribute name="qty" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="cartProduct" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductStore" inverseName="productCart" inverseEntity="ProductStore" syncable="YES"/>
     </entity>
@@ -10,16 +10,15 @@
         <attribute name="address2" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="address3" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="address4" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="code" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="code" optional="YES" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
         <attribute name="currency" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="group" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="identifier" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="name" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
-        <attribute name="priceCode" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <attribute name="status" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="identifier" attributeType="Integer 32" defaultValueString="0" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="priceCode" optional="YES" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="taxGroup" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="customerPriceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PriceListStore" syncable="YES"/>
     </entity>
     <entity name="GlobalStore" representedClassName="GlobalStore" syncable="YES">
         <attribute name="customer_default_code" optional="YES" attributeType="String" syncable="YES"/>
@@ -43,42 +42,41 @@
     <entity name="OfflineSalesStore" representedClassName="OfflineSalesStore" syncable="YES">
         <attribute name="carts" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="customer_code" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="invoice_no" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="invoice_no" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
         <attribute name="payment_type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="PriceListStore" representedClassName="PriceListStore" syncable="YES">
         <attribute name="code" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
-        <attribute name="desc" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="PriceStore" representedClassName="PriceStore" syncable="YES">
         <attribute name="currency" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="identifier" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="itemNo" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="priceListCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="identifier" attributeType="Integer 32" defaultValueString="0" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="itemNo" optional="YES" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="priceListCode" optional="YES" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
         <attribute name="saleEnd" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="saleStart" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="unitPrice" optional="YES" attributeType="Decimal" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="unitPrice" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
     <entity name="ProductStore" representedClassName="ProductStore" syncable="YES">
-        <attribute name="desc" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
-        <attribute name="identifier" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="identifier" attributeType="Integer 32" defaultValueString="0" indexed="YES" versionHashModifier="1" syncable="YES"/>
         <attribute name="image_url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="inStock" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="itemNo" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
+        <attribute name="itemNo" optional="YES" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
         <attribute name="notActive" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="stockUnit" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="upcCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="upcCode" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="productCart" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CartStore" inverseName="cartProduct" inverseEntity="CartStore" syncable="YES"/>
-        <relationship name="productPriceList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PriceListStore" syncable="YES"/>
     </entity>
     <elements>
         <element name="CartStore" positionX="97" positionY="45" width="128" height="88"/>
-        <element name="CustomerStore" positionX="108" positionY="-144" width="128" height="253"/>
+        <element name="CustomerStore" positionX="108" positionY="-144" width="128" height="238"/>
         <element name="GlobalStore" positionX="-261" positionY="243" width="128" height="298"/>
         <element name="OfflineSalesStore" positionX="61" positionY="176" width="128" height="103"/>
         <element name="PriceListStore" positionX="-173" positionY="-144" width="128" height="88"/>
-        <element name="ProductStore" positionX="-432" positionY="29" width="128" height="193"/>
         <element name="PriceStore" positionX="-234" positionY="0" width="128" height="148"/>
+        <element name="ProductStore" positionX="-432" positionY="29" width="128" height="178"/>
     </elements>
 </model>

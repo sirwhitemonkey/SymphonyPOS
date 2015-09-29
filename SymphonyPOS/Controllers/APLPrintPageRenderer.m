@@ -162,7 +162,7 @@ static CGFloat HeaderFooterHeight(CGFloat imageableAreaMargin, CGFloat textHeigh
 - (void)drawHeaderForPageAtIndex:(NSInteger)pageIndex inRect:(CGRect)headerRect
 {
     if(self.jobTitle){
-        UIFont *font = [UIFont fontWithName:@"Helvetica" size:HEADER_FOOTER_TEXT_HEIGHT];
+        NSDictionary *sizeWithAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"Helvetica" size:HEADER_FOOTER_TEXT_HEIGHT]};
         // Position the title starting from the left and inset slightly from the left edge of the imageable area.
         CGFloat startX = CGRectGetMinX(headerRect) + HEADER_LEFT_TEXT_INSET;
         /*
@@ -171,7 +171,7 @@ static CGFloat HeaderFooterHeight(CGFloat imageableAreaMargin, CGFloat textHeigh
          */
         CGFloat startY = self.printableRect.origin.y + HEADER_FOOTER_MARGIN_PADDING;
         CGPoint startPoint = CGPointMake(startX, startY);
-        [self.jobTitle drawAtPoint:startPoint withFont: font];
+        [self.jobTitle drawAtPoint:startPoint withAttributes:sizeWithAttributes];
     }
 }
 
@@ -184,8 +184,9 @@ static CGFloat HeaderFooterHeight(CGFloat imageableAreaMargin, CGFloat textHeigh
      */
     NSString *pageNumberString = [NSString stringWithFormat:localizedPageNumberString,
                                   pageIndex+1 - pageRange.location, pageRange.length];
-    UIFont *font = [UIFont fontWithName:@"Helvetica" size:HEADER_FOOTER_TEXT_HEIGHT];
-    CGSize pageNumSize = [pageNumberString sizeWithFont:font];
+    NSDictionary *sizeWithAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"Helvetica" size:HEADER_FOOTER_TEXT_HEIGHT]};
+    
+    CGSize pageNumSize = [pageNumberString sizeWithAttributes:sizeWithAttributes];
     /*
      Position the page number string so that it ends inset by FOOTER_RIGHT_TEXT_INSET from the right edge of the imageable area.
      */
@@ -197,7 +198,7 @@ static CGFloat HeaderFooterHeight(CGFloat imageableAreaMargin, CGFloat textHeigh
     CGFloat startY = CGRectGetMaxY(self.printableRect) - pageNumSize.height - HEADER_FOOTER_MARGIN_PADDING;
     CGPoint startPoint = CGPointMake(startX, startY);
     
-    [pageNumberString drawAtPoint:startPoint withFont: font];
+    [pageNumberString drawAtPoint:startPoint withAttributes:sizeWithAttributes];
 }
 
 

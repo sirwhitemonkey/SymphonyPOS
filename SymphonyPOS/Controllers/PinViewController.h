@@ -7,8 +7,9 @@
 #import "PriceList.h"
 #import "Customer.h"
 #import "DataDefaults.h"
+#import "SyncViewController.h"
 
-@interface PinViewController : UIViewController <UITextFieldDelegate,APIManagerDelegate>
+@interface PinViewController : UIViewController <UITextFieldDelegate,SyncViewControllerDelegate>
 
 @property (nonatomic,strong) IBOutlet UITextField *pin1;
 @property (nonatomic,strong) IBOutlet UITextField *pin2;

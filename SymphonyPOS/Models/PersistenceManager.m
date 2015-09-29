@@ -39,7 +39,7 @@
 }
 
 
-#pragma mark - Public methods
+#pragma mark - Public methods - common
 
 - (void) setKeyChain:(NSString *)key value:(NSString *)value {
  
@@ -73,6 +73,102 @@
     return [storyboard instantiateViewControllerWithIdentifier:identifier];
 }
 
+- (void) updateSettingsBundle {
+    
+    NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
+    if(!settingsBundle) {
+        DebugLog(@"Could not find Settings.bundle");
+        return;
+    }
+    
+    
+    GlobalStore *globalStore = [persistenceManager getGlobalStore];
+    DebugLog(@"globalStore ->%@",globalStore);
+    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:[settingsBundle stringByAppendingPathComponent:@"Root.plist"]];
+    
+    NSArray *preferences = [settings objectForKey:@"PreferenceSpecifiers"];
+    
+    
+    for(NSDictionary *prefSpecification in preferences) {
+        NSString *key = [prefSpecification objectForKey:@"Key"];
+        if(key) {
+            id value = [prefSpecification objectForKey:@"DefaultValue"];
+            
+            if ([key isEqualToString:@"terminal_name"]) {
+                if ([service isEmptyString:value]) {
+                    if (globalStore.terminal_name != nil) {
+                        value = globalStore.terminal_name;
+                    }
+                }
+                globalStore.terminal_name = value;
+            }
+            else  if ([key isEqualToString:@"terminal_code"]) {
+                if ([service isEmptyString:value]) {
+                    if (globalStore.terminal_code != nil) {
+                        value = globalStore.terminal_code;
+                    }
+                }
+                globalStore.terminal_code = value;
+            }
+            else  if ([key isEqualToString:@"customer_default"]) {
+                if (globalStore.customer_default_code != nil) {
+                    value = globalStore.customer_default_code;
+                }
+            }
+            else  if ([key isEqualToString:@"prefix"]) {
+                if (globalStore.prefix != nil) {
+                    value = globalStore.prefix;
+                }
+            }
+            else  if ([key isEqualToString:@"prefix_number_length"]) {
+                if (globalStore.prefix_number_length != nil) {
+                    value = [globalStore.prefix_number_length stringValue];
+                }
+            }
+            else  if ([key isEqualToString:@"sales_percentage_tax"]) {
+                if (globalStore.sales_percentage_tax != nil) {
+                    value = [globalStore.sales_percentage_tax stringValue];
+                }
+            }
+            else  if ([key isEqualToString:@"last_order_number"]) {
+                if (globalStore.last_order_number != nil) {
+                    value = [globalStore.last_order_number stringValue];
+                }
+            }
+            else  if ([key isEqualToString:@"syncEvent"]) {
+                if (globalStore.sync_event != nil) {
+                    value = globalStore.sync_event;
+                }
+            }
+            else  if ([key isEqualToString:@"logoutEvent"]) {
+                if (globalStore.logout_event!= nil) {
+                    value = globalStore.logout_event;
+                }
+            }
+            else  if ([key isEqualToString:@"qtyEvent"]) {
+                if (globalStore.qty_event!= nil) {
+                    value = globalStore.qty_event;
+                }
+            }
+            else  if ([key isEqualToString:@"days_sync_interval"]) {
+                if (globalStore.days_sync_interval!= nil) {
+                    value = [globalStore.days_sync_interval stringValue];
+                }
+            }
+            else if ([key isEqualToString:@"scanMode"]) {
+                if ([persistenceManager getDataStore:SCAN_MODE] !=nil) {
+                    value = [persistenceManager getDataStore:SCAN_MODE];
+                }
+            }
+            
+            [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+        }
+    }
+    [self saveContext];
+}
+
+
+#pragma mark - Public methods - coredata
 - (void)saveContext {
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
@@ -89,88 +185,64 @@
 }
 
 - (void)setPriceListStore:(PriceList*)pricelist {
-    PriceListStore *pricelistStore = [self getPriceListByProductStore:pricelist.pricelist_code product_code:pricelist.product_code];
+    PriceListStore *pricelistStore = [self getPriceListStore:pricelist.code];
     if (!pricelistStore) {
         pricelistStore = [NSEntityDescription insertNewObjectForEntityForName:@"PriceListStore" inManagedObjectContext:[self managedObjectContext]];
     }
-    pricelistStore.pricelist_code = pricelist.pricelist_code;
-    pricelistStore.price = pricelist.price;
-    pricelistStore.product_code = pricelist.product_code;
-    pricelistStore.currency = pricelist.currency;
+    pricelistStore.identifier = pricelist.identifier;
+    pricelistStore.code = pricelist.code;
+    pricelistStore.desc = pricelist.desc;
     [self saveContext];
     
 }
 
-- (PriceListStore*) getPriceListStore:(NSString*)pricelist_code {
+- (PriceListStore*) getPriceListStore:(NSString*)code {
     NSManagedObjectContext *context = [self managedObjectContext];
-    pricelist_code=[[pricelist_code stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
+    code=[[code stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"PriceListStore" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     request.entity = entity;
-    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"pricelist_code =[cd] \"%@\"",pricelist_code]];
+    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"code = \"%@\"",code]];
     NSError *error = nil;
     NSArray *results = [context executeFetchRequest:request error:&error];
     if (results.count>0) {
         return [results objectAtIndex:0];
     }
     return nil;
-}
-
-- (PriceListStore*)getPriceListByProductStore:(NSString*)pricelist_code product_code:(NSString*)product_code {
-    
-    NSManagedObjectContext *context = [self managedObjectContext];
-    pricelist_code=[[pricelist_code stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
-    
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PriceListStore" inManagedObjectContext:context];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    request.entity = entity;
-    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"pricelist_code =[cd] \"%@\" && product_code =[cd] \"%@\"",pricelist_code,product_code]];
-    NSError *error = nil;
-    NSArray *results = [context executeFetchRequest:request error:&error];
-    if (results.count>0) {
-        return [results objectAtIndex:0];
-    }
-    return nil;
-
-    
-}
-
-- (NSArray*)getPriceListStores {
-    
-    NSManagedObjectContext *context = [self managedObjectContext];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PriceListStore" inManagedObjectContext:context];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    request.entity = entity;
-     NSError *error = nil;
-    NSArray *results = [context executeFetchRequest:request error:&error];
-    return results;
-    
 }
 
 
 - (void) setCustomerStore:(Customer*)customer {
-    CustomerStore *customerStore = [self getCustomerStore:customer.customer_code];
+    CustomerStore *customerStore = [self getCustomerStore:customer.code];
     if (!customerStore) {
         customerStore = [NSEntityDescription insertNewObjectForEntityForName:@"CustomerStore" inManagedObjectContext:[self managedObjectContext]];
     }
-    customerStore.customer_code = customer.customer_code;
-    customerStore.customer_default = [NSNumber numberWithBool:customer.customer_default];
-    customerStore.terms = [NSNumber numberWithBool:customer.terms];
-    customerStore.pricelist_code = customer.pricelist_code;
-    customerStore.customer_description = customer.customer_description;
+    customerStore.identifier = customer.identifier;
+    customerStore.code = customer.code;
+    customerStore.address1 = customer.address1;
+    customerStore.address2 = customer.address2;
+    customerStore.address3 = customer.address3;
+    customerStore.address4 = customer.address4;
+    customerStore.currency = customer.currency;
+    customerStore.email = customer.email;
+    customerStore.group = customer.group;
+    customerStore.name = customer.name;
+    customerStore.priceCode = customer.priceCode;
+    customerStore.status = customer.status;
+    customerStore.taxGroup = customer.taxGroup;
+    
     [self saveContext];
 
 }
 
-- (CustomerStore*) getCustomerStore:(NSString*)customer_code {
+- (CustomerStore*) getCustomerStore:(NSString*)code {
     NSManagedObjectContext *context = [self managedObjectContext];
-    customer_code=[[customer_code stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"CustomerStore" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     request.entity = entity;
-    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"customer_code =[cd] \"%@\"",customer_code]];
+    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"code = \"%@\"",code]];
     NSError *error = nil;
     NSArray *results = [context executeFetchRequest:request error:&error];
     if (results.count>0) {
@@ -187,8 +259,9 @@
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"CustomerStore"
                                                          inManagedObjectContext:context];
     [fectchRequest setEntity: entityDescription];
+    [fectchRequest setFetchBatchSize:100];
     
-    NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"customer_description" ascending:YES selector:@selector(localizedStandardCompare:)];
+    NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
     NSArray * sortDescriptionArray = [[NSArray alloc] initWithObjects: sortDescription, nil];
     [fectchRequest setSortDescriptors: sortDescriptionArray];
     NSError *error = nil;
@@ -200,7 +273,7 @@
     }
     
     if (results.count > 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.customer_description CONTAINS %@ ", searchString];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS %@ ", searchString];
         results=[NSMutableArray arrayWithArray:[results filteredArrayUsingPredicate:predicate]];
     }
     return results;
@@ -218,8 +291,14 @@
     if (results.count>0) {
         globalStore = [results objectAtIndex:0];
     } else {
-       globalStore= [NSEntityDescription insertNewObjectForEntityForName:@"GlobalStore" inManagedObjectContext:[self managedObjectContext]];
+       globalStore = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalStore"
+                                                   inManagedObjectContext:[self managedObjectContext]];
+        
+        //Testing only
+        globalStore.my_custom_url = API_URL;
+        globalStore.my_custom_logo = CUSTOM_CLIENT_LOGO;
     }
+    DebugLog(@"getGlobalStore->%@",globalStore);
     return globalStore;
  
 }
@@ -235,7 +314,7 @@
     productStore.inStock  = [NSNumber numberWithBool:product.inStock];
     productStore.notActive = [NSNumber numberWithBool:product.notActive];
     productStore.image_url = product.image_url;
-    productStore.stockunit = product.stockUnit;
+    productStore.stockUnit = product.stockUnit;
     productStore.desc = product.desc;
     productStore.upcCode = product.upcCode;
     productStore.itemNo = product.itemNo;
@@ -244,8 +323,6 @@
 
 - (ProductStore*)getProductStore:(NSString*)itemNo {
     NSManagedObjectContext *context = [self managedObjectContext];
-    
-    itemNo=[[itemNo stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"ProductStore" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -263,8 +340,6 @@
 
 - (ProductStore*)getProductStoreByUpcCode:(NSString *)upcCode {
     NSManagedObjectContext *context = [self managedObjectContext];
-    
-    upcCode=[[upcCode stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"ProductStore" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -287,8 +362,9 @@
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"ProductStore"
                                                          inManagedObjectContext:context];
     [fectchRequest setEntity: entityDescription];
+    [fectchRequest setFetchBatchSize:100];
     
-    NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"product_name" ascending:YES selector:@selector(localizedStandardCompare:)];
+    NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"desc" ascending:YES selector:@selector(localizedStandardCompare:)];
     NSArray * sortDescriptionArray = [[NSArray alloc] initWithObjects: sortDescription, nil];
     [fectchRequest setSortDescriptors: sortDescriptionArray];
     NSError *error = nil;
@@ -300,7 +376,7 @@
     }
     
     if (results.count > 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.product_name CONTAINS %@", searchString];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.desc CONTAINS %@", searchString];
         results=[NSMutableArray arrayWithArray:[results filteredArrayUsingPredicate:predicate]];
     }
     return results;
@@ -335,8 +411,6 @@
     
     NSManagedObjectContext *context = [self managedObjectContext];
     
-    cart_code=[[cart_code stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
-    
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"CartStore" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     request.entity = entity;
@@ -349,16 +423,14 @@
     return nil;
 }
 
-- (CartStore*)getCartByProductStore:(NSString*)product_code {
+- (CartStore*)getCartByProductStore:(NSString*)itemNo {
     
     NSManagedObjectContext *context = [self managedObjectContext];
-    
-    product_code=[[product_code stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"CartStore" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     request.entity = entity;
-    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"cartProduct.product_code =[cd] \"%@\"",product_code]];
+    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"cartProduct.itemNo =[cd] \"%@\"",itemNo]];
     NSError *error = nil;
     NSArray *results = [context executeFetchRequest:request error:&error];
     if (results.count>0) {
@@ -375,13 +447,66 @@
                                                          inManagedObjectContext:context];
     [fectchRequest setEntity: entityDescription];
     
-    NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"cartProduct.product_name" ascending:YES selector:@selector(localizedStandardCompare:)];
+    NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"cartProduct.desc" ascending:YES selector:@selector(localizedStandardCompare:)];
     NSArray * sortDescriptionArray = [[NSArray alloc] initWithObjects: sortDescription, nil];
     [fectchRequest setSortDescriptors: sortDescriptionArray];
     NSError *error = nil;
     
     NSArray *results = [context executeFetchRequest:fectchRequest error:&error];
     return results;
+}
+
+- (void)setPriceStore:(Price *)price {
+
+    PriceStore *priceStore = [self getPriceStore: price.identifier];
+    if (!priceStore) {
+        priceStore = [NSEntityDescription insertNewObjectForEntityForName:@"PriceStore"
+                                                               inManagedObjectContext:[self managedObjectContext]];
+    }
+    priceStore.identifier = price.identifier;
+    priceStore.priceListCode = price.priceListCode;
+    priceStore.itemNo = price.itemNo;
+    priceStore.unitPrice = price.unitPrice;
+    priceStore.currency = price.currency;
+    [self saveContext];
+}
+
+- (PriceStore*)getPriceStore:(NSNumber*)identifier {
+    NSManagedObjectContext *context = [self managedObjectContext];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PriceStore" inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setFetchLimit:1];
+    request.entity = entity;
+    request.fetchBatchSize = 1;
+    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"identifier = \"%ld\"", (long)[identifier integerValue]]];
+    NSError *error = nil;
+    NSArray *results = [context executeFetchRequest:request error:&error];
+    if (results.count>0)
+        return [results objectAtIndex:0];
+    
+    return nil;
+    
+}
+
+- (PriceStore*) getPriceStore:(NSString *)code itemNo:(NSString *)itemNo {
+ 
+    NSManagedObjectContext *context = [self managedObjectContext];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PriceStore" inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setFetchLimit:1];
+    request.entity = entity;
+    request.fetchBatchSize = 1;
+    request.predicate = [NSPredicate predicateWithFormat:
+                         [NSString stringWithFormat:@"priceListCode = \"%@\" AND itemNo = \"%@\"",code,itemNo]];
+    NSError *error = nil;
+    NSArray *results = [context executeFetchRequest:request error:&error];
+    if (results.count>0)
+        return [results objectAtIndex:0];
+    
+    return nil;
+    
 }
 
 - (void) setOfflineSalesStore:(NSString*)invoice_no {
@@ -399,12 +524,10 @@
         NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
         CustomerStore *customerStore = [self getCustomerStore:globalStore.customer_default_code];
         
-        PriceListStore *priceListStore = [self getPriceListByProductStore:customerStore.pricelist_code
-                                                             product_code:cartStore.cartProduct.itemNo];
         [data setObject:cartStore.cart_code forKey:@"cart_code"];
         [data setObject:cartStore.qty forKey:@"qty"];
-        [data setObject:customerStore.customer_code forKey:@"customer_code"];
-        [data setObject:priceListStore.pricelist_code forKey:@"pricelist_code"];
+        [data setObject:customerStore.code forKey:@"customer_code"];
+        [data setObject:customerStore.priceCode forKey:@"pricelist_code"];
         [data setObject:cartStore.cartProduct.itemNo forKey:@"itemNo"];
      
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
@@ -458,9 +581,8 @@
     }
     
     [self removeEntityObject:[self getGlobalStore]];
-    [self removeFromKeyChain:APP_USER_IDENT];
-    [self removeFromKeyChain:APP_USER_PIN_IDENT];
-    [self removeFromKeyChain:APP_LOGGED_IDENT];
+    [self removeFromKeyChain:USER_PIN_IDENT];
+    [self removeFromKeyChain:USER_LOGGED_IDENT];
     [self removeFromKeyChain:SYNC_DATE_LAST_UPDATED];
     [_dataStore removeAllObjects];
  }
@@ -476,6 +598,7 @@
     [self saveContext];
 }
 
+#pragma mark - Public methods - sync 
 - (void) syncProducts:(APIManager *)apiManager response:(Response *)response completedCallback:(void (^)(void))callbackBlock {
     
     NSMutableArray *operations  = [NSMutableArray array];
@@ -486,6 +609,7 @@
     
     if (raw_metaData.first) {
         _responseData = [[NSMutableArray alloc] init];
+        [persistenceManager setDataStore:SYNC_DATE_LAST_UPDATED value:[raw_metaData.date_last_updated stringValue]];
     }
     [_responseData addObjectsFromArray:data_content];
     
@@ -519,7 +643,7 @@
             for (Product *product in _responseData) {
                 [persistenceManager setProductStore:product];
             }
-
+            
             if (callbackBlock!=nil) {
                 callbackBlock();
             }
@@ -527,149 +651,165 @@
     }
 }
 
-- (void)updateSync:(id)reference response:(Response *)response {
-    DebugLog(@"updateSync -> %@", response);
-    /*
-    if (response.error) {
-        [service showMessage:reference message:@"Synchronisation communication failed from server." error:YES withCallBack:nil];
-        return;
+- (void) syncCustomers:(APIManager *)apiManager response:(Response *)response completedCallback:(void (^)(void))callbackBlock {
+    
+    NSMutableArray *operations  = [NSMutableArray array];
+    NSDictionary *data_metaData = [((NSDictionary*)response.data) objectForKey:@"metadata"];
+    MetaData *raw_metaData = [MTLJSONAdapter modelOfClass:MetaData.class fromJSONDictionary:data_metaData error:nil];
+    NSError *error;
+    NSArray *data_content = [MTLJSONAdapter modelsOfClass:Customer.class
+                                            fromJSONArray:(NSArray*)[(NSDictionary*)response.data objectForKey:@"content"] error:&error];
+    
+    if (raw_metaData.first) {
+        _responseData = [[NSMutableArray alloc] init];
+        [persistenceManager setDataStore:SYNC_DATE_LAST_UPDATED value:[raw_metaData.date_last_updated stringValue]];
     }
+    [_responseData addObjectsFromArray:data_content];
     
-    NSArray *raw_products = [MTLJSONAdapter modelsOfClass:Product.class fromJSONArray:(NSArray*)[response.data objectForKey:@"products"] error:nil];
-    for (Product *product in raw_products) {
-        [self setProductStore:product];
-    }
-    
-    NSArray *raw_pricelists = [MTLJSONAdapter modelsOfClass:PriceList.class fromJSONArray:(NSArray*)[response.data objectForKey:@"pricelists"] error:nil];
-    for (PriceList *pricelist in raw_pricelists) {
-        [self setPriceListStore:pricelist];
-    }
-    
-    NSArray *raw_customers = [MTLJSONAdapter modelsOfClass:Customer.class fromJSONArray:(NSArray*)[response.data objectForKey:@"customers"] error:nil];
-    for (Customer *customer in raw_customers) {
-        [self setCustomerStore:customer];
-    }
-    
-    GlobalItems *raw_globalItems = [MTLJSONAdapter modelOfClass:GlobalItems.class fromJSONDictionary:response.data error:nil];
-    GlobalStore *globalStore = [self getGlobalStore];
-    globalStore.sales_percentage_tax = raw_globalItems.sales_percentage_tax;
-    globalStore.last_order_number = raw_globalItems.last_order_number;
-    globalStore.prefix = raw_globalItems.prefix;
-    globalStore.prefix_number_length = raw_globalItems.prefix_number_length;
-    globalStore.customer_default_code =  raw_globalItems.customer_default_code;
-    globalStore.customer_default_code_copy =raw_globalItems.customer_default_code;
-    if ([globalStore.days_sync_interval integerValue] == 0) {
-        globalStore.days_sync_interval = [NSNumber numberWithInt:30];
-    }
-     [self saveContext];
-    
-    [self updateSettingsBundle];
-    
-    [self setKeyChain:API_SYNC_DATE_LAST_UPDATED value:response.date_last_updated];
-     */
-}
-
-- (void) updateSettingsBundle {
-    
-    NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
-    if(!settingsBundle) {
-        DebugLog(@"Could not find Settings.bundle");
-        return;
-    }
-    
-    
-    GlobalStore *globalStore = [persistenceManager getGlobalStore];
-    DebugLog(@"globalStore ->%@",globalStore);
-    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:[settingsBundle stringByAppendingPathComponent:@"Root.plist"]];
-    
-    NSArray *preferences = [settings objectForKey:@"PreferenceSpecifiers"];
-    
-    
-    for(NSDictionary *prefSpecification in preferences) {
-        NSString *key = [prefSpecification objectForKey:@"Key"];
-        if(key) {
-            id value = [prefSpecification objectForKey:@"DefaultValue"];
-            
-            if ([key isEqualToString:@"terminal_name"]) {
-                if ([service isEmptyString:value]) {
-                    if (globalStore.terminal_name != nil) {
-                        value = globalStore.terminal_name;
-                    }
-                }
-                globalStore.terminal_name = value;
-            }
-            else  if ([key isEqualToString:@"terminal_code"]) {
-                if ([service isEmptyString:value]) {
-                    if (globalStore.terminal_code != nil) {
-                        value = globalStore.terminal_code;
-                    }
-                }
-                globalStore.terminal_code = value;
-            }
-            else  if ([key isEqualToString:@"customer_default"]) {
-                if (globalStore.customer_default_code != nil) {
-                    value = globalStore.customer_default_code;
-                }
-             }
-            else  if ([key isEqualToString:@"prefix"]) {
-                if (globalStore.prefix != nil) {
-                    value = globalStore.prefix;
-                }
-            }
-            else  if ([key isEqualToString:@"prefix_number_length"]) {
-                if (globalStore.prefix_number_length != nil) {
-                    value = [globalStore.prefix_number_length stringValue];
-                }
-            }
-            else  if ([key isEqualToString:@"sales_percentage_tax"]) {
-                if (globalStore.sales_percentage_tax != nil) {
-                    value = [globalStore.sales_percentage_tax stringValue];
-                }
-            }
-            else  if ([key isEqualToString:@"last_order_number"]) {
-                if (globalStore.last_order_number != nil) {
-                    value = [globalStore.last_order_number stringValue];
-                }
-            }
-            else  if ([key isEqualToString:@"syncEvent"]) {
-                if (globalStore.sync_event != nil) {
-                    value = globalStore.sync_event;
-                }
-            }
-            else  if ([key isEqualToString:@"logoutEvent"]) {
-                if (globalStore.logout_event!= nil) {
-                    value = globalStore.logout_event;
-                }
-            }
-            else  if ([key isEqualToString:@"qtyEvent"]) {
-                if (globalStore.qty_event!= nil) {
-                    value = globalStore.qty_event;
-                }
-            }
-            else  if ([key isEqualToString:@"days_sync_interval"]) {
-                if (globalStore.days_sync_interval!= nil) {
-                    value = [globalStore.days_sync_interval stringValue];
-                }
-            }
-            else if ([key isEqualToString:@"scanMode"]) {
-                if ([persistenceManager getDataStore:SCAN_MODE] !=nil) {
-                    value = [persistenceManager getDataStore:SCAN_MODE];
-                }
+    if (raw_metaData.first) {
+        
+        if ([raw_metaData.totalElements integerValue] > PAGE_LIMIT) {
+            for (int page=1;page<[raw_metaData.totalPages integerValue];page++) {
+                AFHTTPRequestOperation *operation = [apiManager getCustomers:page];
+                [operations addObject:operation];
             }
             
-            [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+            NSArray *operationQueues = [AFURLConnectionOperation batchOfRequestOperations:operations
+                                                                            progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
+                                                                                DebugLog(@"%lu of %lu complete",(unsigned long)numberOfFinishedOperations,(unsigned long)totalNumberOfOperations);
+                                                                                
+                                                                            } completionBlock:^(NSArray *operations) {
+                                                                                DebugLog(@"All operations in batch complete:%lu", (unsigned long)_responseData.count);
+                                                                                for (Customer *customer in _responseData) {
+                                                                                    [persistenceManager setCustomerStore:customer];
+                                                                                }
+                                                                                if (callbackBlock!=nil) {
+                                                                                    callbackBlock();
+                                                                                }
+                                                                                
+                                                                            }];
+            
+            [[NSOperationQueue mainQueue] addOperations:operationQueues waitUntilFinished:NO];
+            
+            
+        } else {
+            for (Customer *customer in _responseData) {
+                [persistenceManager setCustomerStore:customer];
+            }
+            
+            if (callbackBlock!=nil) {
+                callbackBlock();
+            }
         }
     }
-    [self saveContext];
 }
 
-- (void) setMyCustomPreference:(NSString*)url logo:(NSString*)logo {
-    DebugLog(@"setMyCustomPreference ->%@,%@",url,logo);
-    GlobalStore *globalStore = [self getGlobalStore];
-    globalStore.my_custom_url = url;
-    globalStore.my_custom_logo = logo;
-    [self saveContext];
+- (void) syncPriceLists:(APIManager *)apiManager response:(Response *)response completedCallback:(void (^)(void))callbackBlock {
+    
+    NSMutableArray *operations  = [NSMutableArray array];
+    NSDictionary *data_metaData = [((NSDictionary*)response.data) objectForKey:@"metadata"];
+    MetaData *raw_metaData = [MTLJSONAdapter modelOfClass:MetaData.class fromJSONDictionary:data_metaData error:nil];
+    NSError *error;
+    NSArray *data_content = [MTLJSONAdapter modelsOfClass:PriceList.class
+                                            fromJSONArray:(NSArray*)[(NSDictionary*)response.data objectForKey:@"content"] error:&error];
+    
+    if (raw_metaData.first) {
+        _responseData = [[NSMutableArray alloc] init];
+        [persistenceManager setDataStore:SYNC_DATE_LAST_UPDATED value:[raw_metaData.date_last_updated stringValue]];
+    }
+    [_responseData addObjectsFromArray:data_content];
+    
+    if (raw_metaData.first) {
+        
+        if ([raw_metaData.totalElements integerValue] > PAGE_LIMIT) {
+            for (int page=1;page<[raw_metaData.totalPages integerValue];page++) {
+                AFHTTPRequestOperation *operation = [apiManager getPriceLists:page];
+                [operations addObject:operation];
+            }
+            
+            NSArray *operationQueues = [AFURLConnectionOperation batchOfRequestOperations:operations
+                                                                            progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
+                                                                                DebugLog(@"%lu of %lu complete",(unsigned long)numberOfFinishedOperations,(unsigned long)totalNumberOfOperations);
+                                                                                
+                                                                            } completionBlock:^(NSArray *operations) {
+                                                                                DebugLog(@"All operations in batch complete:%lu", (unsigned long)_responseData.count);
+                                                                                for (PriceList *priceList in _responseData) {
+                                                                                    [persistenceManager setPriceListStore:priceList];
+                                                                                }
+                                                                                if (callbackBlock!=nil) {
+                                                                                    callbackBlock();
+                                                                                }
+                                                                                
+                                                                            }];
+            
+            [[NSOperationQueue mainQueue] addOperations:operationQueues waitUntilFinished:NO];
+            
+            
+        } else {
+            for (PriceList *priceList in _responseData) {
+                [persistenceManager setPriceListStore:priceList];
+            }
+            
+            if (callbackBlock!=nil) {
+                callbackBlock();
+            }
+        }
+    }
 }
+
+- (void) syncPrices:(APIManager *)apiManager response:(Response *)response completedCallback:(void (^)(void))callbackBlock {
+    
+    NSMutableArray *operations  = [NSMutableArray array];
+    NSDictionary *data_metaData = [((NSDictionary*)response.data) objectForKey:@"metadata"];
+    MetaData *raw_metaData = [MTLJSONAdapter modelOfClass:MetaData.class fromJSONDictionary:data_metaData error:nil];
+    NSError *error;
+    NSArray *data_content = [MTLJSONAdapter modelsOfClass:Price.class
+                                            fromJSONArray:(NSArray*)[(NSDictionary*)response.data objectForKey:@"content"] error:&error];
+    
+    if (raw_metaData.first) {
+        _responseData = [[NSMutableArray alloc] init];
+        [persistenceManager setDataStore:SYNC_DATE_LAST_UPDATED value:[raw_metaData.date_last_updated stringValue]];
+    }
+    [_responseData addObjectsFromArray:data_content];
+    
+    if (raw_metaData.first) {
+        
+        if ([raw_metaData.totalElements integerValue] > PAGE_LIMIT) {
+            for (int page=1;page<[raw_metaData.totalPages integerValue];page++) {
+                AFHTTPRequestOperation *operation = [apiManager getPrices:page];
+                [operations addObject:operation];
+            }
+            
+            NSArray *operationQueues = [AFURLConnectionOperation batchOfRequestOperations:operations
+                                                                            progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) {
+                                                                                DebugLog(@"%lu of %lu complete",(unsigned long)numberOfFinishedOperations,(unsigned long)totalNumberOfOperations);
+                                                                                
+                                                                            } completionBlock:^(NSArray *operations) {
+                                                                                DebugLog(@"All operations in batch complete:%lu", (unsigned long)_responseData.count);
+                                                                                for (Price *price in _responseData) {
+                                                                                    [persistenceManager setPriceStore:price];
+                                                                                }
+                                                                                if (callbackBlock!=nil) {
+                                                                                    callbackBlock();
+                                                                                }
+                                                                                
+                                                                            }];
+            
+            [[NSOperationQueue mainQueue] addOperations:operationQueues waitUntilFinished:NO];
+            
+            
+        } else {
+            for (Price *price in _responseData) {
+                [persistenceManager setPriceStore:price];
+            }
+            
+            if (callbackBlock!=nil) {
+                callbackBlock();
+            }
+        }
+    }
+}
+
 
 #pragma mark - Private methods
 -(NSString*)newUUID {
@@ -702,7 +842,7 @@
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
         _managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [_managedObjectContext setUndoManager:nil];
+        //[_managedObjectContext setUndoManager:nil];
         [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     }
     
@@ -759,25 +899,5 @@
     return _persistentStoreCoordinator;
 }
 
-- (void) dispatchAsyncDataStore:(NSArray*)dataStore dataStoreTypes:(DataStoreTypes)dataStoreTypes {
-    
-    NSString *dataStoreQueue = [self newUUID];
-    dispatch_queue_t dispatch_dataStoreQueue = dispatch_queue_create([dataStoreQueue UTF8String],NULL);
-    __block int item = 0;
-    dispatch_async(dispatch_dataStoreQueue, ^{
-        switch (dataStoreTypes) {
-            case kProducts:
-                for (item=0;item <dataStore.count;item++) {
-                    [self setProductStore:dataStore[item]];
-                }
-                break;
-            case kCustomers:
-                break;
-            case kPriceLists:
-                break;
-        }
-    });
-
-}
 
 @end

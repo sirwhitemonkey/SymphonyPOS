@@ -12,9 +12,6 @@
 @property (nonatomic,strong) IBOutlet RoundedButton *nextBtn;
 @property (nonatomic,strong) IBOutlet UIView *qtyView;
 
-/**
- 
- */
 - (IBAction)next:(id)sender;
 
 - (void) initialise:(ProductStore*)productStore;

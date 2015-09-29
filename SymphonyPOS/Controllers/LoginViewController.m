@@ -18,6 +18,7 @@
     self.password.text = @"ronaldo12345";
     
     _apiManager = [[APIManager alloc] init];
+    _apiManager.delegate = self;
     
     self.navigationController.navigationBarHidden = YES;
     self.footer.text = APP_FOOTER;
@@ -65,10 +66,8 @@
         return;
     }
     
-    _apiManager.delegate = self;
-    
-    [persistenceManager setKeyChain:APP_USER_IDENT value:self.username.text];
-    [persistenceManager setKeyChain:APP_USER_SECURITY
+    [persistenceManager setKeyChain:USER_IDENT value:self.username.text];
+    [persistenceManager setKeyChain:USER_SECURITY
                                value:[service sha1:[service md5:self.password.text]]];
     
     [service showMessage:self loader:YES message:@"Authenticating ..." error:NO
@@ -106,12 +105,12 @@
 - (void) apiAuthSubmitResponse:(Response *)response {
     DebugLog(@"apiAuthSubmitResponse -> %@", response);
     
-    [persistenceManager setKeyChain:APP_LOGGED_IDENT
-                              value:[persistenceManager getKeyChain:APP_USER_IDENT]];
+    [persistenceManager setKeyChain:USER_LOGGED_IDENT
+                              value:[persistenceManager getKeyChain:USER_IDENT]];
     
     [service hideMessage:^ {
    
-        _apiManager.batchOperation = true;
+       _apiManager.batchOperation = true;
         [service showMessage:self loader:YES message:@"Updating settings ..." error:NO
           waitUntilCompleted:YES withCallBack:^ {
        

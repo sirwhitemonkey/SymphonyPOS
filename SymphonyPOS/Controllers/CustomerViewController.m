@@ -113,15 +113,15 @@
    
     CustomerStore *customerStore = [_customers objectAtIndex:indexPath.row];
     CustomerViewCell *cViewCell = (CustomerViewCell*)cell;
-    cViewCell.customer_code.text = customerStore.customer_code;
-    cViewCell.customer_description.text = customerStore.customer_description;
+    cViewCell.customer_code.text = customerStore.code;
+    cViewCell.customer_description.text = customerStore.name;
     [service searchPatternInLabels: cViewCell.customer_description searchString:_searchBar.text];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     CustomerStore *customerStore = [_customers objectAtIndex:indexPath.row];
-    _globalStore.customer_default_code = customerStore.customer_code;
+    _globalStore.customer_default_code = customerStore.code;
     [persistenceManager saveContext];
     [self.navigationController popViewControllerAnimated:YES];
 }

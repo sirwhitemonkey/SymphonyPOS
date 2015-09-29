@@ -48,10 +48,13 @@
 /*!
  * Customer status , the customer status
  */
-@property (nonatomic, strong)  NSNumber *status;
+@property (nonatomic, strong)  NSString *status;
 /*!
  * Customer taxGroup , the customer taxGroup
  */
 @property (nonatomic, strong)  NSString *taxGroup;
-
+/*!
+ * Customer email , the customer email
+ */
+@property (nonatomic, strong)  NSString *email;
 @end

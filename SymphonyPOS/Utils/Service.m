@@ -38,7 +38,7 @@
         _vfbViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [_vfbViewController initialise:loader message:message error:error];
         [_vfbViewController setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-        [reference presentViewController:_vfbViewController animated:YES completion: ^ {
+        [reference presentViewController:_vfbViewController animated:NO completion: ^ {
             if (!waitUntilCompleted) {
                 [self hideMessage:^ {
                     if (callbackBlock != nil) {

@@ -11,22 +11,20 @@
 		4133FD171BB7714000B3EEED /* MetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD161BB7714000B3EEED /* MetaData.m */; };
 		4133FD1B1BB774BA00B3EEED /* getProducts.json in Resources */ = {isa = PBXBuildFile; fileRef = 4133FD1A1BB774BA00B3EEED /* getProducts.json */; };
 		4133FD1D1BB7847200B3EEED /* checkConnection.json in Resources */ = {isa = PBXBuildFile; fileRef = 4133FD1C1BB7847200B3EEED /* checkConnection.json */; };
-		4133FD361BB7988A00B3EEED /* PriceListStore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD1F1BB7988A00B3EEED /* PriceListStore+CoreDataProperties.m */; };
-		4133FD381BB7988A00B3EEED /* CustomerStore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD231BB7988A00B3EEED /* CustomerStore+CoreDataProperties.m */; };
-		4133FD3A1BB7988A00B3EEED /* ProductStore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD271BB7988A00B3EEED /* ProductStore+CoreDataProperties.m */; };
-		4133FD3C1BB7988A00B3EEED /* CartStore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD2B1BB7988A00B3EEED /* CartStore+CoreDataProperties.m */; };
-		4133FD3E1BB7988A00B3EEED /* GlobalStore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD2F1BB7988A00B3EEED /* GlobalStore+CoreDataProperties.m */; };
-		4133FD401BB7988A00B3EEED /* OfflineSalesStore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD331BB7988A00B3EEED /* OfflineSalesStore+CoreDataProperties.m */; };
 		413620C41BB3796C00B548F6 /* authSubmit.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C31BB3796C00B548F6 /* authSubmit.json */; };
 		413620C61BB38EBC00B548F6 /* themes.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C51BB38EBC00B548F6 /* themes.json */; };
 		413620C81BB3934800B548F6 /* dataDefaults.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C71BB3934800B548F6 /* dataDefaults.json */; };
-		41629CD51BB8ECAD001D17AA /* CustomerStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CD41BB8ECAD001D17AA /* CustomerStore.m */; };
-		41629CD81BB8ECAE001D17AA /* ProductStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CD71BB8ECAE001D17AA /* ProductStore.m */; };
-		41629CDB1BB8ECAE001D17AA /* PriceListStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CDA1BB8ECAE001D17AA /* PriceListStore.m */; };
-		41629CDE1BB8ECAE001D17AA /* CartStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CDD1BB8ECAE001D17AA /* CartStore.m */; };
-		41629CE11BB8ECAE001D17AA /* OfflineSalesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CE01BB8ECAE001D17AA /* OfflineSalesStore.m */; };
-		41629CE41BB8ECAE001D17AA /* GlobalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CE31BB8ECAE001D17AA /* GlobalStore.m */; };
-		41629CE71BB8ECAE001D17AA /* PriceStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CE61BB8ECAE001D17AA /* PriceStore.m */; };
+		4136D3471BBA18490027A60F /* getCustomers.json in Resources */ = {isa = PBXBuildFile; fileRef = 4136D3461BBA18490027A60F /* getCustomers.json */; };
+		4136D3491BBA18740027A60F /* getPriceLists.json in Resources */ = {isa = PBXBuildFile; fileRef = 4136D3481BBA18740027A60F /* getPriceLists.json */; };
+		4136D34B1BBA19CF0027A60F /* getPrices.json in Resources */ = {isa = PBXBuildFile; fileRef = 4136D34A1BBA19CF0027A60F /* getPrices.json */; };
+		4136D38D1BBA389F0027A60F /* GlobalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D38C1BBA389F0027A60F /* GlobalStore.m */; };
+		4136D3901BBA38A00027A60F /* PriceStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D38F1BBA38A00027A60F /* PriceStore.m */; };
+		4136D3931BBA38A00027A60F /* CartStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3921BBA38A00027A60F /* CartStore.m */; };
+		4136D3961BBA38A00027A60F /* ProductStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3951BBA38A00027A60F /* ProductStore.m */; };
+		4136D3991BBA38A00027A60F /* OfflineSalesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3981BBA38A00027A60F /* OfflineSalesStore.m */; };
+		4136D39C1BBA38A00027A60F /* CustomerStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D39B1BBA38A00027A60F /* CustomerStore.m */; };
+		4136D39F1BBA38A00027A60F /* PriceListStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D39E1BBA38A00027A60F /* PriceListStore.m */; };
+		4136D3A21BBA439C0027A60F /* SyncViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3A11BBA439C0027A60F /* SyncViewController.m */; };
 		41629CEA1BB8ECD8001D17AA /* Price.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CE91BB8ECD8001D17AA /* Price.m */; };
 		41EA213E1BABAA570021824E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA213D1BABAA570021824E /* main.m */; };
 		41EA21411BABAA570021824E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA21401BABAA570021824E /* AppDelegate.m */; };
@@ -137,36 +135,29 @@
 		4133FD161BB7714000B3EEED /* MetaData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetaData.m; path = Models/MetaData.m; sourceTree = "<group>"; };
 		4133FD1A1BB774BA00B3EEED /* getProducts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getProducts.json; sourceTree = "<group>"; };
 		4133FD1C1BB7847200B3EEED /* checkConnection.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = checkConnection.json; sourceTree = "<group>"; };
-		4133FD1E1BB7988A00B3EEED /* PriceListStore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PriceListStore+CoreDataProperties.h"; path = "Models/Storage/PriceListStore+CoreDataProperties.h"; sourceTree = "<group>"; };
-		4133FD1F1BB7988A00B3EEED /* PriceListStore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "PriceListStore+CoreDataProperties.m"; path = "Models/Storage/PriceListStore+CoreDataProperties.m"; sourceTree = "<group>"; };
-		4133FD221BB7988A00B3EEED /* CustomerStore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CustomerStore+CoreDataProperties.h"; path = "Models/Storage/CustomerStore+CoreDataProperties.h"; sourceTree = "<group>"; };
-		4133FD231BB7988A00B3EEED /* CustomerStore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CustomerStore+CoreDataProperties.m"; path = "Models/Storage/CustomerStore+CoreDataProperties.m"; sourceTree = "<group>"; };
-		4133FD261BB7988A00B3EEED /* ProductStore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ProductStore+CoreDataProperties.h"; path = "Models/Storage/ProductStore+CoreDataProperties.h"; sourceTree = "<group>"; };
-		4133FD271BB7988A00B3EEED /* ProductStore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ProductStore+CoreDataProperties.m"; path = "Models/Storage/ProductStore+CoreDataProperties.m"; sourceTree = "<group>"; };
-		4133FD2A1BB7988A00B3EEED /* CartStore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CartStore+CoreDataProperties.h"; path = "Models/Storage/CartStore+CoreDataProperties.h"; sourceTree = "<group>"; };
-		4133FD2B1BB7988A00B3EEED /* CartStore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CartStore+CoreDataProperties.m"; path = "Models/Storage/CartStore+CoreDataProperties.m"; sourceTree = "<group>"; };
-		4133FD2E1BB7988A00B3EEED /* GlobalStore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GlobalStore+CoreDataProperties.h"; path = "Models/Storage/GlobalStore+CoreDataProperties.h"; sourceTree = "<group>"; };
-		4133FD2F1BB7988A00B3EEED /* GlobalStore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "GlobalStore+CoreDataProperties.m"; path = "Models/Storage/GlobalStore+CoreDataProperties.m"; sourceTree = "<group>"; };
-		4133FD321BB7988A00B3EEED /* OfflineSalesStore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "OfflineSalesStore+CoreDataProperties.h"; path = "Models/Storage/OfflineSalesStore+CoreDataProperties.h"; sourceTree = "<group>"; };
-		4133FD331BB7988A00B3EEED /* OfflineSalesStore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OfflineSalesStore+CoreDataProperties.m"; path = "Models/Storage/OfflineSalesStore+CoreDataProperties.m"; sourceTree = "<group>"; };
 		4133FD431BB7B29D00B3EEED /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		413620C31BB3796C00B548F6 /* authSubmit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = authSubmit.json; sourceTree = "<group>"; };
 		413620C51BB38EBC00B548F6 /* themes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = themes.json; sourceTree = "<group>"; };
 		413620C71BB3934800B548F6 /* dataDefaults.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dataDefaults.json; sourceTree = "<group>"; };
-		41629CD31BB8ECAD001D17AA /* CustomerStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomerStore.h; path = Models/Storage/CustomerStore.h; sourceTree = "<group>"; };
-		41629CD41BB8ECAD001D17AA /* CustomerStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomerStore.m; path = Models/Storage/CustomerStore.m; sourceTree = "<group>"; };
-		41629CD61BB8ECAE001D17AA /* ProductStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProductStore.h; path = Models/Storage/ProductStore.h; sourceTree = "<group>"; };
-		41629CD71BB8ECAE001D17AA /* ProductStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProductStore.m; path = Models/Storage/ProductStore.m; sourceTree = "<group>"; };
-		41629CD91BB8ECAE001D17AA /* PriceListStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriceListStore.h; path = Models/Storage/PriceListStore.h; sourceTree = "<group>"; };
-		41629CDA1BB8ECAE001D17AA /* PriceListStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriceListStore.m; path = Models/Storage/PriceListStore.m; sourceTree = "<group>"; };
-		41629CDC1BB8ECAE001D17AA /* CartStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CartStore.h; path = Models/Storage/CartStore.h; sourceTree = "<group>"; };
-		41629CDD1BB8ECAE001D17AA /* CartStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CartStore.m; path = Models/Storage/CartStore.m; sourceTree = "<group>"; };
-		41629CDF1BB8ECAE001D17AA /* OfflineSalesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OfflineSalesStore.h; path = Models/Storage/OfflineSalesStore.h; sourceTree = "<group>"; };
-		41629CE01BB8ECAE001D17AA /* OfflineSalesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OfflineSalesStore.m; path = Models/Storage/OfflineSalesStore.m; sourceTree = "<group>"; };
-		41629CE21BB8ECAE001D17AA /* GlobalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalStore.h; path = Models/Storage/GlobalStore.h; sourceTree = "<group>"; };
-		41629CE31BB8ECAE001D17AA /* GlobalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GlobalStore.m; path = Models/Storage/GlobalStore.m; sourceTree = "<group>"; };
-		41629CE51BB8ECAE001D17AA /* PriceStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriceStore.h; path = Models/Storage/PriceStore.h; sourceTree = "<group>"; };
-		41629CE61BB8ECAE001D17AA /* PriceStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriceStore.m; path = Models/Storage/PriceStore.m; sourceTree = "<group>"; };
+		4136D3461BBA18490027A60F /* getCustomers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getCustomers.json; path = Mock/getCustomers.json; sourceTree = "<group>"; };
+		4136D3481BBA18740027A60F /* getPriceLists.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getPriceLists.json; path = Mock/getPriceLists.json; sourceTree = "<group>"; };
+		4136D34A1BBA19CF0027A60F /* getPrices.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getPrices.json; path = Mock/getPrices.json; sourceTree = "<group>"; };
+		4136D38B1BBA389F0027A60F /* GlobalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalStore.h; path = Models/Storage/GlobalStore.h; sourceTree = "<group>"; };
+		4136D38C1BBA389F0027A60F /* GlobalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GlobalStore.m; path = Models/Storage/GlobalStore.m; sourceTree = "<group>"; };
+		4136D38E1BBA38A00027A60F /* PriceStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriceStore.h; path = Models/Storage/PriceStore.h; sourceTree = "<group>"; };
+		4136D38F1BBA38A00027A60F /* PriceStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriceStore.m; path = Models/Storage/PriceStore.m; sourceTree = "<group>"; };
+		4136D3911BBA38A00027A60F /* CartStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CartStore.h; path = Models/Storage/CartStore.h; sourceTree = "<group>"; };
+		4136D3921BBA38A00027A60F /* CartStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CartStore.m; path = Models/Storage/CartStore.m; sourceTree = "<group>"; };
+		4136D3941BBA38A00027A60F /* ProductStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProductStore.h; path = Models/Storage/ProductStore.h; sourceTree = "<group>"; };
+		4136D3951BBA38A00027A60F /* ProductStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProductStore.m; path = Models/Storage/ProductStore.m; sourceTree = "<group>"; };
+		4136D3971BBA38A00027A60F /* OfflineSalesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OfflineSalesStore.h; path = Models/Storage/OfflineSalesStore.h; sourceTree = "<group>"; };
+		4136D3981BBA38A00027A60F /* OfflineSalesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OfflineSalesStore.m; path = Models/Storage/OfflineSalesStore.m; sourceTree = "<group>"; };
+		4136D39A1BBA38A00027A60F /* CustomerStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomerStore.h; path = Models/Storage/CustomerStore.h; sourceTree = "<group>"; };
+		4136D39B1BBA38A00027A60F /* CustomerStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomerStore.m; path = Models/Storage/CustomerStore.m; sourceTree = "<group>"; };
+		4136D39D1BBA38A00027A60F /* PriceListStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriceListStore.h; path = Models/Storage/PriceListStore.h; sourceTree = "<group>"; };
+		4136D39E1BBA38A00027A60F /* PriceListStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriceListStore.m; path = Models/Storage/PriceListStore.m; sourceTree = "<group>"; };
+		4136D3A01BBA439C0027A60F /* SyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SyncViewController.h; path = Controllers/SyncViewController.h; sourceTree = "<group>"; };
+		4136D3A11BBA439C0027A60F /* SyncViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SyncViewController.m; path = Controllers/SyncViewController.m; sourceTree = "<group>"; };
 		41629CE81BB8ECD8001D17AA /* Price.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Price.h; path = Models/Price.h; sourceTree = "<group>"; };
 		41629CE91BB8ECD8001D17AA /* Price.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Price.m; path = Models/Price.m; sourceTree = "<group>"; };
 		41EA21381BABAA570021824E /* SymphonyPOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SymphonyPOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -462,6 +453,8 @@
 				41EA218C1BABAC780021824E /* TerminalViewController.m */,
 				41EA218D1BABAC780021824E /* VisualFeedBackViewController.h */,
 				41EA218E1BABAC780021824E /* VisualFeedBackViewController.m */,
+				4136D3A01BBA439C0027A60F /* SyncViewController.h */,
+				4136D3A11BBA439C0027A60F /* SyncViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -527,6 +520,9 @@
 				413620C71BB3934800B548F6 /* dataDefaults.json */,
 				4133FD1A1BB774BA00B3EEED /* getProducts.json */,
 				4133FD1C1BB7847200B3EEED /* checkConnection.json */,
+				4136D3461BBA18490027A60F /* getCustomers.json */,
+				4136D3481BBA18740027A60F /* getPriceLists.json */,
+				4136D34A1BBA19CF0027A60F /* getPrices.json */,
 			);
 			name = Mock;
 			sourceTree = "<group>";
@@ -559,32 +555,20 @@
 			isa = PBXGroup;
 			children = (
 				41EA22021BABAD2A0021824E /* POS.xcdatamodeld */,
-				41629CE51BB8ECAE001D17AA /* PriceStore.h */,
-				41629CE61BB8ECAE001D17AA /* PriceStore.m */,
-				41629CE21BB8ECAE001D17AA /* GlobalStore.h */,
-				41629CE31BB8ECAE001D17AA /* GlobalStore.m */,
-				41629CDF1BB8ECAE001D17AA /* OfflineSalesStore.h */,
-				41629CE01BB8ECAE001D17AA /* OfflineSalesStore.m */,
-				41629CDC1BB8ECAE001D17AA /* CartStore.h */,
-				41629CDD1BB8ECAE001D17AA /* CartStore.m */,
-				41629CD91BB8ECAE001D17AA /* PriceListStore.h */,
-				41629CDA1BB8ECAE001D17AA /* PriceListStore.m */,
-				41629CD61BB8ECAE001D17AA /* ProductStore.h */,
-				41629CD71BB8ECAE001D17AA /* ProductStore.m */,
-				41629CD31BB8ECAD001D17AA /* CustomerStore.h */,
-				41629CD41BB8ECAD001D17AA /* CustomerStore.m */,
-				4133FD1E1BB7988A00B3EEED /* PriceListStore+CoreDataProperties.h */,
-				4133FD1F1BB7988A00B3EEED /* PriceListStore+CoreDataProperties.m */,
-				4133FD221BB7988A00B3EEED /* CustomerStore+CoreDataProperties.h */,
-				4133FD231BB7988A00B3EEED /* CustomerStore+CoreDataProperties.m */,
-				4133FD261BB7988A00B3EEED /* ProductStore+CoreDataProperties.h */,
-				4133FD271BB7988A00B3EEED /* ProductStore+CoreDataProperties.m */,
-				4133FD2A1BB7988A00B3EEED /* CartStore+CoreDataProperties.h */,
-				4133FD2B1BB7988A00B3EEED /* CartStore+CoreDataProperties.m */,
-				4133FD2E1BB7988A00B3EEED /* GlobalStore+CoreDataProperties.h */,
-				4133FD2F1BB7988A00B3EEED /* GlobalStore+CoreDataProperties.m */,
-				4133FD321BB7988A00B3EEED /* OfflineSalesStore+CoreDataProperties.h */,
-				4133FD331BB7988A00B3EEED /* OfflineSalesStore+CoreDataProperties.m */,
+				4136D39D1BBA38A00027A60F /* PriceListStore.h */,
+				4136D39E1BBA38A00027A60F /* PriceListStore.m */,
+				4136D39A1BBA38A00027A60F /* CustomerStore.h */,
+				4136D39B1BBA38A00027A60F /* CustomerStore.m */,
+				4136D3971BBA38A00027A60F /* OfflineSalesStore.h */,
+				4136D3981BBA38A00027A60F /* OfflineSalesStore.m */,
+				4136D3941BBA38A00027A60F /* ProductStore.h */,
+				4136D3951BBA38A00027A60F /* ProductStore.m */,
+				4136D3911BBA38A00027A60F /* CartStore.h */,
+				4136D3921BBA38A00027A60F /* CartStore.m */,
+				4136D38E1BBA38A00027A60F /* PriceStore.h */,
+				4136D38F1BBA38A00027A60F /* PriceStore.m */,
+				4136D38B1BBA389F0027A60F /* GlobalStore.h */,
+				4136D38C1BBA389F0027A60F /* GlobalStore.m */,
 			);
 			name = Storage;
 			sourceTree = "<group>";
@@ -777,6 +761,7 @@
 				41EA223A1BABAD8A0021824E /* CreditCardViewCell.xib in Resources */,
 				41EA21C11BABAC990021824E /* checked@2x.png in Resources */,
 				41EA21C01BABAC990021824E /* checked.png in Resources */,
+				4136D34B1BBA19CF0027A60F /* getPrices.json in Resources */,
 				413620C81BB3934800B548F6 /* dataDefaults.json in Resources */,
 				41EA21CB1BABAC990021824E /* unchecked.png in Resources */,
 				41EA21C21BABAC990021824E /* connected.png in Resources */,
@@ -791,9 +776,11 @@
 				41EA22431BABAD8A0021824E /* ProductViewCell.xib in Resources */,
 				41EA21DF1BABACE90021824E /* submitAuthorisation.json in Resources */,
 				41EA21CD1BABAC990021824E /* user-logout.png in Resources */,
+				4136D3471BBA18490027A60F /* getCustomers.json in Resources */,
 				41EA21CE1BABAC990021824E /* user-logout@2x.png in Resources */,
 				41EA21C51BABAC990021824E /* refresh@2x.png in Resources */,
 				41EA21DE1BABACE90021824E /* offlineSales.json in Resources */,
+				4136D3491BBA18740027A60F /* getPriceLists.json in Resources */,
 				413620C41BB3796C00B548F6 /* authSubmit.json in Resources */,
 				4133FD1D1BB7847200B3EEED /* checkConnection.json in Resources */,
 				41EA21BA1BABAC990021824E /* batt_info_0.png in Resources */,
@@ -848,14 +835,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				41EA219E1BABAC780021824E /* VisualFeedBackViewController.m in Sources */,
-				4133FD381BB7988A00B3EEED /* CustomerStore+CoreDataProperties.m in Sources */,
-				4133FD361BB7988A00B3EEED /* PriceListStore+CoreDataProperties.m in Sources */,
 				41EA223D1BABAD8A0021824E /* EFTPOSViewCell.m in Sources */,
 				41EA221E1BABAD6A0021824E /* KeychainWrapper.m in Sources */,
 				41EA22221BABAD6A0021824E /* SyncService.m in Sources */,
 				41EA22391BABAD8A0021824E /* CreditCardViewCell.m in Sources */,
+				4136D39F1BBA38A00027A60F /* PriceListStore.m in Sources */,
 				41EA221F1BABAD6A0021824E /* NSData-AES.m in Sources */,
-				4133FD3E1BB7988A00B3EEED /* GlobalStore+CoreDataProperties.m in Sources */,
 				41EA223B1BABAD8A0021824E /* CustomerViewCell.m in Sources */,
 				41EA22201BABAD6A0021824E /* rijndael.c in Sources */,
 				412C53901BB4827800E51B81 /* JSONResponseSerializerWithData.m in Sources */,
@@ -864,30 +849,28 @@
 				41EA220E1BABAD500021824E /* APIManager.m in Sources */,
 				41EA219B1BABAC780021824E /* SignatureViewController.m in Sources */,
 				41EA216D1BABAC5F0021824E /* UILabel+FormattedText.m in Sources */,
-				41629CD81BB8ECAE001D17AA /* ProductStore.m in Sources */,
 				41EA21901BABAC780021824E /* APLWebViewController.m in Sources */,
+				4136D3901BBA38A00027A60F /* PriceStore.m in Sources */,
+				4136D39C1BBA38A00027A60F /* CustomerStore.m in Sources */,
+				4136D3961BBA38A00027A60F /* ProductStore.m in Sources */,
 				41EA223F1BABAD8A0021824E /* FilteredProductViewCell.m in Sources */,
-				41629CD51BB8ECAD001D17AA /* CustomerStore.m in Sources */,
-				41629CDE1BB8ECAE001D17AA /* CartStore.m in Sources */,
 				41EA21F41BABAD060021824E /* Response.m in Sources */,
 				41EA21931BABAC780021824E /* MainViewController.m in Sources */,
 				41EA21F01BABAD060021824E /* DataDefaults.m in Sources */,
 				41EA213E1BABAA570021824E /* main.m in Sources */,
 				41EA219D1BABAC780021824E /* TerminalViewController.m in Sources */,
-				41629CE11BB8ECAE001D17AA /* OfflineSalesStore.m in Sources */,
 				41EA21971BABAC780021824E /* PaymentViewController.m in Sources */,
 				41EA221D1BABAD6A0021824E /* Base64.m in Sources */,
+				4136D3A21BBA439C0027A60F /* SyncViewController.m in Sources */,
 				41EA22371BABAD8A0021824E /* CashViewCell.m in Sources */,
-				41629CE71BB8ECAE001D17AA /* PriceStore.m in Sources */,
 				41EA21F21BABAD060021824E /* PriceList.m in Sources */,
-				4133FD3C1BB7988A00B3EEED /* CartStore+CoreDataProperties.m in Sources */,
+				4136D38D1BBA389F0027A60F /* GlobalStore.m in Sources */,
 				41EA22421BABAD8A0021824E /* ProductViewCell.m in Sources */,
 				41EA219C1BABAC780021824E /* SubmitViewController.m in Sources */,
 				41629CEA1BB8ECD8001D17AA /* Price.m in Sources */,
-				4133FD3A1BB7988A00B3EEED /* ProductStore+CoreDataProperties.m in Sources */,
-				41629CE41BB8ECAE001D17AA /* GlobalStore.m in Sources */,
 				41EA22211BABAD6A0021824E /* Service.m in Sources */,
 				41EA21961BABAC780021824E /* PaymentTypeViewController.m in Sources */,
+				4136D3931BBA38A00027A60F /* CartStore.m in Sources */,
 				41EA21EF1BABAD060021824E /* Customer.m in Sources */,
 				41EA21951BABAC780021824E /* PaymentCustomerViewController.m in Sources */,
 				41EA21981BABAC780021824E /* PinViewController.m in Sources */,
@@ -895,13 +878,12 @@
 				41EA21941BABAC780021824E /* PageViewController.m in Sources */,
 				41EA21991BABAC780021824E /* QtyViewController.m in Sources */,
 				41EA21921BABAC780021824E /* LoginViewController.m in Sources */,
+				4136D3991BBA38A00027A60F /* OfflineSalesStore.m in Sources */,
 				41EA216B1BABAC5F0021824E /* RadioButton.m in Sources */,
 				41EA220A1BABAD2A0021824E /* POS.xcdatamodeld in Sources */,
 				41EA216C1BABAC5F0021824E /* RoundedButton.m in Sources */,
-				4133FD401BB7988A00B3EEED /* OfflineSalesStore+CoreDataProperties.m in Sources */,
 				4133FD171BB7714000B3EEED /* MetaData.m in Sources */,
 				41EA218F1BABAC780021824E /* APLPrintPageRenderer.m in Sources */,
-				41629CDB1BB8ECAE001D17AA /* PriceListStore.m in Sources */,
 				41EA219A1BABAC780021824E /* POSViewController.m in Sources */,
 				41EA21F11BABAD060021824E /* PersistenceManager.m in Sources */,
 			);

@@ -11,6 +11,7 @@
 #pragma mark - api services
 
 -(AFHTTPRequestOperation*) authSubmit{
+    
     GlobalStore *globalStore = [persistenceManager getGlobalStore];
     
     if (MOCK_DATA) {
@@ -129,6 +130,105 @@
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
        [self setRequestOperationError:operation error:error];
+    }];
+    return operation;
+}
+
+-(AFHTTPRequestOperation*) getCustomers:(int)page{
+    
+    if (MOCK_DATA) {
+        Response *response;
+        response = [self getResponse:[self getMockData:@"getCustomers"]];
+        [self.delegate apiCustomersResponse:response];
+        return nil;
+    }
+    
+    GlobalStore *globalStore = [persistenceManager getGlobalStore];
+    NSString *params = [NSString stringWithFormat:@"date_last_updated=%@&page=%d&limit=%d",
+                        [persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED],page,PAGE_LIMIT];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@",globalStore.my_custom_url,API_CUSTOMERS,params]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+    [self setHeaders:request];
+    [request setHTTPMethod:@"GET"];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        Response *response = [self getResponse:responseObject];
+        [self.delegate apiCustomersResponse:response];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self setRequestOperationError:operation error:error];
+    }];
+    return operation;
+}
+
+-(AFHTTPRequestOperation*) getPriceLists:(int)page{
+    
+    if (MOCK_DATA) {
+        Response *response;
+        response = [self getResponse:[self getMockData:@"getPriceLists"]];
+        [self.delegate apiPriceListsResponse:response];
+        return nil;
+    }
+    
+    GlobalStore *globalStore = [persistenceManager getGlobalStore];
+    NSString *params = [NSString stringWithFormat:@"date_last_updated=%@&page=%d&limit=%d",
+                        [persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED],page,PAGE_LIMIT];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@",globalStore.my_custom_url,API_PRICELISTS,params]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+    [self setHeaders:request];
+    [request setHTTPMethod:@"GET"];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        Response *response = [self getResponse:responseObject];
+        [self.delegate apiPriceListsResponse:response];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self setRequestOperationError:operation error:error];
+    }];
+    return operation;
+}
+
+-(AFHTTPRequestOperation*) getPrices:(int)page{
+    
+    if (MOCK_DATA) {
+        Response *response;
+        response = [self getResponse:[self getMockData:@"getPrices"]];
+        [self.delegate apiPricesResponse:response];
+        return nil;
+    }
+    
+    GlobalStore *globalStore = [persistenceManager getGlobalStore];
+    NSString *params = [NSString stringWithFormat:@"date_last_updated=%@&page=%d&limit=%d",
+                        [persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED],page,PAGE_LIMIT];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@",globalStore.my_custom_url,API_PRICES,params]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+    [self setHeaders:request];
+    [request setHTTPMethod:@"GET"];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        Response *response = [self getResponse:responseObject];
+        [self.delegate apiPricesResponse:response];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self setRequestOperationError:operation error:error];
     }];
     return operation;
 }
@@ -254,12 +354,12 @@
         NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
         CustomerStore *customerStore = [persistenceManager getCustomerStore:globalStore.customer_default_code];
         
-        PriceListStore *priceListStore = [persistenceManager getPriceListByProductStore:customerStore.pricelist_code
-                                                             product_code:cartStore.cartProduct.itemNo];
+        PriceStore *priceStore = [persistenceManager getPriceStore:customerStore.priceCode
+                                                             itemNo:cartStore.cartProduct.itemNo];
         [data setObject:cartStore.cart_code forKey:@"cart_code"];
         [data setObject:cartStore.qty forKey:@"qty"];
-        [data setObject:customerStore.customer_code forKey:@"customer_code"];
-        [data setObject:priceListStore.pricelist_code forKey:@"pricelist_code"];
+        [data setObject:customerStore.code forKey:@"customer_code"];
+        [data setObject:priceStore.priceListCode forKey:@"pricelist_code"];
         [data setObject:cartStore.cartProduct.itemNo forKey:@"itemNo"];
         
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
@@ -274,7 +374,6 @@
     [request setHTTPMethod:@"POST"];
     /*!
      * parameters:
-     * token , the unique identifier returned from server
      * paymentType, the payment type used
      * customer, the customer details {name,email,phone ... etc.}
      * payment, the payment details {cash,eftpos,creditcard)
@@ -282,8 +381,7 @@
      * customer_code, the customer code used
      * carts, the carts details {cart_code,qty, product ... etc}
      */
-    NSString *params = [NSString stringWithFormat:@"token=%@&paymentType=%@&customer=%@payment=%@&invoice_no=%@&cashSales=%@customer_code=%@&carts=%@",
-                        [persistenceManager getKeyChain:APP_TOKEN],
+    NSString *params = [NSString stringWithFormat:@"paymentType=%@&customer=%@payment=%@&invoice_no=%@&cashSales=%@customer_code=%@&carts=%@",
                         paymentType,customer, payment, invoice_no,cashSales,globalStore.customer_default_code,carts];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -343,8 +441,7 @@
      * token , the unique identifier returned from server
      * offlineSales, the offline sales details {invoice_no ... etc.}
      */
-    NSString *params = [NSString stringWithFormat:@"token=%@&offlineSales=%@",
-                        [persistenceManager getKeyChain:APP_TOKEN],offlineSalesData];
+    NSString *params = [NSString stringWithFormat:@"offlineSales=%@",offlineSalesData];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
@@ -425,7 +522,7 @@
 
 #pragma Private methods
 - (void) setHeaders :(NSMutableURLRequest *) request{
-    NSString *wsee = [CocoaWSSE headerWithUsername:[persistenceManager getKeyChain:APP_USER_IDENT] password:[persistenceManager getKeyChain:APP_USER_SECURITY]];
+    NSString *wsee = [CocoaWSSE headerWithUsername:[persistenceManager getKeyChain:USER_IDENT] password:[persistenceManager getKeyChain:USER_SECURITY]];
     DebugLog(@"wsee ->%@",wsee);
     [request setValue:wsee forHTTPHeaderField:@"X-WSSE"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -451,7 +548,11 @@
                                                             options:0 error:nil];
         response = (Response*)[self getResponse:responseObject];
         message = [self getError:response];
-    }
+     } else {
+         response = [[Response alloc]init];
+         response.responseCode = [NSNumber numberWithInt:HTTP_STATUS_SERVICE_UNAVAILABLE];
+         message = SERVER_ERROR;
+     }
     response.data = message;
     [self.delegate apiRequestError:error response:response];
 }

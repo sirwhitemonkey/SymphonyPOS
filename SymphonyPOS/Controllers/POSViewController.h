@@ -1,5 +1,6 @@
 
 #import <UIKit/UIKit.h>
+
 #import "APIManager.h"
 #import "Product.h"
 #import "ProductViewCell.h"
@@ -9,9 +10,9 @@
 #import "FilteredProductViewCell.h"
 #import "QtyViewController.h"
 #import "DTDevices.h"
+#import "SyncViewController.h"
 
-@interface POSViewController : UIViewController<UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate, UITextFieldDelegate,UIActionSheetDelegate,APIManagerDelegate,
-QtyViewContollerDelegate>
+@interface POSViewController : UIViewController<UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate, UITextFieldDelegate,UIActionSheetDelegate, QtyViewContollerDelegate, SyncViewControllerDelegate>
 
 @property (nonatomic,strong) IBOutlet ProductViewCell *productViewCell;
 @property (nonatomic,strong) IBOutlet FilteredProductViewCell *filteredProductViewCell;
