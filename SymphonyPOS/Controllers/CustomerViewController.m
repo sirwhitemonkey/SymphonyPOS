@@ -60,7 +60,7 @@
         }
     }
     [self registerNotifications];
-    [self searchCustomers:@""];
+    
 }
 
 - (BOOL)shouldAutorotate{
@@ -126,26 +126,16 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
-
 
 #pragma mark - UISearchBar
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchCustomers:) object:searchText];
-    [self performSelector:@selector(searchCustomers:) withObject:searchText afterDelay:0.5];
+    //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchCustomers:) object:searchText];
+    //[self performSelector:@selector(searchCustomers:) withObject:searchText afterDelay:0.5];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
+    [self searchCustomers:_searchBar.text];
 }
 
 #pragma mark - Private methods
@@ -158,6 +148,9 @@
  */
 - (void) searchCustomers:(NSString*) searchString {
     _customers = [persistenceManager getCustomerStores:searchString];
+    if ([_customers count] == 0) {
+         [service showMessage:self loader:NO message:@"No customers available" error:YES waitUntilCompleted:NO withCallBack:nil];
+    }
     [self.tableView reloadData];
 }
 

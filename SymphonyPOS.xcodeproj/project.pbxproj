@@ -11,6 +11,7 @@
 		4133FD171BB7714000B3EEED /* MetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD161BB7714000B3EEED /* MetaData.m */; };
 		4133FD1B1BB774BA00B3EEED /* getProducts.json in Resources */ = {isa = PBXBuildFile; fileRef = 4133FD1A1BB774BA00B3EEED /* getProducts.json */; };
 		4133FD1D1BB7847200B3EEED /* checkConnection.json in Resources */ = {isa = PBXBuildFile; fileRef = 4133FD1C1BB7847200B3EEED /* checkConnection.json */; };
+		4133FD461BBA6E7B00B3EEED /* LoaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD451BBA6E7B00B3EEED /* LoaderViewController.m */; settings = {ASSET_TAGS = (); }; };
 		413620C41BB3796C00B548F6 /* authSubmit.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C31BB3796C00B548F6 /* authSubmit.json */; };
 		413620C61BB38EBC00B548F6 /* themes.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C51BB38EBC00B548F6 /* themes.json */; };
 		413620C81BB3934800B548F6 /* dataDefaults.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C71BB3934800B548F6 /* dataDefaults.json */; };
@@ -136,6 +137,8 @@
 		4133FD1A1BB774BA00B3EEED /* getProducts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getProducts.json; sourceTree = "<group>"; };
 		4133FD1C1BB7847200B3EEED /* checkConnection.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = checkConnection.json; sourceTree = "<group>"; };
 		4133FD431BB7B29D00B3EEED /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		4133FD441BBA6E7B00B3EEED /* LoaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoaderViewController.h; path = Controllers/LoaderViewController.h; sourceTree = "<group>"; };
+		4133FD451BBA6E7B00B3EEED /* LoaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoaderViewController.m; path = Controllers/LoaderViewController.m; sourceTree = "<group>"; };
 		413620C31BB3796C00B548F6 /* authSubmit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = authSubmit.json; sourceTree = "<group>"; };
 		413620C51BB38EBC00B548F6 /* themes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = themes.json; sourceTree = "<group>"; };
 		413620C71BB3934800B548F6 /* dataDefaults.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dataDefaults.json; sourceTree = "<group>"; };
@@ -455,6 +458,8 @@
 				41EA218E1BABAC780021824E /* VisualFeedBackViewController.m */,
 				4136D3A01BBA439C0027A60F /* SyncViewController.h */,
 				4136D3A11BBA439C0027A60F /* SyncViewController.m */,
+				4133FD441BBA6E7B00B3EEED /* LoaderViewController.h */,
+				4133FD451BBA6E7B00B3EEED /* LoaderViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -853,6 +858,7 @@
 				4136D3901BBA38A00027A60F /* PriceStore.m in Sources */,
 				4136D39C1BBA38A00027A60F /* CustomerStore.m in Sources */,
 				4136D3961BBA38A00027A60F /* ProductStore.m in Sources */,
+				4133FD461BBA6E7B00B3EEED /* LoaderViewController.m in Sources */,
 				41EA223F1BABAD8A0021824E /* FilteredProductViewCell.m in Sources */,
 				41EA21F41BABAD060021824E /* Response.m in Sources */,
 				41EA21931BABAC780021824E /* MainViewController.m in Sources */,

@@ -57,7 +57,8 @@
 #define ALPHA_CHARACTERS @" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 #define DECRYPTION_KEY @"12345678901234567890123456789012"
 #define SYNC_DATE_LAST_UPDATED @"sync_date_last_updated"
-#define PAGE_LIMIT 1000
+#define PAGE_LIMIT 25000
+#define FETCH_BATCH_SIZE 500
 
 #pragma mark - Response codes
 #define HTTP_STATUS_OK 200
@@ -66,7 +67,7 @@
 
 #pragma mark - Api service
 //TODO
-#define API_URL @"http://192.168.153.89:8080/Sphere/v1"
+#define API_URL @"http://192.168.1.7:8080/Sphere/v1"
 #define CUSTOM_CLIENT_LOGO @"http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg"
 //---
 

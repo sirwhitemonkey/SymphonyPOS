@@ -220,7 +220,7 @@
 }
 
 /*!
- * SubmitViewController navigate to quick order page
+ * SubmitViewController navigate to pos page
  */
 - (void) viewQuickOrderPage {
     [self performSegueWithIdentifier:@"SubmitPOSSegue" sender:self];
@@ -267,7 +267,7 @@
     _printBtn =[[UIBarButtonItem alloc]  initWithTitle:@"Print" style:UIBarButtonItemStylePlain
                                                 target:self action:@selector(print:)];
     
-    _homeBtn =[[UIBarButtonItem alloc]  initWithTitle:@"Quick Order" style:UIBarButtonItemStylePlain
+    _homeBtn =[[UIBarButtonItem alloc]  initWithTitle:@"POS" style:UIBarButtonItemStylePlain
                                                target:self action:@selector(home:)];
 
     self.navigationItem.leftBarButtonItem = _homeBtn;

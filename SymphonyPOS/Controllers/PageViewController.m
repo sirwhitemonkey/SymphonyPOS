@@ -202,7 +202,7 @@
 }
 
 /*!
- * PageViewController navigate to quick order page
+ * PageViewController navigate to pos page
  */
 - (void) viewPOSPage {
     [self performSegueWithIdentifier:@"POSSegue" sender:self];

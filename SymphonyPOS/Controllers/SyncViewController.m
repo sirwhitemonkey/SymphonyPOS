@@ -52,7 +52,7 @@
     [persistenceManager syncCustomers:_apiManager response:response completedCallback:^ {
         [service hideMessage:^ {
             // Sync pricelists
-            [service showMessage:self loader:YES message:@"Synchronising pricelists ..." error:NO
+            [service showMessage:self loader:YES message:@"Synchronising priceLists ..." error:NO
               waitUntilCompleted:YES withCallBack:^ {
                   _apiManager.batchOperation = true;
                   AFHTTPRequestOperation *syncPriceLists = [_apiManager getPriceLists:0];

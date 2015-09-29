@@ -60,7 +60,6 @@
      _apiManager = [[APIManager alloc]init];
     [_apiManager syncImage:titleView url:_globalStore.my_custom_logo];
     
-    
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
@@ -94,7 +93,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -179,7 +177,7 @@
         [service showMessage:self loader:NO message:@"No carts available"   error:YES
           waitUntilCompleted:NO withCallBack:nil];
     } else {
-        self.navigationItem.title = @"Quick Order";
+        self.navigationItem.title = @"POS";
         [self viewPaymentCustomerPage];
     }
 }
@@ -317,22 +315,34 @@
         
         pViewCell.removeToCart.tag = indexPath.row;
          [ pViewCell.removeToCart setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_remove"]]];
-      
-        [_apiManager syncImage:pViewCell.image_url url:productStore.image_url];
+       
+        NSString *imageUrl = productStore.image_url;
+        if (!imageUrl) {
+            imageUrl = _globalStore.my_custom_logo;
+        }
+        [_apiManager syncImage:pViewCell.image_url url:imageUrl];
         
   
     }
     return cell;
 }
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_onSearchProduct) {
         ProductStore *productStore = [_products objectAtIndex:indexPath.row];
-        NSUserDefaults* settings = [NSUserDefaults standardUserDefaults];
-        BOOL qtyEvent = [settings boolForKey:@"qtyEvent"];
-        if (qtyEvent) {
-            [self viewQtyPage:productStore];
+        CustomerStore *customerStore = [persistenceManager getCustomerStore:_globalStore.customer_default_code];
+        PriceStore *priceStore = [persistenceManager getPriceStore:customerStore.priceCode itemNo:productStore.itemNo];
+        if (!priceStore) {
+            [service showMessage:self loader:NO message:@"Price not available" error:YES waitUntilCompleted:NO withCallBack:nil];
         } else {
-            [self setToCart:productStore qty:[NSNumber numberWithInt:1]];
+            NSUserDefaults* settings = [NSUserDefaults standardUserDefaults];
+            BOOL qtyEvent = [settings boolForKey:@"qtyEvent"];
+            if (qtyEvent) {
+                [self viewQtyPage:productStore];
+            } else {
+                [self setToCart:productStore qty:[NSNumber numberWithInt:1]];
+            }
+            
         }
     }
 }
@@ -340,9 +350,15 @@
 #pragma mark - QtyViewControllerDelegate
 - (void)qtyDidCompleted:(QtyViewController*)controller qty:(NSNumber *)qty productStore:(ProductStore *)productStore{
     [controller dismissViewControllerAnimated:NO completion:nil];
-    [self setToCart:productStore qty:qty];
-    if (_deviceConnected) {
-        [_dtdev barcodeStartScan:nil];
+    CustomerStore *customerStore = [persistenceManager getCustomerStore:_globalStore.customer_default_code];
+    PriceStore *priceStore = [persistenceManager getPriceStore:customerStore.priceCode itemNo:productStore.itemNo];
+    if (!priceStore) {
+        [service showMessage:self loader:NO message:@"Price not available" error:YES waitUntilCompleted:NO withCallBack:nil];
+    } else {
+        [self setToCart:productStore qty:qty];
+        if (_deviceConnected) {
+            [_dtdev barcodeStartScan:nil];
+        }
     }
 }
 
@@ -356,15 +372,15 @@
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
-
 #pragma mark - UISearchBar
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchProducts:) object:searchText];
-    [self performSelector:@selector(searchProducts:) withObject:searchText afterDelay:0.5];
+    //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchProducts:) object:searchText];
+    //[self performSelector:@selector(searchProducts:) withObject:searchText afterDelay:1.0];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
+    [self searchProducts:_searchBar.text];
 }
 
 
@@ -380,9 +396,8 @@
         if (cartStore) {
             [persistenceManager updateCartStore:cartStore.cart_code qty: [NSNumber numberWithLong:[finalString integerValue]]];
         }
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchProducts:) object:@""];
-        [self performSelector:@selector(searchProducts:) withObject:@"" afterDelay:2.0];
-
+        [self searchProducts:@""];
+     
         return YES;
     }
     return NO;
@@ -573,6 +588,14 @@
     if (![service isEmptyString:_archivedSearchStrings]) {
         _onSearchProduct = true;
         _products = [persistenceManager getProductStores:searchString];
+        if ([_products count] == 0) {
+            [service showMessage:self loader:NO message:@"No products available" error:YES waitUntilCompleted:NO withCallBack:^ {
+                _onSearchProduct = false;
+                _products = [persistenceManager getCartStores];
+                [self finaliseGrandTotals];
+                [self.tableView reloadData];
+            }];
+        }
 
     } else {
          _products = [persistenceManager getCartStores];
@@ -581,12 +604,13 @@
     [self.tableView reloadData];
 }
 
+
 /*!
  * POSViewController switching the customer
  */
 - (void)switchDefaultCustomer {
     DebugLog(@"switchDefaultCustomer");
-    self.navigationItem.title = @"Quick Order";
+    self.navigationItem.title = @"POS";
     [self viewCustomerPage];
 }
 
@@ -755,7 +779,7 @@
 - (void) viewSyncPage {
     SyncViewController *controller = (SyncViewController*)[persistenceManager getView:@"SyncViewController"];
     controller.delegate = self;
-    controller.settings = NO;
+    controller.settings = YES;
     [controller setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:controller animated:NO completion: ^ {
         [controller sync];

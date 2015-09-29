@@ -362,7 +362,7 @@
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"ProductStore"
                                                          inManagedObjectContext:context];
     [fectchRequest setEntity: entityDescription];
-    [fectchRequest setFetchBatchSize:100];
+    [fectchRequest setFetchBatchSize:FETCH_BATCH_SIZE];
     
     NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"desc" ascending:YES selector:@selector(localizedStandardCompare:)];
     NSArray * sortDescriptionArray = [[NSArray alloc] initWithObjects: sortDescription, nil];
