@@ -159,16 +159,21 @@
     long days_sync_interval = [[settings objectForKey:@"days_sync_interval"] integerValue];
     if (days_sync_interval < days) {
         [self viewSyncPage];
-    }
-    
-    // Sync offline
-    NSArray *offlineSalesStores = [persistenceManager getOfflineSalesStore];
-    if (offlineSalesStores.count > 0) {
-        [service showMessage:self loader:YES message:@"Synchronising offline sales ..." error:NO
-          waitUntilCompleted:YES withCallBack:^ {
-              _apiManager.batchOperation = false;
-              [_apiManager offlineSales:self];
-          }];
+        
+    } else {
+        
+        // Sync offline sales
+        NSArray *offlineSalesStores = [persistenceManager getOfflineSalesStore];
+        if (offlineSalesStores.count > 0) {
+            [service showMessage:self loader:YES message:@"Synchronising offline sales ..." error:NO
+              waitUntilCompleted:YES withCallBack:^ {
+                  _apiManager.batchOperation = false;
+                  AFHTTPRequestOperation *offlineSales = [_apiManager offlineSales];
+                  if (offlineSales) {
+                      [offlineSales start];
+                  }
+              }];
+        }
     }
 }
 

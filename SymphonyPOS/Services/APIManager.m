@@ -268,33 +268,6 @@
     
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- (void) sync: (id)reference {
-}
-
 - (void) submitPayment:(id)reference invoice_no:(NSString*)invoice_no {
     
    if (MOCK_DATA) {
@@ -399,15 +372,13 @@
     [operation start];
 }
 
-- (void) offlineSales:(id)reference {
+- (AFHTTPRequestOperation*) offlineSales {
     
     if (MOCK_DATA) {
         Response *response;
         response = [self getResponse:[self getMockData:@"offlineSales"]];
-        
         [self.delegate apiOfflineSalesResponse:response];
-        
-        return;
+        return nil;
     }
     GlobalStore *globalStore = [persistenceManager getGlobalStore];
     
@@ -456,12 +427,8 @@
         [self setRequestOperationError:operation error:error];
         
     }];
-    [operation start];
-    
+    return operation;
 }
-
-
-
 
 - (void) syncImage:(UIImageView*) refImageView url:(NSString *)url {
     

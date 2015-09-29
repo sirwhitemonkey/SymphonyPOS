@@ -53,16 +53,6 @@
  */
 - (void) apiPricesResponse:(Response*)response;
 
-
-
-
-
-
-/*!
- * APIManagerDelegate sync callback.
- */
-- (void) apiSyncResponse:(Response*)response;
-
 /*!
  * APIManagerDelegate check connection  callback.
  */
@@ -79,14 +69,6 @@
  * Offline sales synchronisation.
  */
 - (void) apiOfflineSalesResponse:(Response*) response;
-
-/*!
- * APIManagerDelegate submit authorisation callback
- * Submission of authorisation data for data encryption
- */
-- (void) apiSubmitAuthorisationResponse:(Response*)response;
-
-
 
 
 @end
@@ -139,31 +121,6 @@
  */
 - (AFHTTPRequestOperation*) checkConnection;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*!
- * APIManager sync data  request
- */
-- (void) sync:(id)reference;
-
-
-
 /*!
  * APIManager payment submission request
  */
@@ -172,7 +129,7 @@
 /*!
  * APIManager synchronisation of offline sales request.
  */
-- (void) offlineSales:(id) reference;
+- (AFHTTPRequestOperation*) offlineSales;
 
 /*!
  * APIManager synchronisation of image on the background request.
