@@ -423,15 +423,7 @@
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell=nil;
-    NSDictionary *data= nil;
-    if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
-        NSData * dataCreditCard = [[persistenceManager getKeyChain:_paymentType] dataUsingEncoding:NSUTF8StringEncoding];
-        if (dataCreditCard) {
-            data = [NSJSONSerialization JSONObjectWithData:dataCreditCard options:0 error:nil];
-        }
-    } else {
-        data = [persistenceManager getDataStore:_paymentType];
-    }
+    NSDictionary *data= data = [persistenceManager getDataStore:_paymentType];
     
     if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
         cell=[tableView dequeueReusableCellWithIdentifier:@"CreditCardViewCell"];
@@ -449,23 +441,11 @@
             ccViewCell.grandTotals.text = [NSString stringWithFormat:@"%@ %.2f",_currency, ([_subTotals floatValue] -[_salesPercentageTax floatValue])];
             
             if (data) {
-                NSString *decryptCard = nil;
                 ccViewCell.cardHolderName.text = [data objectForKey:@"cardHolderName"];
-                decryptCard = [ service decrypt:[data objectForKey:@"creditCardNumber"] key:[persistenceManager getKeyChain:PASSKEY]];
-                
-                decryptCard = [service trim:decryptCard];
-                
-                 ccViewCell.creditCardNumber.text = decryptCard;
-                
+                ccViewCell.creditCardNumber.text = [data objectForKey:@"creditCardNumber"];
                 ccViewCell.expiryDateMonth.text = [data objectForKey:@"expMonth"];
                 ccViewCell.expiryDateYear.text = [data objectForKey:@"expYear"];
-                
-                if (![service isEmptyString:[data objectForKey:@"securityCode"]]) {
-                     NSString *decryptSecurityCode = [ service decrypt:[data objectForKey:@"securityCode"] key:[persistenceManager getKeyChain:PASSKEY]];
-                    
-                    decryptSecurityCode= [service trim:decryptSecurityCode];
-                    ccViewCell.securityCode.text = decryptSecurityCode;
-                }
+                ccViewCell.securityCode.text = [data objectForKey:@"securityCode"];
                 
                 NSString *cardType = [persistenceManager getDataStore:PAYMENT_CREDITCARDTYPE];
                 RoundedButton *cardTypeBtn = nil;
@@ -614,8 +594,8 @@
  */
 - (BOOL) validatePaymentEntries {
     BOOL validate = true;
-    NSDictionary *data = nil;
     BOOL dialog = false;
+    
     if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
         
         if ([service isEmptyString:self.creditCardViewCell.cardHolderName.text]) {
@@ -670,24 +650,14 @@
             }
             NSString *creditCardNumber = self.creditCardViewCell.creditCardNumber.text;
             NSString *securityCode = self.creditCardViewCell.securityCode.text;
-           creditCardNumber = [service encrypt:creditCardNumber key:[persistenceManager getKeyChain:PASSKEY]];
-            
-            if (![service isEmptyString:self.creditCardViewCell.securityCode.text]) {
-                securityCode = [service encrypt:securityCode key:[persistenceManager getKeyChain:PASSKEY]];
-            }
-            
-            data = [[NSDictionary alloc] initWithObjectsAndKeys:self.creditCardViewCell.cardHolderName.text, @"cardHolderName",
-                    creditCardNumber,@"creditCardNumber",
-                    self.creditCardViewCell.expiryDateMonth.text, @"expMonth",
-                    self.creditCardViewCell.expiryDateYear.text, @"expYear",
-                    securityCode, @"securityCode",
-                    signatureData, @"signature",
-                    [persistenceManager getDataStore:PAYMENT_CREDITCARDTYPE],@"paymentCreditCardType",nil];
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
-                                                               options:NSJSONWritingPrettyPrinted
-                                                                 error:nil];
-            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            [persistenceManager setKeyChain:_paymentType value:jsonString];
+           [persistenceManager setDataStore:_paymentType value:[[NSDictionary alloc]
+                                                                 initWithObjectsAndKeys:self.creditCardViewCell.cardHolderName.text, @"cardHolderName",
+                                                                 creditCardNumber,@"creditCardNumber",
+                                                                 self.creditCardViewCell.expiryDateMonth.text, @"expMonth",
+                                                                 self.creditCardViewCell.expiryDateYear.text, @"expYear",
+                                                                 securityCode, @"securityCode",
+                                                                 signatureData, @"signature",
+                                                                 [persistenceManager getDataStore:PAYMENT_CREDITCARDTYPE],@"paymentCreditCardType",nil]];
         }
     }
     else if ([_paymentType isEqualToString:PAYMENT_CASH]) {
@@ -703,9 +673,9 @@
             }
             if (validate) {
                 float balance = [self.cashViewCell.amountPaid.text floatValue] - [_grandTotals floatValue];
-                data = [[NSDictionary alloc] initWithObjectsAndKeys:self.cashViewCell.amountPaid.text, @"amountPaid",
-                        [NSString stringWithFormat:@"%.2f",balance] ,@"balance",nil];
-                [persistenceManager setDataStore:_paymentType value:data];
+                [persistenceManager setDataStore:_paymentType value:[[NSDictionary alloc]
+                                                                     initWithObjectsAndKeys:self.cashViewCell.amountPaid.text, @"amountPaid",
+                                                                     [NSString stringWithFormat:@"%.2f",balance] ,@"balance",nil]];
             }
         }
     }
