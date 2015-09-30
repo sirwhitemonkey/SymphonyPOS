@@ -94,10 +94,11 @@
 - (void)apiRequestError:(NSError *)error response:(Response *)response {
     DebugLog(@"apiRequestError -> %@,%@", error,response);
     if (!_apiManager.batchOperation) {
-        [persistenceManager clearCache];
         [service hideMessage:^ {
             [service showMessage:self loader:NO message:(NSString*)response.data error:YES
-              waitUntilCompleted:NO withCallBack:nil];
+              waitUntilCompleted:NO withCallBack:^ {
+                  [persistenceManager clearCache:nil];
+              }];
         }];
     }
 }

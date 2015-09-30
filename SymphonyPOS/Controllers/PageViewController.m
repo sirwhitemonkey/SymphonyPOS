@@ -78,7 +78,6 @@
                 }
             }
         } else {
-            [persistenceManager clearCache];
             // Show login page
             controller = [persistenceManager getView:@"LoginViewController"];
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -87,7 +86,6 @@
         }
         
     } else {
-        [persistenceManager clearCache];
         // Show login page
         controller = [persistenceManager getView:@"LoginViewController"];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;

@@ -634,30 +634,42 @@
     }
 }
 
-- (void) clearCache {
+- (void) clearCache:(void (^)(void))callbackBlock {
+    /*
     [self getProductStores:@"" completedCallback:^(NSArray *results) {
         for (ProductStore *productStore in results) {
             [self removeEntityObject:productStore];
         }
-    }];
-    
-    NSArray *cartStores = [self getCartStores];
-    for (CartStore *cartStore in cartStores) {
-        [self removeEntityObject:cartStore];
-    }
-   
-    [self getCustomerStores:@"" completedCallback:^(NSArray *results) {
-        for (CustomerStore *customerStore in results) {
-            [self removeEntityObject:customerStore];
+        
+        NSArray *cartStores = [self getCartStores];
+        for (CartStore *cartStore in cartStores) {
+            [self removeEntityObject:cartStore];
         }
+        
+        [self getCustomerStores:@"" completedCallback:^(NSArray *results) {
+            for (CustomerStore *customerStore in results) {
+                [self removeEntityObject:customerStore];
+            }
+            
+            [self removeEntityObject:[self getGlobalStore]];
+            [self removeFromKeyChain:USER_PIN_IDENT];
+            [self removeFromKeyChain:USER_LOGGED_IDENT];
+            [self removeFromKeyChain:SYNC_DATE_LAST_UPDATED];
+            [_dataStore removeAllObjects];
+            
+            callbackBlock();
+
+        }];
     }];
-    
-    [self removeEntityObject:[self getGlobalStore]];
-    [self removeFromKeyChain:USER_PIN_IDENT];
+    */
     [self removeFromKeyChain:USER_LOGGED_IDENT];
-    [self removeFromKeyChain:SYNC_DATE_LAST_UPDATED];
+    [self removeFromKeyChain:USER_IDENT];
     [_dataStore removeAllObjects];
- }
+
+    if (callbackBlock != nil) {
+        callbackBlock();
+    }
+}
 
 
 - (void) clearCurrentTransaction {

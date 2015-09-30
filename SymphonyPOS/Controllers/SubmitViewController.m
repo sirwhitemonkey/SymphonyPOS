@@ -123,7 +123,10 @@
 
 
 - (void) apiSubmitTransactionsResponse:(Response *)response {
-    [self finaliseSubmission];
+    DebugLog(@"apiSubmitTransactionsResponse");
+    [service hideMessage: ^ {
+       [self finaliseSubmission];
+    }];
 }
 
 #pragma mark - UIActionSheet
@@ -190,7 +193,7 @@
     
     _invoice_no = [invoice componentsJoinedByString:@""];
     
-    if (!offline) {
+    if (offline) {
         [persistenceManager setOfflineSalesStore:_invoice_no];
         [self finaliseSubmission];
         
@@ -223,7 +226,7 @@
         // Carts
         NSArray *cartStores = [persistenceManager getCartStores];
         NSMutableArray *saleCarts = [NSMutableArray array];
-         for (CartStore *cartStore in cartStores) {
+        for (CartStore *cartStore in cartStores) {
             PriceStore *priceStore = [persistenceManager getPriceStore:customerStore.priceCode
                                                                 itemNo:cartStore.cartProduct.itemNo];
             [saleCarts addObject: [[NSDictionary alloc] initWithObjectsAndKeys:

@@ -485,9 +485,17 @@
     switch (action.tag) {
         case 1: {
             switch (buttonIndex) {
-                case 0:
-                    [persistenceManager clearCache];
-                    [self.navigationController popToRootViewControllerAnimated:YES];
+                case 0: {
+                    [service showMessage:self loader:YES message:@"Logging out ..." error:NO waitUntilCompleted:YES
+                            withCallBack:^ {
+                                [persistenceManager clearCache:^ {
+                                    [service hideMessage:^ {
+                                        [self.navigationController popToRootViewControllerAnimated:YES];
+                                    }];
+                                }];
+                            }];
+                }
+                    break;
                 default:
                     break;
             }

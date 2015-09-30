@@ -164,7 +164,7 @@
 /*!
  * PersistenceManager clearing all the events (i.e transactions and data cache)
  */
-- (void)clearCache;
+- (void)clearCache:(void (^)(void))callbackBlock;
 
 /*!
  * PersistenceManager clearing the current transaction
