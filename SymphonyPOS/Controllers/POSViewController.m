@@ -399,6 +399,13 @@
     /*[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchProducts:) object:searchText];
     [self performSelector:@selector(searchProducts:) withObject:searchText afterDelay:0.5];
      */
+    if ([service isEmptyString:searchText]) {
+        _page = 0;
+        _pageReached = NO;
+        [_products removeAllObjects];
+        [self.tableView reloadData];
+        [self searchProducts:_searchBar.text];
+    }
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
