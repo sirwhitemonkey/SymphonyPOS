@@ -230,8 +230,8 @@
 }
 
 - (void) willEnterForegroundNotification {
-     // Sync every 5 minutes
-    [_syncService startTimerForSender:self withTimeInterval:60*5];
+    // Sync every 30 minutes
+    [_syncService startTimerForSender:self withTimeInterval:60*30];
 
 }
 
