@@ -184,6 +184,7 @@
     [self saveContext];
 }
 
+
 - (void)setPriceListStore:(PriceList*)pricelist {
     PriceListStore *pricelistStore = [self getPriceListStore:pricelist.code];
     if (!pricelistStore) {
@@ -252,14 +253,14 @@
 
 }
 
-- (NSArray*) getCustomerStores:(NSString*)searchString {
+- (void) getCustomerStores:(NSString*)searchString completedCallback:(void (^)(NSArray*))callbackBlock {
     NSManagedObjectContext *context = [self managedObjectContext];
     
     NSFetchRequest *fectchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"CustomerStore"
                                                          inManagedObjectContext:context];
     [fectchRequest setEntity: entityDescription];
-    [fectchRequest setFetchBatchSize:100];
+    [fectchRequest setFetchBatchSize:FETCH_BATCH_SIZE];
     
     NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
     NSArray * sortDescriptionArray = [[NSArray alloc] initWithObjects: sortDescription, nil];
@@ -269,15 +270,41 @@
     NSArray *results = [context executeFetchRequest:fectchRequest error:&error];
     
     if ([service isEmptyString:searchString]) {
-        return results;
+        callbackBlock(results);
+    } else {
+        if (results.count > 0) {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS %@ ", searchString];
+            results=[NSMutableArray arrayWithArray:[results filteredArrayUsingPredicate:predicate]];
+        }
+        callbackBlock(results);
+    }
+}
+
+- (NSArray*) getCustomerStores:(NSString*)searchString page:(int)page {
+    
+    NSManagedObjectContext *context = [self managedObjectContext];
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"CustomerStore"
+                                                         inManagedObjectContext:context];
+    [fetchRequest setEntity: entityDescription];
+    //[fetchRequest setFetchBatchSize:FETCH_BATCH_SIZE];
+    fetchRequest.fetchLimit = FETCH_LIMIT;
+    fetchRequest.fetchOffset = page * FETCH_LIMIT;
+    
+    if (![service isEmptyString:searchString]) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS %@", searchString];
+        [fetchRequest setPredicate:predicate];
     }
     
-    if (results.count > 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS %@ ", searchString];
-        results=[NSMutableArray arrayWithArray:[results filteredArrayUsingPredicate:predicate]];
-    }
+    NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)];
+    NSArray * sortDescriptionArray = [[NSArray alloc] initWithObjects: sortDescription, nil];
+    [fetchRequest setSortDescriptors: sortDescriptionArray];
+    NSError *error = nil;
+    NSArray *results = [context executeFetchRequest:fetchRequest error:&error];
     return results;
 }
+
 
 - (GlobalStore*) getGlobalStore {
     NSManagedObjectContext *context = [self managedObjectContext];
@@ -354,7 +381,8 @@
 
 }
 
-- (NSArray*)getProductStores: (NSString*) searchString {
+- (void)getProductStores: (NSString*) searchString completedCallback:(void (^)(NSArray*))callbackBlock {
+    
     
     NSManagedObjectContext *context = [self managedObjectContext];
     
@@ -372,13 +400,38 @@
     NSArray *results = [context executeFetchRequest:fectchRequest error:&error];
     
     if ([service isEmptyString:searchString]) {
-        return results;
+        callbackBlock(results);
+    } else {
+        if (results.count > 0) {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.desc CONTAINS %@", searchString];
+            results=[NSMutableArray arrayWithArray:[results filteredArrayUsingPredicate:predicate]];
+        }
+        callbackBlock(results);
+    }
+}
+
+- (NSArray*)getProductStores: (NSString*) searchString page:(int)page {
+    
+    NSManagedObjectContext *context = [self managedObjectContext];
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"ProductStore"
+                                                         inManagedObjectContext:context];
+    [fetchRequest setEntity: entityDescription];
+    //[fetchRequest setFetchBatchSize:FETCH_BATCH_SIZE];
+    fetchRequest.fetchLimit = FETCH_LIMIT;
+    fetchRequest.fetchOffset = page * FETCH_LIMIT;
+    
+    if (![service isEmptyString:searchString]) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.desc CONTAINS %@", searchString];
+        [fetchRequest setPredicate:predicate];
     }
     
-    if (results.count > 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.desc CONTAINS %@", searchString];
-        results=[NSMutableArray arrayWithArray:[results filteredArrayUsingPredicate:predicate]];
-    }
+    NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:@"desc" ascending:YES selector:@selector(localizedStandardCompare:)];
+    NSArray * sortDescriptionArray = [[NSArray alloc] initWithObjects: sortDescription, nil];
+    [fetchRequest setSortDescriptors: sortDescriptionArray];
+    NSError *error = nil;
+    NSArray *results = [context executeFetchRequest:fetchRequest error:&error];
     return results;
 }
 
@@ -510,31 +563,48 @@
 }
 
 - (void) setOfflineSalesStore:(NSString*)invoice_no {
-    OfflineSalesStore *offlineSalesStore = [NSEntityDescription insertNewObjectForEntityForName:@"CustomerStore" inManagedObjectContext:[self managedObjectContext]];
+    OfflineSalesStore *offlineSalesStore = [NSEntityDescription insertNewObjectForEntityForName:@"OfflineSalesStore" inManagedObjectContext:[self managedObjectContext]];
+    
+    NSData *jsonData;
     
     GlobalStore *globalStore = [self getGlobalStore];
+    CustomerStore *customerStore = [self getCustomerStore:globalStore.customer_default_code];
+
     offlineSalesStore.invoice_no = invoice_no;
-    offlineSalesStore.customer_code = globalStore.customer_default_code;
     offlineSalesStore.payment_type = [self getDataStore:PAYMENT_TYPE];
+  
+    jsonData = [NSJSONSerialization dataWithJSONObject:
+                [[NSDictionary alloc] initWithObjectsAndKeys:
+                globalStore.customer_default_code ?: [NSNull null], @"customer_code",
+                customerStore.priceCode ?: [NSNull null], @"customer_priceCode",
+                nil]   options:NSJSONWritingPrettyPrinted error:nil];
+    offlineSalesStore.customerPreference = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+    jsonData = [NSJSONSerialization dataWithJSONObject:[persistenceManager getDataStore:CUSTOMER]
+                                               options:NSJSONWritingPrettyPrinted error:nil];
+    offlineSalesStore.customer = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    jsonData = [NSJSONSerialization dataWithJSONObject:[persistenceManager getDataStore:CASH_SALES]
+                                               options:NSJSONWritingPrettyPrinted error:nil];
+    offlineSalesStore.cashSales = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
     
     NSArray *cartStores = [self getCartStores];
     NSMutableArray *carts = [NSMutableArray array];
+   
     for (CartStore *cartStore in cartStores) {
         NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-        CustomerStore *customerStore = [self getCustomerStore:globalStore.customer_default_code];
-        
+        PriceStore *priceStore = [persistenceManager getPriceStore:customerStore.priceCode
+                                                            itemNo:cartStore.cartProduct.itemNo];
         [data setObject:cartStore.cart_code forKey:@"cart_code"];
         [data setObject:cartStore.qty forKey:@"qty"];
-        [data setObject:customerStore.code forKey:@"customer_code"];
-        [data setObject:customerStore.priceCode forKey:@"pricelist_code"];
+        [data setObject: priceStore.priceListCode forKey:@"pricelist_code"];
         [data setObject:cartStore.cartProduct.itemNo forKey:@"itemNo"];
      
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
+        jsonData = [NSJSONSerialization dataWithJSONObject:data
                                                    options:NSJSONWritingPrettyPrinted
                                                      error:nil];
         [carts addObject:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]];
-
     }
     offlineSalesStore.carts = [carts componentsJoinedByString:@","];
     [self saveContext];
@@ -565,20 +635,22 @@
 }
 
 - (void) clearCache {
-    NSArray *productStores = [self getProductStores:@""];
-    for (ProductStore *productStore in productStores) {
-        [self removeEntityObject:productStore];
-    }
+    [self getProductStores:@"" completedCallback:^(NSArray *results) {
+        for (ProductStore *productStore in results) {
+            [self removeEntityObject:productStore];
+        }
+    }];
     
     NSArray *cartStores = [self getCartStores];
     for (CartStore *cartStore in cartStores) {
         [self removeEntityObject:cartStore];
     }
    
-    NSArray *customerStores = [self getCustomerStores:@""];
-    for (CustomerStore *customerStore in customerStores) {
-        [self removeEntityObject:customerStore];
-    }
+    [self getCustomerStores:@"" completedCallback:^(NSArray *results) {
+        for (CustomerStore *customerStore in results) {
+            [self removeEntityObject:customerStore];
+        }
+    }];
     
     [self removeEntityObject:[self getGlobalStore]];
     [self removeFromKeyChain:USER_PIN_IDENT];
@@ -586,6 +658,7 @@
     [self removeFromKeyChain:SYNC_DATE_LAST_UPDATED];
     [_dataStore removeAllObjects];
  }
+
 
 - (void) clearCurrentTransaction {
     NSArray *cartStores = [self getCartStores];

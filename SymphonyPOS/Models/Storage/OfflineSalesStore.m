@@ -2,7 +2,7 @@
 //  OfflineSalesStore.m
 //  SymphonyPOS
 //
-//  Created by Rommel Sumpo on 29/09/15.
+//  Created by Rommel Sumpo on 30/09/15.
 //  Copyright (c) 2015 XMDevelopments. All rights reserved.
 //
 
@@ -12,8 +12,10 @@
 @implementation OfflineSalesStore
 
 @dynamic carts;
-@dynamic customer_code;
+@dynamic customerPreference;
 @dynamic invoice_no;
 @dynamic payment_type;
+@dynamic cashSales;
+@dynamic customer;
 
 @end

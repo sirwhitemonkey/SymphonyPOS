@@ -11,21 +11,20 @@
 		4133FD171BB7714000B3EEED /* MetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD161BB7714000B3EEED /* MetaData.m */; };
 		4133FD1B1BB774BA00B3EEED /* getProducts.json in Resources */ = {isa = PBXBuildFile; fileRef = 4133FD1A1BB774BA00B3EEED /* getProducts.json */; };
 		4133FD1D1BB7847200B3EEED /* checkConnection.json in Resources */ = {isa = PBXBuildFile; fileRef = 4133FD1C1BB7847200B3EEED /* checkConnection.json */; };
-		4133FD461BBA6E7B00B3EEED /* LoaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4133FD451BBA6E7B00B3EEED /* LoaderViewController.m */; settings = {ASSET_TAGS = (); }; };
 		413620C41BB3796C00B548F6 /* authSubmit.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C31BB3796C00B548F6 /* authSubmit.json */; };
 		413620C61BB38EBC00B548F6 /* themes.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C51BB38EBC00B548F6 /* themes.json */; };
 		413620C81BB3934800B548F6 /* dataDefaults.json in Resources */ = {isa = PBXBuildFile; fileRef = 413620C71BB3934800B548F6 /* dataDefaults.json */; };
 		4136D3471BBA18490027A60F /* getCustomers.json in Resources */ = {isa = PBXBuildFile; fileRef = 4136D3461BBA18490027A60F /* getCustomers.json */; };
 		4136D3491BBA18740027A60F /* getPriceLists.json in Resources */ = {isa = PBXBuildFile; fileRef = 4136D3481BBA18740027A60F /* getPriceLists.json */; };
 		4136D34B1BBA19CF0027A60F /* getPrices.json in Resources */ = {isa = PBXBuildFile; fileRef = 4136D34A1BBA19CF0027A60F /* getPrices.json */; };
-		4136D38D1BBA389F0027A60F /* GlobalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D38C1BBA389F0027A60F /* GlobalStore.m */; };
-		4136D3901BBA38A00027A60F /* PriceStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D38F1BBA38A00027A60F /* PriceStore.m */; };
-		4136D3931BBA38A00027A60F /* CartStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3921BBA38A00027A60F /* CartStore.m */; };
-		4136D3961BBA38A00027A60F /* ProductStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3951BBA38A00027A60F /* ProductStore.m */; };
-		4136D3991BBA38A00027A60F /* OfflineSalesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3981BBA38A00027A60F /* OfflineSalesStore.m */; };
-		4136D39C1BBA38A00027A60F /* CustomerStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D39B1BBA38A00027A60F /* CustomerStore.m */; };
-		4136D39F1BBA38A00027A60F /* PriceListStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D39E1BBA38A00027A60F /* PriceListStore.m */; };
 		4136D3A21BBA439C0027A60F /* SyncViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3A11BBA439C0027A60F /* SyncViewController.m */; };
+		4136D3A51BBB5C150027A60F /* CartStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3A41BBB5C150027A60F /* CartStore.m */; };
+		4136D3A81BBB5C150027A60F /* CustomerStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3A71BBB5C150027A60F /* CustomerStore.m */; };
+		4136D3AB1BBB5C150027A60F /* ProductStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3AA1BBB5C150027A60F /* ProductStore.m */; };
+		4136D3AE1BBB5C150027A60F /* PriceListStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3AD1BBB5C150027A60F /* PriceListStore.m */; };
+		4136D3B11BBB5C150027A60F /* PriceStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3B01BBB5C150027A60F /* PriceStore.m */; };
+		4136D3B41BBB5C160027A60F /* GlobalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3B31BBB5C160027A60F /* GlobalStore.m */; };
+		4136D3BD1BBB5F2D0027A60F /* OfflineSalesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4136D3BC1BBB5F2D0027A60F /* OfflineSalesStore.m */; };
 		41629CEA1BB8ECD8001D17AA /* Price.m in Sources */ = {isa = PBXBuildFile; fileRef = 41629CE91BB8ECD8001D17AA /* Price.m */; };
 		41EA213E1BABAA570021824E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA213D1BABAA570021824E /* main.m */; };
 		41EA21411BABAA570021824E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA21401BABAA570021824E /* AppDelegate.m */; };
@@ -77,10 +76,7 @@
 		41EA21D01BABAC990021824E /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 41EA21B71BABAC990021824E /* user@2x.png */; };
 		41EA21D11BABAC990021824E /* XMSymphony.png in Resources */ = {isa = PBXBuildFile; fileRef = 41EA21B81BABAC990021824E /* XMSymphony.png */; };
 		41EA21D61BABACCF0021824E /* libdtdev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41EA21D51BABACCF0021824E /* libdtdev.a */; };
-		41EA21DE1BABACE90021824E /* offlineSales.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EA21D91BABACE90021824E /* offlineSales.json */; };
-		41EA21DF1BABACE90021824E /* submitAuthorisation.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EA21DA1BABACE90021824E /* submitAuthorisation.json */; };
-		41EA21E01BABACE90021824E /* submitPayment.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EA21DB1BABACE90021824E /* submitPayment.json */; };
-		41EA21E11BABACE90021824E /* sync.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EA21DC1BABACE90021824E /* sync.json */; };
+		41EA21DE1BABACE90021824E /* submitTransactions.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EA21D91BABACE90021824E /* submitTransactions.json */; };
 		41EA21EF1BABAD060021824E /* Customer.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA21E41BABAD060021824E /* Customer.m */; };
 		41EA21F01BABAD060021824E /* DataDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA21E61BABAD060021824E /* DataDefaults.m */; };
 		41EA21F11BABAD060021824E /* PersistenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EA21E81BABAD060021824E /* PersistenceManager.m */; };
@@ -137,30 +133,28 @@
 		4133FD1A1BB774BA00B3EEED /* getProducts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getProducts.json; sourceTree = "<group>"; };
 		4133FD1C1BB7847200B3EEED /* checkConnection.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = checkConnection.json; sourceTree = "<group>"; };
 		4133FD431BB7B29D00B3EEED /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		4133FD441BBA6E7B00B3EEED /* LoaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoaderViewController.h; path = Controllers/LoaderViewController.h; sourceTree = "<group>"; };
-		4133FD451BBA6E7B00B3EEED /* LoaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoaderViewController.m; path = Controllers/LoaderViewController.m; sourceTree = "<group>"; };
 		413620C31BB3796C00B548F6 /* authSubmit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = authSubmit.json; sourceTree = "<group>"; };
 		413620C51BB38EBC00B548F6 /* themes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = themes.json; sourceTree = "<group>"; };
 		413620C71BB3934800B548F6 /* dataDefaults.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dataDefaults.json; sourceTree = "<group>"; };
 		4136D3461BBA18490027A60F /* getCustomers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getCustomers.json; path = Mock/getCustomers.json; sourceTree = "<group>"; };
 		4136D3481BBA18740027A60F /* getPriceLists.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getPriceLists.json; path = Mock/getPriceLists.json; sourceTree = "<group>"; };
 		4136D34A1BBA19CF0027A60F /* getPrices.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getPrices.json; path = Mock/getPrices.json; sourceTree = "<group>"; };
-		4136D38B1BBA389F0027A60F /* GlobalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalStore.h; path = Models/Storage/GlobalStore.h; sourceTree = "<group>"; };
-		4136D38C1BBA389F0027A60F /* GlobalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GlobalStore.m; path = Models/Storage/GlobalStore.m; sourceTree = "<group>"; };
-		4136D38E1BBA38A00027A60F /* PriceStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriceStore.h; path = Models/Storage/PriceStore.h; sourceTree = "<group>"; };
-		4136D38F1BBA38A00027A60F /* PriceStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriceStore.m; path = Models/Storage/PriceStore.m; sourceTree = "<group>"; };
-		4136D3911BBA38A00027A60F /* CartStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CartStore.h; path = Models/Storage/CartStore.h; sourceTree = "<group>"; };
-		4136D3921BBA38A00027A60F /* CartStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CartStore.m; path = Models/Storage/CartStore.m; sourceTree = "<group>"; };
-		4136D3941BBA38A00027A60F /* ProductStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProductStore.h; path = Models/Storage/ProductStore.h; sourceTree = "<group>"; };
-		4136D3951BBA38A00027A60F /* ProductStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProductStore.m; path = Models/Storage/ProductStore.m; sourceTree = "<group>"; };
-		4136D3971BBA38A00027A60F /* OfflineSalesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OfflineSalesStore.h; path = Models/Storage/OfflineSalesStore.h; sourceTree = "<group>"; };
-		4136D3981BBA38A00027A60F /* OfflineSalesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OfflineSalesStore.m; path = Models/Storage/OfflineSalesStore.m; sourceTree = "<group>"; };
-		4136D39A1BBA38A00027A60F /* CustomerStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomerStore.h; path = Models/Storage/CustomerStore.h; sourceTree = "<group>"; };
-		4136D39B1BBA38A00027A60F /* CustomerStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomerStore.m; path = Models/Storage/CustomerStore.m; sourceTree = "<group>"; };
-		4136D39D1BBA38A00027A60F /* PriceListStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriceListStore.h; path = Models/Storage/PriceListStore.h; sourceTree = "<group>"; };
-		4136D39E1BBA38A00027A60F /* PriceListStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriceListStore.m; path = Models/Storage/PriceListStore.m; sourceTree = "<group>"; };
 		4136D3A01BBA439C0027A60F /* SyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SyncViewController.h; path = Controllers/SyncViewController.h; sourceTree = "<group>"; };
 		4136D3A11BBA439C0027A60F /* SyncViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SyncViewController.m; path = Controllers/SyncViewController.m; sourceTree = "<group>"; };
+		4136D3A31BBB5C150027A60F /* CartStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CartStore.h; path = Models/Storage/CartStore.h; sourceTree = "<group>"; };
+		4136D3A41BBB5C150027A60F /* CartStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CartStore.m; path = Models/Storage/CartStore.m; sourceTree = "<group>"; };
+		4136D3A61BBB5C150027A60F /* CustomerStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomerStore.h; path = Models/Storage/CustomerStore.h; sourceTree = "<group>"; };
+		4136D3A71BBB5C150027A60F /* CustomerStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomerStore.m; path = Models/Storage/CustomerStore.m; sourceTree = "<group>"; };
+		4136D3A91BBB5C150027A60F /* ProductStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProductStore.h; path = Models/Storage/ProductStore.h; sourceTree = "<group>"; };
+		4136D3AA1BBB5C150027A60F /* ProductStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProductStore.m; path = Models/Storage/ProductStore.m; sourceTree = "<group>"; };
+		4136D3AC1BBB5C150027A60F /* PriceListStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriceListStore.h; path = Models/Storage/PriceListStore.h; sourceTree = "<group>"; };
+		4136D3AD1BBB5C150027A60F /* PriceListStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriceListStore.m; path = Models/Storage/PriceListStore.m; sourceTree = "<group>"; };
+		4136D3AF1BBB5C150027A60F /* PriceStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriceStore.h; path = Models/Storage/PriceStore.h; sourceTree = "<group>"; };
+		4136D3B01BBB5C150027A60F /* PriceStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriceStore.m; path = Models/Storage/PriceStore.m; sourceTree = "<group>"; };
+		4136D3B21BBB5C160027A60F /* GlobalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalStore.h; path = Models/Storage/GlobalStore.h; sourceTree = "<group>"; };
+		4136D3B31BBB5C160027A60F /* GlobalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GlobalStore.m; path = Models/Storage/GlobalStore.m; sourceTree = "<group>"; };
+		4136D3BB1BBB5F2D0027A60F /* OfflineSalesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OfflineSalesStore.h; path = Models/Storage/OfflineSalesStore.h; sourceTree = "<group>"; };
+		4136D3BC1BBB5F2D0027A60F /* OfflineSalesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OfflineSalesStore.m; path = Models/Storage/OfflineSalesStore.m; sourceTree = "<group>"; };
 		41629CE81BB8ECD8001D17AA /* Price.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Price.h; path = Models/Price.h; sourceTree = "<group>"; };
 		41629CE91BB8ECD8001D17AA /* Price.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Price.m; path = Models/Price.m; sourceTree = "<group>"; };
 		41EA21381BABAA570021824E /* SymphonyPOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SymphonyPOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -238,10 +232,7 @@
 		41EA21B81BABAC990021824E /* XMSymphony.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = XMSymphony.png; path = Images/XMSymphony.png; sourceTree = "<group>"; };
 		41EA21D41BABACCF0021824E /* DTDevices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTDevices.h; path = LineaPro/SDK/DTDevices.h; sourceTree = "<group>"; };
 		41EA21D51BABACCF0021824E /* libdtdev.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdtdev.a; path = LineaPro/SDK/libdtdev.a; sourceTree = "<group>"; };
-		41EA21D91BABACE90021824E /* offlineSales.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = offlineSales.json; path = Mock/offlineSales.json; sourceTree = "<group>"; };
-		41EA21DA1BABACE90021824E /* submitAuthorisation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = submitAuthorisation.json; path = Mock/submitAuthorisation.json; sourceTree = "<group>"; };
-		41EA21DB1BABACE90021824E /* submitPayment.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = submitPayment.json; path = Mock/submitPayment.json; sourceTree = "<group>"; };
-		41EA21DC1BABACE90021824E /* sync.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = sync.json; path = Mock/sync.json; sourceTree = "<group>"; };
+		41EA21D91BABACE90021824E /* submitTransactions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = submitTransactions.json; path = Mock/submitTransactions.json; sourceTree = "<group>"; };
 		41EA21E31BABAD060021824E /* Customer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Customer.h; path = Models/Customer.h; sourceTree = "<group>"; };
 		41EA21E41BABAD060021824E /* Customer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Customer.m; path = Models/Customer.m; sourceTree = "<group>"; };
 		41EA21E51BABAD060021824E /* DataDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataDefaults.h; path = Models/DataDefaults.h; sourceTree = "<group>"; };
@@ -458,8 +449,6 @@
 				41EA218E1BABAC780021824E /* VisualFeedBackViewController.m */,
 				4136D3A01BBA439C0027A60F /* SyncViewController.h */,
 				4136D3A11BBA439C0027A60F /* SyncViewController.m */,
-				4133FD441BBA6E7B00B3EEED /* LoaderViewController.h */,
-				4133FD451BBA6E7B00B3EEED /* LoaderViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -516,10 +505,7 @@
 		41EA21D71BABACDB0021824E /* Mock */ = {
 			isa = PBXGroup;
 			children = (
-				41EA21D91BABACE90021824E /* offlineSales.json */,
-				41EA21DA1BABACE90021824E /* submitAuthorisation.json */,
-				41EA21DB1BABACE90021824E /* submitPayment.json */,
-				41EA21DC1BABACE90021824E /* sync.json */,
+				41EA21D91BABACE90021824E /* submitTransactions.json */,
 				413620C31BB3796C00B548F6 /* authSubmit.json */,
 				413620C51BB38EBC00B548F6 /* themes.json */,
 				413620C71BB3934800B548F6 /* dataDefaults.json */,
@@ -560,20 +546,20 @@
 			isa = PBXGroup;
 			children = (
 				41EA22021BABAD2A0021824E /* POS.xcdatamodeld */,
-				4136D39D1BBA38A00027A60F /* PriceListStore.h */,
-				4136D39E1BBA38A00027A60F /* PriceListStore.m */,
-				4136D39A1BBA38A00027A60F /* CustomerStore.h */,
-				4136D39B1BBA38A00027A60F /* CustomerStore.m */,
-				4136D3971BBA38A00027A60F /* OfflineSalesStore.h */,
-				4136D3981BBA38A00027A60F /* OfflineSalesStore.m */,
-				4136D3941BBA38A00027A60F /* ProductStore.h */,
-				4136D3951BBA38A00027A60F /* ProductStore.m */,
-				4136D3911BBA38A00027A60F /* CartStore.h */,
-				4136D3921BBA38A00027A60F /* CartStore.m */,
-				4136D38E1BBA38A00027A60F /* PriceStore.h */,
-				4136D38F1BBA38A00027A60F /* PriceStore.m */,
-				4136D38B1BBA389F0027A60F /* GlobalStore.h */,
-				4136D38C1BBA389F0027A60F /* GlobalStore.m */,
+				4136D3BB1BBB5F2D0027A60F /* OfflineSalesStore.h */,
+				4136D3BC1BBB5F2D0027A60F /* OfflineSalesStore.m */,
+				4136D3B21BBB5C160027A60F /* GlobalStore.h */,
+				4136D3B31BBB5C160027A60F /* GlobalStore.m */,
+				4136D3AF1BBB5C150027A60F /* PriceStore.h */,
+				4136D3B01BBB5C150027A60F /* PriceStore.m */,
+				4136D3AC1BBB5C150027A60F /* PriceListStore.h */,
+				4136D3AD1BBB5C150027A60F /* PriceListStore.m */,
+				4136D3A91BBB5C150027A60F /* ProductStore.h */,
+				4136D3AA1BBB5C150027A60F /* ProductStore.m */,
+				4136D3A61BBB5C150027A60F /* CustomerStore.h */,
+				4136D3A71BBB5C150027A60F /* CustomerStore.m */,
+				4136D3A31BBB5C150027A60F /* CartStore.h */,
+				4136D3A41BBB5C150027A60F /* CartStore.m */,
 			);
 			name = Storage;
 			sourceTree = "<group>";
@@ -746,7 +732,6 @@
 				41EA22381BABAD8A0021824E /* CashViewCell.xib in Resources */,
 				41EA21CC1BABAC990021824E /* unchecked@2x.png in Resources */,
 				41EA21491BABAA570021824E /* Images.xcassets in Resources */,
-				41EA21E01BABACE90021824E /* submitPayment.json in Resources */,
 				41EA21C31BABAC990021824E /* disconnected.png in Resources */,
 				41EA21BD1BABAC990021824E /* batt_info_75.png in Resources */,
 				41EA223E1BABAD8A0021824E /* EFTPOSViewCell.xib in Resources */,
@@ -760,7 +745,6 @@
 				41EA21C91BABAC990021824E /* rounded_table_cell_top@2x.png in Resources */,
 				41EA21CF1BABAC990021824E /* user.png in Resources */,
 				41EA21D11BABAC990021824E /* XMSymphony.png in Resources */,
-				41EA21E11BABACE90021824E /* sync.json in Resources */,
 				41EA21C71BABAC990021824E /* rounded_table_cell_bottom@2x.png in Resources */,
 				4133FD1B1BB774BA00B3EEED /* getProducts.json in Resources */,
 				41EA223A1BABAD8A0021824E /* CreditCardViewCell.xib in Resources */,
@@ -779,12 +763,11 @@
 				41EA21D01BABAC990021824E /* user@2x.png in Resources */,
 				41EA22451BABADC90021824E /* Settings.bundle in Resources */,
 				41EA22431BABAD8A0021824E /* ProductViewCell.xib in Resources */,
-				41EA21DF1BABACE90021824E /* submitAuthorisation.json in Resources */,
 				41EA21CD1BABAC990021824E /* user-logout.png in Resources */,
 				4136D3471BBA18490027A60F /* getCustomers.json in Resources */,
 				41EA21CE1BABAC990021824E /* user-logout@2x.png in Resources */,
 				41EA21C51BABAC990021824E /* refresh@2x.png in Resources */,
-				41EA21DE1BABACE90021824E /* offlineSales.json in Resources */,
+				41EA21DE1BABACE90021824E /* submitTransactions.json in Resources */,
 				4136D3491BBA18740027A60F /* getPriceLists.json in Resources */,
 				413620C41BB3796C00B548F6 /* authSubmit.json in Resources */,
 				4133FD1D1BB7847200B3EEED /* checkConnection.json in Resources */,
@@ -843,10 +826,13 @@
 				41EA223D1BABAD8A0021824E /* EFTPOSViewCell.m in Sources */,
 				41EA221E1BABAD6A0021824E /* KeychainWrapper.m in Sources */,
 				41EA22221BABAD6A0021824E /* SyncService.m in Sources */,
+				4136D3B11BBB5C150027A60F /* PriceStore.m in Sources */,
 				41EA22391BABAD8A0021824E /* CreditCardViewCell.m in Sources */,
-				4136D39F1BBA38A00027A60F /* PriceListStore.m in Sources */,
+				4136D3B41BBB5C160027A60F /* GlobalStore.m in Sources */,
 				41EA221F1BABAD6A0021824E /* NSData-AES.m in Sources */,
 				41EA223B1BABAD8A0021824E /* CustomerViewCell.m in Sources */,
+				4136D3AE1BBB5C150027A60F /* PriceListStore.m in Sources */,
+				4136D3A81BBB5C150027A60F /* CustomerStore.m in Sources */,
 				41EA22201BABAD6A0021824E /* rijndael.c in Sources */,
 				412C53901BB4827800E51B81 /* JSONResponseSerializerWithData.m in Sources */,
 				41EA21F31BABAD060021824E /* Product.m in Sources */,
@@ -855,10 +841,7 @@
 				41EA219B1BABAC780021824E /* SignatureViewController.m in Sources */,
 				41EA216D1BABAC5F0021824E /* UILabel+FormattedText.m in Sources */,
 				41EA21901BABAC780021824E /* APLWebViewController.m in Sources */,
-				4136D3901BBA38A00027A60F /* PriceStore.m in Sources */,
-				4136D39C1BBA38A00027A60F /* CustomerStore.m in Sources */,
-				4136D3961BBA38A00027A60F /* ProductStore.m in Sources */,
-				4133FD461BBA6E7B00B3EEED /* LoaderViewController.m in Sources */,
+				4136D3A51BBB5C150027A60F /* CartStore.m in Sources */,
 				41EA223F1BABAD8A0021824E /* FilteredProductViewCell.m in Sources */,
 				41EA21F41BABAD060021824E /* Response.m in Sources */,
 				41EA21931BABAC780021824E /* MainViewController.m in Sources */,
@@ -870,13 +853,13 @@
 				4136D3A21BBA439C0027A60F /* SyncViewController.m in Sources */,
 				41EA22371BABAD8A0021824E /* CashViewCell.m in Sources */,
 				41EA21F21BABAD060021824E /* PriceList.m in Sources */,
-				4136D38D1BBA389F0027A60F /* GlobalStore.m in Sources */,
+				4136D3AB1BBB5C150027A60F /* ProductStore.m in Sources */,
 				41EA22421BABAD8A0021824E /* ProductViewCell.m in Sources */,
 				41EA219C1BABAC780021824E /* SubmitViewController.m in Sources */,
 				41629CEA1BB8ECD8001D17AA /* Price.m in Sources */,
 				41EA22211BABAD6A0021824E /* Service.m in Sources */,
 				41EA21961BABAC780021824E /* PaymentTypeViewController.m in Sources */,
-				4136D3931BBA38A00027A60F /* CartStore.m in Sources */,
+				4136D3BD1BBB5F2D0027A60F /* OfflineSalesStore.m in Sources */,
 				41EA21EF1BABAD060021824E /* Customer.m in Sources */,
 				41EA21951BABAC780021824E /* PaymentCustomerViewController.m in Sources */,
 				41EA21981BABAC780021824E /* PinViewController.m in Sources */,
@@ -884,7 +867,6 @@
 				41EA21941BABAC780021824E /* PageViewController.m in Sources */,
 				41EA21991BABAC780021824E /* QtyViewController.m in Sources */,
 				41EA21921BABAC780021824E /* LoginViewController.m in Sources */,
-				4136D3991BBA38A00027A60F /* OfflineSalesStore.m in Sources */,
 				41EA216B1BABAC5F0021824E /* RadioButton.m in Sources */,
 				41EA220A1BABAD2A0021824E /* POS.xcdatamodeld in Sources */,
 				41EA216C1BABAC5F0021824E /* RoundedButton.m in Sources */,
@@ -1007,7 +989,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SymphonyPOS/LineaPro/SDK",
-					"$(PROJECT_DIR)/build/Release-iphoneos",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "nz.co.xmdevelopments.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1026,7 +1007,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SymphonyPOS/LineaPro/SDK",
-					"$(PROJECT_DIR)/build/Release-iphoneos",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "nz.co.xmdevelopments.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

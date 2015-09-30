@@ -119,12 +119,11 @@
     }
 }
 
-
-- (void) apiOfflineSalesResponse:(Response *)response {
-   [persistenceManager removeOfflineSalesStore];
-    [service hideMessage:nil];
+- (void) apiSubmitTransactionsResponse:(Response *)response {
+    [service hideMessage:^{
+        [persistenceManager removeOfflineSalesStore];
+    }];
 }
-
 
 #pragma mark - SyncViewControllerDelegate
 - (void)syncDidCompleted:(SyncViewController *)controller {
@@ -149,32 +148,68 @@
         return;
     }
    
-    // Sync
-    double date_last_sync_interval = [[persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED] doubleValue]/1000;
-    NSDate * date_last_sync = [NSDate  dateWithTimeIntervalSince1970:date_last_sync_interval];
-    NSTimeInterval date_current_sync = [[NSDate date] timeIntervalSinceDate:date_last_sync];
-    
-    int days = date_current_sync / (60 * 60 * 24);
-    NSUserDefaults* settings = [NSUserDefaults standardUserDefaults];
-    long days_sync_interval = [[settings objectForKey:@"days_sync_interval"] integerValue];
-    if (days_sync_interval < days) {
-        [self viewSyncPage];
+    // Sync offline sales
+    NSArray *offlineSalesStores = [persistenceManager getOfflineSalesStore];
+    if (offlineSalesStores.count > 0) {
+        // Formulate the params
+        NSData *jsonData = nil;
+        NSDictionary *json = nil;
+        
+        NSMutableDictionary *paramsData = [[NSMutableDictionary alloc]init];
+        NSMutableArray *offlineSalesStoresData = [NSMutableArray array];
+        [paramsData setObject:ORIGINATOR forKey:@"originator"];
+        
+        for (OfflineSalesStore *offlineSalesStore in offlineSalesStores) {
+            NSMutableDictionary *data = [[NSMutableDictionary alloc]init];
+            // Offline
+            [data setObject:[NSNumber numberWithBool:YES] forKey:@"offline"];
+            // Invoice
+            [data setObject:offlineSalesStore.invoice_no forKey:@"invoice"];
+            // Customer preference
+            json = [NSJSONSerialization JSONObjectWithData:[offlineSalesStore.customerPreference dataUsingEncoding:NSUTF8StringEncoding]   options:NSJSONReadingMutableContainers error:nil];
+            [data setObject:json forKey:@"customerPreference"];
+            // Customer
+            json = [NSJSONSerialization JSONObjectWithData:[offlineSalesStore.customer dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+            [data setObject:json forKey:@"customer"];
+            // PaymentType
+            [data setObject:offlineSalesStore.payment_type forKey:@"paymentType"];
+            // Cash sales
+            json = [NSJSONSerialization JSONObjectWithData:[offlineSalesStore.cashSales dataUsingEncoding:NSUTF8StringEncoding]  options:NSJSONReadingMutableContainers  error:nil];
+            [data setObject:json forKey:@"cashSales"];
+            // Carts
+            json = [NSJSONSerialization JSONObjectWithData:[offlineSalesStore.carts dataUsingEncoding:NSUTF8StringEncoding]  options:NSJSONReadingMutableContainers error:nil];
+            [data setObject:json forKey:@"carts"];
+            [offlineSalesStoresData addObject:data];
+        }
+        [paramsData setObject:offlineSalesStoresData forKey:@"data"];
+        
+        jsonData = [NSJSONSerialization dataWithJSONObject:paramsData
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:nil];
+        NSString *params = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        [service showMessage:self loader:YES message:@"Processing transactions ..." error:NO waitUntilCompleted:YES withCallBack:^ {
+            AFHTTPRequestOperation *submitTransactions = [_apiManager submitTransactions:params];
+            if (submitTransactions) {
+                [submitTransactions start];
+            }
+        }];
         
     } else {
+        // Sync
+        double date_last_sync_interval = [[persistenceManager getKeyChain:SYNC_DATE_LAST_UPDATED] doubleValue]/1000;
+        NSDate * date_last_sync = [NSDate  dateWithTimeIntervalSince1970:date_last_sync_interval];
+        NSTimeInterval date_current_sync = [[NSDate date] timeIntervalSinceDate:date_last_sync];
         
-        // Sync offline sales
-        NSArray *offlineSalesStores = [persistenceManager getOfflineSalesStore];
-        if (offlineSalesStores.count > 0) {
-            [service showMessage:self loader:YES message:@"Synchronising offline sales ..." error:NO
-              waitUntilCompleted:YES withCallBack:^ {
-                  _apiManager.batchOperation = false;
-                  AFHTTPRequestOperation *offlineSales = [_apiManager offlineSales];
-                  if (offlineSales) {
-                      [offlineSales start];
-                  }
-              }];
+        int days = date_current_sync / (60 * 60 * 24);
+        NSUserDefaults* settings = [NSUserDefaults standardUserDefaults];
+        long days_sync_interval = [[settings objectForKey:@"days_sync_interval"] integerValue];
+        if (days_sync_interval < days) {
+            [self viewSyncPage];
+            
         }
     }
+
 }
 
 

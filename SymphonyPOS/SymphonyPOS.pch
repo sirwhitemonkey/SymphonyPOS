@@ -54,11 +54,14 @@
 #define CUSTOMER @"customer"
 #define SCAN_MODE @"scanMode"
 #define PASSKEY @"passKey"
+#define PRINT_COPY @"printCopy"
 #define ALPHA_CHARACTERS @" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 #define DECRYPTION_KEY @"12345678901234567890123456789012"
 #define SYNC_DATE_LAST_UPDATED @"sync_date_last_updated"
 #define PAGE_LIMIT 25000
 #define FETCH_BATCH_SIZE 500
+#define FETCH_LIMIT 100
+#define ORIGINATOR @"MobileApp"
 
 #pragma mark - Response codes
 #define HTTP_STATUS_OK 200
@@ -67,7 +70,7 @@
 
 #pragma mark - Api service
 //TODO
-#define API_URL @"http://192.168.1.7:8080/Sphere/v1"
+#define API_URL @"http://192.168.153.76:8080/Sphere/v1"
 #define CUSTOM_CLIENT_LOGO @"http://www.vapor-rage.com/wp-content/uploads/2014/05/sample.jpg"
 //---
 
@@ -75,10 +78,11 @@
 #define API_SETTING_THEMES @"setting/themes"
 #define API_SETTING_DATA_DEFAULTS @"setting/dataDefaults"
 #define API_PRODUCTS @"products"
-#define API_CHECK_CONNECTION @"checkConnection"
+#define API_CHECK_CONNECTION @"setting/checkConnection"
 #define API_PRICELISTS @"priceLists"
 #define API_CUSTOMERS @"customers"
 #define API_PRICES @"prices"
+#define API_SUBMIT_TRANSACTIONS @"transactions/submit"
 
 
 

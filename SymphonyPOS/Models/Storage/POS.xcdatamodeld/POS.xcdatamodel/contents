@@ -41,7 +41,9 @@
     </entity>
     <entity name="OfflineSalesStore" representedClassName="OfflineSalesStore" syncable="YES">
         <attribute name="carts" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="customer_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cashSales" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customer" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerPreference" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="invoice_no" attributeType="String" indexed="YES" versionHashModifier="1" syncable="YES"/>
         <attribute name="payment_type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -74,7 +76,7 @@
         <element name="CartStore" positionX="97" positionY="45" width="128" height="88"/>
         <element name="CustomerStore" positionX="108" positionY="-144" width="128" height="238"/>
         <element name="GlobalStore" positionX="-261" positionY="243" width="128" height="298"/>
-        <element name="OfflineSalesStore" positionX="61" positionY="176" width="128" height="103"/>
+        <element name="OfflineSalesStore" positionX="61" positionY="176" width="128" height="133"/>
         <element name="PriceListStore" positionX="-173" positionY="-144" width="128" height="88"/>
         <element name="PriceStore" positionX="-234" positionY="0" width="128" height="148"/>
         <element name="ProductStore" positionX="-432" positionY="29" width="128" height="178"/>

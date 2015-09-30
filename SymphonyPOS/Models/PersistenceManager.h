@@ -63,7 +63,10 @@
 /*!
  * PersistenceManager getting the arrays of products from coredata
  */
-- (NSArray*)getProductStores: (NSString*) searchString;
+- (void)getProductStores: (NSString*) searchString completedCallback:(void (^)(NSArray*))callbackBlock;
+
+- (NSArray*)getProductStores: (NSString*) searchString page:(int)page;
+
 
 /*!
  * PersistenceManager setting/storing the cart into coredata
@@ -133,7 +136,8 @@
 /*!
  * PersistenceManager getting the arrays of customers from coredata
  */
-- (NSArray*) getCustomerStores:(NSString*)searchString;
+- (void) getCustomerStores:(NSString*)searchString completedCallback:(void (^)(NSArray*))callbackBlock;
+- (NSArray*) getCustomerStores:(NSString*)searchString page:(int)page;
 
 /*!
  * PersistenceManager setting/storing the offline sales into coredata

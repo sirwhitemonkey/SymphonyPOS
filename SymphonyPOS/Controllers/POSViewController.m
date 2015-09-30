@@ -3,7 +3,7 @@
 
 @interface POSViewController ()
 @property (nonatomic,strong) APIManager *apiManager;
-@property (nonatomic,strong) NSArray *products;
+@property (nonatomic,strong) NSMutableArray *products;
 @property (nonatomic,strong) NSString *archivedSearchStrings;
 @property (nonatomic,strong)  NSIndexPath *itemSelectedIndexPath;
 @property (nonatomic,weak)  UISearchBar *searchBar;
@@ -20,6 +20,8 @@
 @property BOOL centering;
 @property (nonatomic,assign) long currentRow;
 @property BOOL deviceConnected;
+@property int page;
+@property BOOL pageReached;
 @end
 
 
@@ -42,6 +44,8 @@
 @synthesize mfLedTimer = _mfLedTimer;
 @synthesize scPresent = _scPresent;
 @synthesize deviceConnected = _deviceConnected;
+@synthesize page = _page;
+@synthesize pageReached = _pageReached;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -59,6 +63,8 @@
     self.navigationItem.titleView = headerTitleView;
      _apiManager = [[APIManager alloc]init];
     [_apiManager syncImage:titleView url:_globalStore.my_custom_logo];
+    
+    _products = [NSMutableArray array];
     
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
@@ -88,6 +94,8 @@
     [self updateEvents];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    _page = 0;
     
 }
 
@@ -347,6 +355,20 @@
     }
 }
 
+-(void)scrollViewDidScroll: (UIScrollView*)scrollView{
+    float scrollViewHeight = scrollView.frame.size.height;
+    float scrollContentSizeHeight = scrollView.contentSize.height;
+    float scrollOffset = scrollView.contentOffset.y;
+    
+    if (scrollOffset + scrollViewHeight == scrollContentSizeHeight) {
+        if (!_pageReached) {
+            _page++;
+            [self searchProducts:_archivedSearchStrings];
+        }
+    }
+    
+}
+
 #pragma mark - QtyViewControllerDelegate
 - (void)qtyDidCompleted:(QtyViewController*)controller qty:(NSNumber *)qty productStore:(ProductStore *)productStore{
     [controller dismissViewControllerAnimated:NO completion:nil];
@@ -374,16 +396,19 @@
 
 #pragma mark - UISearchBar
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchProducts:) object:searchText];
-    //[self performSelector:@selector(searchProducts:) withObject:searchText afterDelay:1.0];
+    /*[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchProducts:) object:searchText];
+    [self performSelector:@selector(searchProducts:) withObject:searchText afterDelay:0.5];
+     */
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
+    _page = 0;
+    _pageReached = NO;
+    [_products removeAllObjects];
+    [self.tableView reloadData];
     [self searchProducts:_searchBar.text];
 }
-
-
 
 #pragma mark - UITextField
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -582,27 +607,76 @@
 /*!
  * POSViewController searching the products
  */
+/*
 - (void) searchProducts:(NSString*) searchString {
+    if ([service isEmptyString:searchString]) {
+            }
     _archivedSearchStrings = searchString;
     _onSearchProduct = false;
     if (![service isEmptyString:_archivedSearchStrings]) {
         _onSearchProduct = true;
-        _products = [persistenceManager getProductStores:searchString];
-        if ([_products count] == 0) {
-            [service showMessage:self loader:NO message:@"No products available" error:YES waitUntilCompleted:NO withCallBack:^ {
-                _onSearchProduct = false;
-                _products = [persistenceManager getCartStores];
-                [self finaliseGrandTotals];
-                [self.tableView reloadData];
+        [service showMessage:self loader:YES message:@"Searching ..." error:NO waitUntilCompleted:YES withCallBack: ^{
+            [persistenceManager getProductStores:searchString completedCallback:^(NSArray *results){
+                _products = results;
+                
+                [service hideMessage:^ {
+                    
+                    if ([_products count] == 0) {
+                        [service showMessage:self loader:NO message:@"No products available" error:YES waitUntilCompleted:NO withCallBack:^ {
+                            _onSearchProduct = false;
+                            _products = [persistenceManager getCartStores];
+                            [self finaliseGrandTotals];
+                            [self.tableView reloadData];
+                        }];
+                    }
+                    
+                    [self finaliseGrandTotals];
+                    [self.tableView reloadData];
+                }];
+               
             }];
-        }
-
+            
+        }];
     } else {
          _products = [persistenceManager getCartStores];
+        [self finaliseGrandTotals];
+        [self.tableView reloadData];
     }
-    [self finaliseGrandTotals];
-    [self.tableView reloadData];
+}*/
+
+- (void) searchProducts:(NSString*) searchString {
+    _archivedSearchStrings = searchString;
+    _onSearchProduct = false;
+    
+    if (![service isEmptyString:_archivedSearchStrings]) {
+        _onSearchProduct = true;
+        NSArray *results = [persistenceManager getProductStores:_archivedSearchStrings page:_page];
+        if (results.count == 0) {
+            if (_page == 0) {
+                [service showMessage:self loader:NO message:@"No products available" error:YES waitUntilCompleted:NO withCallBack:^ {
+                    _onSearchProduct = false;
+                    [_products removeAllObjects];
+                    [_products addObjectsFromArray:[persistenceManager getCartStores]];
+                    [self finaliseGrandTotals];
+                    [self.tableView reloadData];
+                }];
+            } else {
+                _pageReached = YES;
+            }
+        } else {
+            [_products addObjectsFromArray:results];
+            [self.tableView reloadData];
+        }
+    } else {
+        _pageReached = NO;
+        _page = 0;
+        [_products removeAllObjects];
+        [_products addObjectsFromArray:[persistenceManager getCartStores]];
+        [self finaliseGrandTotals];
+        [self.tableView reloadData];
+    }
 }
+
 
 
 /*!

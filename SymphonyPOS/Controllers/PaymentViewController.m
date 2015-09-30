@@ -42,6 +42,7 @@
     self.tableView.pagingEnabled = NO;
     
      _apiManager = [[APIManager alloc]init];
+    _apiManager.delegate = self;
     
     // Make snapping fast
     self.tableView.decelerationRate = UIScrollViewDecelerationRateFast;
@@ -333,12 +334,10 @@
 #pragma mark - IBActions
 - (IBAction)next:(id)sender {
     [self.view endEditing:YES];
-    if ([self validatePaymentEntries]) {
-        if (!persistenceManager.offline) {
-            [self checkConnection];
-        } else {
-            [self viewSubmitPage];
-        }
+    if ([[persistenceManager getDataStore:PAYMENT_TYPE] isEqualToString:PAYMENT_CREDITCARD]) {
+        [self checkConnection];
+    } else {
+        [self viewSubmitPage];
     }
 }
 
@@ -375,21 +374,26 @@
 }
 
 #pragma mark - APIManager
-- (void) apiRequestError:(NSError *)error {
-    DebugLog(@"apiRequestError -> %@",error);
+- (void) apiRequestError:(NSError *)error response:(Response *)response {
+    DebugLog(@"apiRequestError -> %@,%@",error,response);
     
-    if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
-        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:@"OFFLINE: Change your payment type" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Change" otherButtonTitles:nil,
-                                 nil];
-        action.tag = 1;
-        [action showInView:[UIApplication sharedApplication].keyWindow];
-        
-    }
+    [service hideMessage:^ {
+        if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
+            UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:@"OFFLINE: Change your payment type" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Change" otherButtonTitles:nil,
+                                     nil];
+            action.tag = 1;
+            [action showInView:[UIApplication sharedApplication].keyWindow];
+            
+        }
+    }];
+    
     
 }
 
 - (void)apiCheckConnnectionResponse:(Response *)response {
-    [self viewSubmitPage];
+    [service hideMessage:^ {
+        [self viewSubmitPage];
+    }];
 }
 
 
@@ -597,12 +601,12 @@
  * PaymentViewController checking the connection
  */
 - (void) checkConnection {
-   
-    _apiManager.delegate = self;
-    AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
-    if (checkConnection) {
-        [checkConnection start];
-    }
+    [service showMessage:self loader:YES message:@"Checking server communication ..." error:NO waitUntilCompleted:YES withCallBack: ^ {
+        AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
+        if (checkConnection) {
+            [checkConnection start];
+        }
+    }];
 }
 
 /*!

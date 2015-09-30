@@ -17,6 +17,8 @@
     self.navigationController.navigationBarHidden = NO;
     
      _apiManager = [[APIManager alloc]init];
+    _apiManager.delegate = self;
+    
     // Default payment type
     [persistenceManager setDataStore:PAYMENT_TYPE value:PAYMENT_CREDITCARD];
     
@@ -96,29 +98,28 @@
 - (IBAction)next:(id)sender {
     self.offlineMessage.hidden = YES;
     self.navigationItem.title = @"Payment Type";
-    if (persistenceManager.offline) {
-        if ([[persistenceManager getDataStore:PAYMENT_TYPE] isEqualToString:PAYMENT_CREDITCARD]) {
-            [self checkConnection];
-        } else {
-            [self viewPaymentPage];
-        }
-        
-    } else {
+    if ([[persistenceManager getDataStore:PAYMENT_TYPE] isEqualToString:PAYMENT_CREDITCARD]) {
         [self checkConnection];
+    } else {
+        [self viewPaymentPage];
     }
 }
 
 
 #pragma mark - APIMAnager
-- (void)apiRequestError:(NSError *)error {
-    DebugLog(@"apiRequestError -> %@", error);
-    self.offlineMessage.hidden = NO;
-    [persistenceManager setDataStore:PAYMENT_TYPE value:nil];
+- (void)apiRequestError:(NSError *)error response:(Response *)response {
+    DebugLog(@"apiRequestError -> %@,%@", error,response);
+    [service hideMessage:^ {
+        self.offlineMessage.hidden = NO;
+        [persistenceManager setDataStore:PAYMENT_TYPE value:nil];
+    }];
 }
 
 - (void) apiCheckConnnectionResponse:(Response *)response {
     DebugLog(@"apiCheckConnnectionResponse");
-    [self viewPaymentPage];
+    [service hideMessage: ^ {
+        [self viewPaymentPage];
+    }];
 }
 
 
@@ -127,10 +128,12 @@
  * PaymentTypeViewController checking the connection
  */
 - (void) checkConnection {
-    AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
-    if (checkConnection) {
-        [checkConnection start];
-    }
+    [service showMessage:self loader:YES message:@"Checking server communication ..." error:NO waitUntilCompleted:YES withCallBack: ^ {
+        AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
+        if (checkConnection) {
+            [checkConnection start];
+        }
+    }];
 }
 
 - (void) willEnterForegroundNotification {

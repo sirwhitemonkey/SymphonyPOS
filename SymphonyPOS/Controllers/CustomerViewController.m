@@ -4,9 +4,12 @@
 
 @interface CustomerViewController ()
 @property (nonatomic,strong) UISearchBar *searchBar;
-@property (nonatomic,strong) NSArray *customers;
+@property (nonatomic,strong) NSMutableArray *customers;
 @property (nonatomic,strong) GlobalStore *globalStore;
 @property (nonatomic,strong) NSDictionary *themes;
+@property int page;
+@property BOOL pageReached;
+
 @end
 
 @implementation CustomerViewController
@@ -14,6 +17,8 @@
 @synthesize customers = _customers;
 @synthesize globalStore = _globalStore;
 @synthesize themes = _themes;
+@synthesize page = _page;
+@synthesize pageReached = _pageReached;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -23,6 +28,8 @@
     
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.pagingEnabled = NO;
+    
+    _customers = [NSMutableArray array];
     
     _globalStore = [persistenceManager getGlobalStore];
     
@@ -38,7 +45,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
@@ -60,6 +66,7 @@
         }
     }
     [self registerNotifications];
+    [self searchCustomers:@""];
     
 }
 
@@ -127,6 +134,20 @@
 }
 
 
+-(void)scrollViewDidScroll: (UIScrollView*)scrollView{
+    float scrollViewHeight = scrollView.frame.size.height;
+    float scrollContentSizeHeight = scrollView.contentSize.height;
+    float scrollOffset = scrollView.contentOffset.y;
+    
+    if (scrollOffset + scrollViewHeight == scrollContentSizeHeight) {
+        if (!_pageReached) {
+            _page++;
+            [self searchCustomers:_searchBar.text];
+        }
+    }
+    
+}
+
 #pragma mark - UISearchBar
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchCustomers:) object:searchText];
@@ -135,6 +156,10 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
+    _page = 0;
+    _pageReached = NO;
+    [_customers removeAllObjects];
+    [self.tableView reloadData];
     [self searchCustomers:_searchBar.text];
 }
 
@@ -146,14 +171,41 @@
 /*!
  * CustomerViewController customer's search
  */
+/*
 - (void) searchCustomers:(NSString*) searchString {
-    _customers = [persistenceManager getCustomerStores:searchString];
-    if ([_customers count] == 0) {
-         [service showMessage:self loader:NO message:@"No customers available" error:YES waitUntilCompleted:NO withCallBack:nil];
+    if (![service isEmptyString:searchString]) {
+        [service showMessage:self loader:YES message:@"Searching ..." error:NO waitUntilCompleted:YES withCallBack: ^ {
+            [persistenceManager getCustomerStores:searchString completedCallback:^(NSArray *results){
+                _customers = results;
+                [service hideMessage:^ {
+                    if ([_customers count] == 0) {
+                        [service showMessage:self loader:NO message:@"No customers available" error:YES waitUntilCompleted:NO withCallBack:nil];
+                    }
+                    [self.tableView reloadData];
+                }];
+                
+            }];
+            
+        }];
     }
-    [self.tableView reloadData];
 }
-
+ */
+- (void) searchCustomers:(NSString*) searchString {
+    NSArray *results = [persistenceManager getCustomerStores:searchString page:_page];
+    if (results.count == 0) {
+        if (_page == 0) {
+            [service showMessage:self loader:NO message:@"No customers available" error:YES waitUntilCompleted:NO withCallBack:^ {
+                [_customers removeAllObjects];
+                [self.tableView reloadData];
+            }];
+        } else {
+            _pageReached = YES;
+        }
+    } else {
+        [_customers addObjectsFromArray:results];
+        [self.tableView reloadData];
+    }
+}
 
 
 

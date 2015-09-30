@@ -6,7 +6,6 @@
 @property (nonatomic,strong) APIManager *apiManager;
 @property (nonatomic,strong) GlobalStore *globalStore;
 @property (nonatomic,strong) NSDictionary *themes;
-@property (nonatomic,assign) BOOL offline;
 @property (nonatomic,strong) NSString *paymentType;
 @property (nonatomic,strong) NSString *invoice_no;
 @property (nonatomic,strong) UIBarButtonItem *printBtn;
@@ -17,7 +16,6 @@
 @synthesize apiManager = _apiManager;
 @synthesize globalStore = _globalStore;
 @synthesize themes = _themes;
-@synthesize offline = _offline;
 @synthesize paymentType = _paymentType;
 @synthesize invoice_no = _invoice_no;
 @synthesize printBtn = _printBtn;
@@ -28,6 +26,7 @@
     _globalStore = [persistenceManager getGlobalStore];
     
     _apiManager = [[APIManager alloc]init];
+    _apiManager.delegate = self;
     
     NSData *data = [_globalStore.themes dataUsingEncoding:NSUTF8StringEncoding];
     _themes = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
@@ -35,7 +34,6 @@
     [self.view setBackgroundColor:[service colorFromHexString:
                                    [_themes objectForKey:@"background"]]];
     [self.submitBtn setBackgroundColor:[service colorFromHexString:[_themes objectForKey:@"button_submit"]]];
-    _offline = persistenceManager.offline;
     
     _paymentType = [persistenceManager getDataStore:PAYMENT_TYPE];
     self.navigationItem.title = @"Payment Confirmation";
@@ -82,40 +80,49 @@
 
 #pragma mark - IBActions
 - (IBAction)submit:(id)sender {
-    AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
-    if (checkConnection) {
-        [checkConnection start];
-    }
+    [self checkConnection];
 }
 
 
 #pragma mark - APIManager
-- (void) apiRequestError:(NSError *)error {
-    DebugLog(@"apiRequestError -> %@", error);
+
+- (void) apiRequestError:(NSError *)error response:(Response *)response {
     
-    UIActionSheet *action;
+    DebugLog(@"apiRequestError -> %@,%@", error,response);
     
-    if (_offline) {
-        action = [[UIActionSheet alloc] initWithTitle:@"OFFLINE Payment: Continue ?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Confirm" otherButtonTitles:nil,
-                  nil];
-        action.tag = 2;
-        [action showInView:[UIApplication sharedApplication].keyWindow];
+    [service hideMessage:^ {
         
-    } else {
-        if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
-            action = [[UIActionSheet alloc] initWithTitle:@"OFFLINE: Change your payment type" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Change" otherButtonTitles:nil,
-                      nil];
-            action.tag = 1;
-            [action showInView:[UIApplication sharedApplication].keyWindow];
-        }
-    }
+        [service showMessage:self loader:NO message:(NSString*)response.data error:NO waitUntilCompleted:NO
+                withCallBack:^{
+                    UIActionSheet *action;
+                    
+                    if (persistenceManager.offline) {
+                        if ([_paymentType isEqualToString:PAYMENT_CREDITCARD]) {
+                            action = [[UIActionSheet alloc] initWithTitle:@"OFFLINE: Change your payment type" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Change" otherButtonTitles:nil,
+                                      nil];
+                            action.tag = 1;
+                        } else {
+                            action = [[UIActionSheet alloc] initWithTitle:@"OFFLINE Payment: Continue ?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Confirm" otherButtonTitles:nil,
+                                      nil];
+                            action.tag = 2;
+                        }
+                        [action showInView:[UIApplication sharedApplication].keyWindow];
+                        
+                    }
+                }];
+    }];
+    
 }
 
 - (void) apiCheckConnnectionResponse:(Response *)response {
-    [self submitTransaction:NO];
+    DebugLog(@"apiCheckConnnectionResponse");
+    [service hideMessage: ^ {
+        [self submitTransaction:NO];
+    }];
 }
 
-- (void) apiSubmitPaymentResponse:(Response *)response {
+
+- (void) apiSubmitTransactionsResponse:(Response *)response {
     [self finaliseSubmission];
 }
 
@@ -125,7 +132,7 @@
         case 1: {
             switch (buttonIndex) {
                 case 0:
-                    [persistenceManager removeFromKeyChain:_paymentType]; // Credit card only
+                    [persistenceManager removeDataStore:_paymentType];
                     [self viewPaymentTypePage];
                     break;
                 default:
@@ -154,10 +161,12 @@
  * SubmitViewController checking the connection
  */
 - (void) checkConnection {
-    AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
-    if (checkConnection) {
-        [checkConnection start];
-    }
+    [service showMessage:self loader:YES message:@"Checking server communication ..." error:NO waitUntilCompleted:YES withCallBack: ^ {
+        AFHTTPRequestOperation *checkConnection = [_apiManager checkConnection];
+        if (checkConnection) {
+            [checkConnection start];
+        }
+    }];
 }
 
 - (void) willEnterForegroundNotification {
@@ -181,12 +190,64 @@
     
     _invoice_no = [invoice componentsJoinedByString:@""];
     
-    if (offline) {
+    if (!offline) {
         [persistenceManager setOfflineSalesStore:_invoice_no];
         [self finaliseSubmission];
+        
     } else {
-        _apiManager.delegate = self;
-        [_apiManager submitPayment:self invoice_no:_invoice_no];
+        
+        // Formulate the params
+        NSData *jsonData = nil;
+        CustomerStore *customerStore = [persistenceManager getCustomerStore:_globalStore.customer_default_code];
+        
+        NSMutableDictionary *paramsData = [[NSMutableDictionary alloc]init];
+        [paramsData setObject:ORIGINATOR forKey:@"originator"];
+        
+        NSMutableDictionary *data = [[NSMutableDictionary alloc]init];
+        
+        // Offline
+        [data setObject:[NSNumber numberWithBool:NO] forKey:@"offline"];
+        // Invoice
+        [data setObject:_invoice_no forKey:@"invoice"];
+        // Customer preference
+        [data setObject:[[NSDictionary alloc] initWithObjectsAndKeys:
+                               _globalStore.customer_default_code ?: [NSNull null], @"customer_code",
+                               customerStore.priceCode ?: [NSNull null], @"customer_priceCode",
+                               nil] forKey:@"customerPreference"];
+        // Customer
+        [data setObject:[persistenceManager getDataStore:CUSTOMER] forKey:@"customer"];
+        // PaymentType
+        [data setObject:[persistenceManager getDataStore:PAYMENT_TYPE] forKey:@"paymentType"];
+        // CashSales
+        [data setObject:[persistenceManager getDataStore:CASH_SALES] forKey:@"cashSales"];
+        // Carts
+        NSArray *cartStores = [persistenceManager getCartStores];
+        NSMutableArray *saleCarts = [NSMutableArray array];
+         for (CartStore *cartStore in cartStores) {
+            PriceStore *priceStore = [persistenceManager getPriceStore:customerStore.priceCode
+                                                                itemNo:cartStore.cartProduct.itemNo];
+            [saleCarts addObject: [[NSDictionary alloc] initWithObjectsAndKeys:
+                                   cartStore.cart_code ?: [NSNull null], @"cart_code",
+                                   cartStore.qty ?: [NSNull null], @"qty",
+                                   priceStore.priceListCode ?: [NSNull null], @"pricelist_code",
+                                   cartStore.cartProduct.itemNo ?: [NSNull null], @"itemNo",
+                                   nil]];
+        }
+        [data setObject:saleCarts forKey:@"carts"];
+        [paramsData setObject:data forKey:@"data"];
+        
+        jsonData = [NSJSONSerialization dataWithJSONObject:paramsData
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:nil];
+        NSString *params = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        [service showMessage:self loader:YES message:@"Processing transactions ..." error:NO waitUntilCompleted:YES withCallBack:^ {
+            AFHTTPRequestOperation *submitTransactions = [_apiManager submitTransactions:params];
+            if (submitTransactions) {
+                [submitTransactions start];
+            }
+        }];
+        
     }
 }
 
@@ -210,7 +271,7 @@
 /*!
  * SubmitViewController navigate to pos page
  */
-- (void) viewQuickOrderPage {
+- (void) viewPOSPage {
     [self performSegueWithIdentifier:@"SubmitPOSSegue" sender:self];
 }
 
@@ -229,7 +290,7 @@
     NSArray *cartStores = [persistenceManager getCartStores];
     for (CartStore *cartStore in cartStores) {
         NSDictionary *cart = [[NSDictionary alloc] initWithObjectsAndKeys:cartStore.cart_code,@"cart_code",
-        cartStore.cartProduct.itemNo,@"product_code",cartStore.qty, @"qty", nil];
+                              cartStore.cartProduct.itemNo,@"product_code",cartStore.qty, @"qty", nil];
         [carts addObject:cart];
     }
     NSDictionary *data = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -249,21 +310,22 @@
     [persistenceManager clearCurrentTransaction];
     self.navigationItem.title = @"Payment Received";
     [service showMessage:self loader:NO message:@"Payment received successfully" error:NO
-      waitUntilCompleted:NO  withCallBack:nil];
-    [persistenceManager setDataStore:@"printCopy" value:data];
-    
-    _printBtn =[[UIBarButtonItem alloc]  initWithTitle:@"Print" style:UIBarButtonItemStylePlain
-                                                target:self action:@selector(print:)];
-    
-    _homeBtn =[[UIBarButtonItem alloc]  initWithTitle:@"POS" style:UIBarButtonItemStylePlain
-                                               target:self action:@selector(home:)];
-
-    self.navigationItem.leftBarButtonItem = _homeBtn;
-    self.navigationItem.rightBarButtonItem = _printBtn;
+      waitUntilCompleted:NO  withCallBack:^{
+          [persistenceManager setDataStore:PRINT_COPY value:data];
+          
+          _printBtn =[[UIBarButtonItem alloc]  initWithTitle:@"Print" style:UIBarButtonItemStylePlain
+                                                      target:self action:@selector(print:)];
+          
+          _homeBtn =[[UIBarButtonItem alloc]  initWithTitle:@"POS" style:UIBarButtonItemStylePlain
+                                                     target:self action:@selector(home:)];
+          
+          self.navigationItem.leftBarButtonItem = _homeBtn;
+          self.navigationItem.rightBarButtonItem = _printBtn;
+      }];
 }
 
 - (void)home:(id)sender {
-    [self viewQuickOrderPage];
+    [self viewPOSPage];
 }
 
 - (void)print:(id)sender{

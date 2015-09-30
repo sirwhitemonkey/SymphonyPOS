@@ -59,17 +59,10 @@
 - (void) apiCheckConnnectionResponse:(Response*) response;
 
 /*!
- * APIManagerDelegate submit payment callback
- * Payment submission received.
+ * APIManagerDelegate submitTransactions callback
+ * Submit transaction received.
  */
-- (void) apiSubmitPaymentResponse:(Response*) response;
-
-/*!
- * APIManagerDelegate offline sales callback.
- * Offline sales synchronisation.
- */
-- (void) apiOfflineSalesResponse:(Response*) response;
-
+- (void) apiSubmitTransactionsResponse:(Response*) response;
 
 @end
 
@@ -122,25 +115,14 @@
 - (AFHTTPRequestOperation*) checkConnection;
 
 /*!
- * APIManager payment submission request
- */
-- (void) submitPayment:(id) reference invoice_no:(NSString*)invoice_no;
-
-/*!
- * APIManager synchronisation of offline sales request.
- */
-- (AFHTTPRequestOperation*) offlineSales;
+* APIManager submit transaction request.
+*/
+- (AFHTTPRequestOperation*) submitTransactions:(NSString*)transactions;
 
 /*!
  * APIManager synchronisation of image on the background request.
  */
 - (void) syncImage:(UIImageView*) refImageView url:(NSString*)url;
-
-
-
-
-
-
 
 @end
 

@@ -2,7 +2,7 @@
 //  PriceStore.h
 //  SymphonyPOS
 //
-//  Created by Rommel Sumpo on 29/09/15.
+//  Created by Rommel Sumpo on 30/09/15.
 //  Copyright (c) 2015 XMDevelopments. All rights reserved.
 //
 
