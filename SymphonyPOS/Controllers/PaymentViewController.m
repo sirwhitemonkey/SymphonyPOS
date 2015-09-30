@@ -33,7 +33,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden = NO;
     self.navigationItem.title = [persistenceManager getDataStore:PAYMENT_TYPE];
     

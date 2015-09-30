@@ -17,9 +17,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
-     self.qtyView.layer.borderWidth = 1;
+    self.qtyView.layer.borderWidth = 1;
     self.qtyView.layer.borderColor =[[UIColor  grayColor] CGColor];
     
     _globalStore = [persistenceManager getGlobalStore];

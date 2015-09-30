@@ -12,7 +12,9 @@
 #import "DTDevices.h"
 #import "SyncViewController.h"
 
-@interface POSViewController : UIViewController<UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate, UITextFieldDelegate,UIActionSheetDelegate, QtyViewContollerDelegate, SyncViewControllerDelegate>
+@interface POSViewController : UIViewController<UISearchBarDelegate,UITableViewDataSource,
+                               UITableViewDelegate, UITextFieldDelegate,UIActionSheetDelegate,
+                               QtyViewContollerDelegate, SyncViewControllerDelegate>
 
 @property (nonatomic,strong) IBOutlet ProductViewCell *productViewCell;
 @property (nonatomic,strong) IBOutlet FilteredProductViewCell *filteredProductViewCell;
